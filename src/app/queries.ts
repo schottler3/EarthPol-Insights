@@ -77,7 +77,7 @@ export const renderSkin = async(uuid: string): Promise<string> => {
 export const verifyUser = async(uuid: string, code:number, time:string) : Promise<boolean> => {
     //if(usingFake){
     //    return true;
-    //}
+    //} 
 
     let query = 
     {
