@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Lucas Schottler",
-  description: "A portfolio website for Lucas Schottler.",
+  title: "EPMC Insights",
+  description: "Compiled information for EarthPol.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" }

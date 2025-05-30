@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET() : Promise<Response>{
   try {
     const response = await fetch('https://api.earthpol.com/astra/nations', {
       headers: {
@@ -28,7 +28,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request) : Promise<Response>{
   try {
     const body = await request.json();
     
@@ -45,7 +45,9 @@ export async function POST(request: Request) {
     
     if (!response.ok) {
       console.log(`Error! Status: ${response.status}`);
-      return null;
+      return NextResponse.json(
+        null
+      );;
     }
     
     const data = await response.json();
@@ -56,8 +58,6 @@ export async function POST(request: Request) {
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error querying EarthPol nations:', error);
-    return NextResponse.json(
-      null
-    );
+    return NextResponse.json(null);
   }
 }

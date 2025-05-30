@@ -1,4 +1,3 @@
-import { Timestamp } from "firebase/firestore";
 import {FAKENATION, FAKETOWN, Nation, Player, Town } from "./types";
 
 const usingFake: boolean = true;
