@@ -1,6 +1,6 @@
 import { useState, useEffect} from "react";
-import {Town, type Nation, type ReactStateHandler} from "../types";
-import { renderNation } from "../queries";
+import {Town, type Nation, type ReactStateHandler} from "../lib/types";
+import { renderNation } from "../lib/queries";
 import TownItem from "./TownItem";
 
 export default function NationItem({ name, collapse, selectedItem, setSelectedItem}: { name: string, collapse: boolean, selectedItem:Nation | Town | null, setSelectedItem: ReactStateHandler}) {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Nation, Player, ReactStateHandler, Town } from "../types";
-import { renderSkin, renderTown} from "../queries";
+import { Nation, Player, ReactStateHandler, Town } from "../lib/types";
+import { renderSkin, renderTown} from "../lib/queries";
 
 export default function TownItem({name, selectedItem, setSelectedItem}: {name:string, selectedItem:Nation | Town | null, setSelectedItem:ReactStateHandler}) {
 

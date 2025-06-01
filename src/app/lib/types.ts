@@ -167,6 +167,8 @@ export function isNation(item: Town | Nation | null): item is Nation {
   return item !== null && 'towns' in item;
 }
 
+export const USINGFAKE = true;
+
 export const FAKENATIONS = 
 [
     {
@@ -248,10 +250,30 @@ export const FAKENATION =
         "enemies": [],
         "sanctioned": [],
         "ranks": {
-            "co-leader": [],
-            "minister": [],
-            "recruiter": [],
-            "soldier": [],
+            "co-leader": [
+                {
+                    "name": "schottler3",
+                    "uuid": "2f6f620b-6d60-4c89-bd50-974aff8da13f"
+                }
+            ],
+            "minister": [
+                {
+                    "name": "schottler3",
+                    "uuid": "2f6f620b-6d60-4c89-bd50-974aff8da13f"
+                }
+            ],
+            "recruiter": [
+                {
+                    "name": "schottler3",
+                    "uuid": "2f6f620b-6d60-4c89-bd50-974aff8da13f"
+                }
+            ],
+            "soldier": [
+                {
+                    "name": "schottler3",
+                    "uuid": "2f6f620b-6d60-4c89-bd50-974aff8da13f"
+                }
+            ],
             "general": [
                 {
                     "name": "NimbKied",

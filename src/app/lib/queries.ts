@@ -1,14 +1,12 @@
-import {FAKENATION, FAKETOWN, Nation, Player, Town } from "./types";
-
-const usingFake: boolean = true;
+import {FAKENATION, FAKETOWN, Nation, Player, Town, USINGFAKE } from "./types";
 
 export const renderNation = async (query: string): Promise<Nation | null> => {
-    if(usingFake){
+    if(USINGFAKE){
         const nat : Nation = FAKENATION[0] as any;
         return nat;
     }
     try {
-        const response = await fetch('/api/earthpol/nations', {
+        const response = await fetch('/api/nations', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,11 +32,11 @@ export const renderNation = async (query: string): Promise<Nation | null> => {
 };
 
 export const renderTown = async (query: string): Promise<Town> => {
-    if(usingFake){
+    if(USINGFAKE){
         return FAKETOWN[0] as any;
     }
     try {
-        const response = await fetch('/api/earthpol/towns', {
+        const response = await fetch('/api/towns', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,10 +72,38 @@ export const renderSkin = async(uuid: string): Promise<string> => {
     }
 };
 
+export const checkDiscord = async (locationUUID: string): Promise<string | null> => {
+  try {
+    if (!locationUUID) {
+      console.error("Missing locationUUID parameter");
+      return "";
+    }
+    
+    const response = await fetch('/api/discord', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ locationUUID }) // Make sure locationUUID is properly passed
+    });
+
+    if (!response.ok) {
+      console.error(`Error fetching discord link. Status: ${response.status}`);
+      return "";
+    }
+
+    const data = await response.json();
+    return data.discord;
+  } catch (error) {
+    console.error("Error checking discord:", error);
+    return "";
+  }
+};
+
 export const verifyUser = async(uuid: string, code:number, time:string) : Promise<boolean> => {
-    //if(usingFake){
-    //    return true;
-    //}  
+    if(USINGFAKE){
+        return true;
+    }  
 
     let query = 
     {
@@ -89,7 +115,7 @@ export const verifyUser = async(uuid: string, code:number, time:string) : Promis
     }
 
     try {
-        const response = await fetch('/api/earthpol/chat', {
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,15 +126,16 @@ export const verifyUser = async(uuid: string, code:number, time:string) : Promis
         });
         
         if (!response.ok) {
-            throw new Error(`Error fetching town data. Status: ${response.status}`);
+            console.log(`Error fetching town data. Status: ${response.status}`);
+            return false;
         }
         
-        const townDataInc = await response.json();
+        const chatData = await response.json();
 
-        const townObject = townDataInc[0];
-        return townObject;
+        const chatBoolean = chatData[0];
+        return chatBoolean;
     } catch (error: any) {
-        return error;
+        return false;
     }
 }
 
