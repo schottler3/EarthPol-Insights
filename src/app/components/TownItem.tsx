@@ -20,9 +20,9 @@ export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {n
                 setLoading(true);
                 setError(null);
                 
-                //const locationObject = await renderTown(uuid, true);
-                //console.log("Town data received:", townObject);
-                //setTownData(locationObject as Town);
+                const locationObject = await renderTown(uuid, true);
+                console.log("Town data received:", locationObject);
+                setTownData(locationObject as Town);
                 
             } catch (err) {
                 console.error("Error fetching town data:", err);

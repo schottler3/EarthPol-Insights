@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react"
 import NationItem from "./components/NationItem";
 import Header from "./components/Header";
-import { FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/types";
+import { FAKECUBA, FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/types";
 import NationPage from "./components/NationPage";
 import TownPage from "./components/TownPage";
 
@@ -26,6 +26,7 @@ export default function EarthPol() {
                 ...nation,
                 index
             })));
+            setSelectedItem(FAKECUBA);
             setLoading(false);
         }
         else {
@@ -40,6 +41,8 @@ export default function EarthPol() {
                     const result = await response.json();
                     console.log('Fetched data:', result);
                     setNations(result);
+                    console.log(result[0])
+                    setSelectedItem(result[0]);
                     setLoading(false);
                 } catch (e: unknown) {
                     const error = e instanceof Error ? e : new Error(String(e));

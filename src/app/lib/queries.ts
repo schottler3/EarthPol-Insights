@@ -1,6 +1,6 @@
 import { adminDb } from "../api/firebase-admin";
 import { getDiscord } from "../databasing";
-import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE } from "./types";
+import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE, FAKETOWNS } from "./types";
 
 export const renderLocation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
     switch(query){
@@ -69,13 +69,19 @@ export const renderNation = async (query: string, town: boolean | null): Promise
 };
 
 export const renderTown = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
-    switch(query){
-        case "Cuba":
-            return FAKECUBA as unknown as Nation;
-        case "Japan": 
-            return FAKEJAPAN as unknown as Nation;
-        case "Cascadia":
-            return FAKECASCADIA as unknown as Nation;
+    switch(query) {
+        // Havana (Cuba's capital)
+        case "ff50d039-669d-413e-84e0-18c3fd370ea3":
+            return FAKETOWNS[0] as Town;
+        // Tokyo (Japan's capital)
+        case "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3":
+            return FAKETOWNS[1] as Town;
+        // Portland (Cascadia's capital)
+        case "a7c891f6-7d3e-495b-b276-c4a7328ab9e1":
+            return FAKETOWNS[2] as Town;
+        // Seattle (Cascadia town)
+        case "f25acd71-9e38-4712-89b4-f24a963c320e":
+            return FAKETOWNS[3] as Town;
     }
 
     try {

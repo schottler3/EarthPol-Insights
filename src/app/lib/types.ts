@@ -184,6 +184,458 @@ export const FAKENATIONS =
     }
 ]
 
+export const FAKETOWNS = [
+  // HAVANA - CUBA
+  {
+    "name": "Havana",
+    "uuid": "ff50d039-669d-413e-84e0-18c3fd370ea3",
+    "board": "VIVA LA LIBERTAD CARAJO",
+    "founder": "5u5u",
+    "mayor": {
+      "name": "jhjhjh098k",
+      "uuid": "9a2657ea-e15c-4469-8886-6c101151eff0"
+    },
+    "nation": {
+      "name": "Cuba",
+      "uuid": "5eda99c0-e430-4552-abae-4e7604579483"
+    },
+    "timestamps": {
+      "registered": 1719014016273,
+      "joinedNationAt": 1719176120296,
+      "ruinedAt": null
+    },
+    "status": {
+      "isPublic": true,
+      "isOpen": false,
+      "isNeutral": false,
+      "isCapital": true,
+      "isOverClaimed": true,
+      "isRuined": false,
+      "isForSale": false,
+      "hasNation": true
+    },
+    "stats": {
+      "numTownBlocks": 1020,
+      "maxTownBlocks": 985,
+      "bonusBlocks": 0,
+      "numResidents": 14,
+      "numTrusted": 9,
+      "numOutlaws": 1,
+      "balance": 81.8
+    },
+    "perms": {
+      "build": [false, false, false, false],
+      "destroy": [false, false, false, false],
+      "switch": [false, false, false, false],
+      "itemUse": [false, false, false, false],
+      "flags": {
+        "pvp": false,
+        "explosion": false,
+        "fire": false,
+        "mobs": false
+      }
+    },
+    "coordinates": {
+      "spawn": {
+        "world": "world",
+        "x": -27417.0297,
+        "y": 88.75061,
+        "z": -7704.7489,
+        "pitch": 41.038494,
+        "yaw": -97.12445
+      },
+      "homeBlock": [-1714, -482],
+      "townBlocks": [[-1745, -479]]
+    },
+    "residents": [
+      {
+        "name": "MrTytanic",
+        "uuid": "d904bb76-412d-4f6a-af9f-13853b5fc614"
+      },
+      {
+        "name": "jhjhjh098k",
+        "uuid": "9a2657ea-e15c-4469-8886-6c101151eff0"
+      }
+    ],
+    "trusted": [
+      {
+        "name": "jhjhjh098k",
+        "uuid": "9a2657ea-e15c-4469-8886-6c101151eff0"
+      },
+      {
+        "name": "Kauntar",
+        "uuid": "67dbe22c-f9f8-4f27-a372-3ec9cf7c8ea8"
+      }
+    ],
+    "outlaws": [
+      {
+        "name": "kreepsta",
+        "uuid": "dc013ac2-23b9-4a56-84f2-74b6e559ffe1"
+      }
+    ],
+    "quarters": [],
+    "ranks": {
+      "assistant": [
+        {
+          "name": "Ethnzz",
+          "uuid": "bb045b6c-df6a-4f83-be01-5eb745273f72"
+        }
+      ],
+      "trusted": [],
+      "recruiter": [],
+      "sheriff": [],
+      "guard": []
+    }
+  },
+  
+  // TOKYO - JAPAN
+  {
+    "name": "Tokyo",
+    "uuid": "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3",
+    "board": "東京へようこそ | Imperial Capital",
+    "founder": "SakuraSan",
+    "mayor": {
+      "name": "SakuraSan",
+      "uuid": "b71c2a48-3f76-49a2-9e4c-b9826376a8f2"
+    },
+    "nation": {
+      "name": "Japan",
+      "uuid": "93f28b00-51ba-43b2-930f-a63e496317a2"
+    },
+    "timestamps": {
+      "registered": 1719089462147,
+      "joinedNationAt": 1719089562147,
+      "ruinedAt": null
+    },
+    "status": {
+      "isPublic": true,
+      "isOpen": true,
+      "isNeutral": false,
+      "isCapital": true,
+      "isOverClaimed": false,
+      "isRuined": false,
+      "isForSale": false,
+      "hasNation": true
+    },
+    "stats": {
+      "numTownBlocks": 742,
+      "maxTownBlocks": 800,
+      "bonusBlocks": 50,
+      "numResidents": 8,
+      "numTrusted": 3,
+      "numOutlaws": 2,
+      "balance": 157.25
+    },
+    "perms": {
+      "build": [false, true, false, false],
+      "destroy": [false, false, false, false],
+      "switch": [false, true, false, false],
+      "itemUse": [false, true, false, false],
+      "flags": {
+        "pvp": true,
+        "explosion": false,
+        "fire": false,
+        "mobs": true
+      }
+    },
+    "coordinates": {
+      "spawn": {
+        "world": "world",
+        "x": 14582.47,
+        "y": 76.0,
+        "z": -2471.92,
+        "pitch": 12.45,
+        "yaw": -178.32
+      },
+      "homeBlock": [912, -155],
+      "townBlocks": [[912, -155], [913, -155], [912, -156]]
+    },
+    "residents": [
+      {
+        "name": "SakuraSan",
+        "uuid": "b71c2a48-3f76-49a2-9e4c-b9826376a8f2"
+      },
+      {
+        "name": "Kitsune42",
+        "uuid": "753cb829-69c4-48c5-9432-8dfa12631d7f"
+      },
+      {
+        "name": "MountFuji",
+        "uuid": "e275d96b-943c-4c7d-a67f-9f49b68f067d"
+      }
+    ],
+    "trusted": [
+      {
+        "name": "Kitsune42",
+        "uuid": "753cb829-69c4-48c5-9432-8dfa12631d7f"
+      },
+      {
+        "name": "NinjaWarrior",
+        "uuid": "9f6ed37a-25bf-4a5c-8e75-2f783c42e05f"
+      }
+    ],
+    "outlaws": [
+      {
+        "name": "MongoRaider",
+        "uuid": "fa397e1d-54cb-4d27-9b1e-21c9dd502903"
+      }
+    ],
+    "quarters": ["Imperial District", "Harbor District"],
+    "ranks": {
+      "assistant": [
+        {
+          "name": "Kitsune42",
+          "uuid": "753cb829-69c4-48c5-9432-8dfa12631d7f"
+        }
+      ],
+      "trusted": [
+        {
+          "name": "SamuraiCode",
+          "uuid": "63aa4187-ed9b-4ac6-8074-0fd43cc2c4ea"
+        }
+      ],
+      "recruiter": [
+        {
+          "name": "MountFuji",
+          "uuid": "e275d96b-943c-4c7d-a67f-9f49b68f067d"
+        }
+      ],
+      "sheriff": [],
+      "guard": [
+        {
+          "name": "ShogunWarrior",
+          "uuid": "db1a7c93-8942-4b78-9c4d-f5379871a532"
+        }
+      ]
+    }
+  },
+  
+  // PORTLAND - CASCADIA
+  {
+    "name": "Portland",
+    "uuid": "a7c891f6-7d3e-495b-b276-c4a7328ab9e1",
+    "board": "City of Roses | Home of Cascadia",
+    "founder": "PNWExplorer",
+    "mayor": {
+      "name": "PNWExplorer",
+      "uuid": "4cba82d5-94fa-42f8-b7a7-83d9c06e3f6b"
+    },
+    "nation": {
+      "name": "Cascadia",
+      "uuid": "e38c9fbc-78d9-4e9b-a90f-870fba949693"
+    },
+    "timestamps": {
+      "registered": 1719230614783,
+      "joinedNationAt": 1719235614783,
+      "ruinedAt": null
+    },
+    "status": {
+      "isPublic": true,
+      "isOpen": true,
+      "isNeutral": true,
+      "isCapital": true,
+      "isOverClaimed": false,
+      "isRuined": false,
+      "isForSale": false,
+      "hasNation": true
+    },
+    "stats": {
+      "numTownBlocks": 312,
+      "maxTownBlocks": 350,
+      "bonusBlocks": 25,
+      "numResidents": 6,
+      "numTrusted": 4,
+      "numOutlaws": 0,
+      "balance": 95.75
+    },
+    "perms": {
+      "build": [true, true, false, false],
+      "destroy": [false, true, false, false],
+      "switch": [true, true, false, false],
+      "itemUse": [true, true, false, false],
+      "flags": {
+        "pvp": false,
+        "explosion": false,
+        "fire": false,
+        "mobs": true
+      }
+    },
+    "coordinates": {
+      "spawn": {
+        "world": "world",
+        "x": -12483.52,
+        "y": 68.0,
+        "z": -4219.18,
+        "pitch": -5.78,
+        "yaw": 92.46
+      },
+      "homeBlock": [-781, -264],
+      "townBlocks": [[-781, -264], [-781, -263], [-782, -264]]
+    },
+    "residents": [
+      {
+        "name": "PNWExplorer",
+        "uuid": "4cba82d5-94fa-42f8-b7a7-83d9c06e3f6b"
+      },
+      {
+        "name": "ForestKeeper",
+        "uuid": "37d9e142-5b76-4a3d-9e4c-61af8f8693a2"
+      },
+      {
+        "name": "RiverGuide",
+        "uuid": "ba1f63c8-9371-47d5-b89e-32f47582d841"
+      }
+    ],
+    "trusted": [
+      {
+        "name": "ForestKeeper",
+        "uuid": "37d9e142-5b76-4a3d-9e4c-61af8f8693a2"
+      },
+      {
+        "name": "RiverGuide",
+        "uuid": "ba1f63c8-9371-47d5-b89e-32f47582d841"
+      },
+      {
+        "name": "MountainClimber",
+        "uuid": "5d7845f9-c2a6-4f83-b758-c32e761af9d4"
+      }
+    ],
+    "outlaws": [],
+    "quarters": ["Rose Quarter", "Pearl District", "Waterfront"],
+    "ranks": {
+      "assistant": [
+        {
+          "name": "ForestKeeper",
+          "uuid": "37d9e142-5b76-4a3d-9e4c-61af8f8693a2"
+        }
+      ],
+      "trusted": [
+        {
+          "name": "RiverGuide",
+          "uuid": "ba1f63c8-9371-47d5-b89e-32f47582d841"
+        }
+      ],
+      "recruiter": [
+        {
+          "name": "ForestKeeper",
+          "uuid": "37d9e142-5b76-4a3d-9e4c-61af8f8693a2"
+        }
+      ],
+      "sheriff": [
+        {
+          "name": "PacificDefender",
+          "uuid": "1a8b72c5-e96d-4973-8462-d27f8ab95e18"
+        }
+      ],
+      "guard": []
+    }
+  },
+  
+  // SEATTLE - CASCADIA
+  {
+    "name": "Seattle",
+    "uuid": "f25acd71-9e38-4712-89b4-f24a963c320e",
+    "board": "Emerald City | Coffee & Rain",
+    "founder": "RainCity",
+    "mayor": {
+      "name": "RainCity",
+      "uuid": "29e47b48-c631-4958-b07e-814e218ab5a9"
+    },
+    "nation": {
+      "name": "Cascadia",
+      "uuid": "e38c9fbc-78d9-4e9b-a90f-870fba949693"
+    },
+    "timestamps": {
+      "registered": 1719233614783,
+      "joinedNationAt": 1719235989783,
+      "ruinedAt": null
+    },
+    "status": {
+      "isPublic": true,
+      "isOpen": true,
+      "isNeutral": true,
+      "isCapital": false,
+      "isOverClaimed": false,
+      "isRuined": false,
+      "isForSale": false,
+      "hasNation": true
+    },
+    "stats": {
+      "numTownBlocks": 216,
+      "maxTownBlocks": 250,
+      "bonusBlocks": 0,
+      "numResidents": 5,
+      "numTrusted": 2,
+      "numOutlaws": 1,
+      "balance": 53.50
+    },
+    "perms": {
+      "build": [false, true, false, false],
+      "destroy": [false, true, false, false],
+      "switch": [false, true, false, false],
+      "itemUse": [false, true, false, false],
+      "flags": {
+        "pvp": false,
+        "explosion": false,
+        "fire": false,
+        "mobs": false
+      }
+    },
+    "coordinates": {
+      "spawn": {
+        "world": "world",
+        "x": -12283.64,
+        "y": 72.0,
+        "z": -5219.38,
+        "pitch": 2.45,
+        "yaw": 178.92
+      },
+      "homeBlock": [-768, -327],
+      "townBlocks": [[-768, -327], [-769, -327], [-768, -328]]
+    },
+    "residents": [
+      {
+        "name": "RainCity",
+        "uuid": "29e47b48-c631-4958-b07e-814e218ab5a9"
+      },
+      {
+        "name": "CoastalGuard",
+        "uuid": "73e894f2-57b1-49d5-ba8c-fd3a95e2782f"
+      }
+    ],
+    "trusted": [
+      {
+        "name": "PNWExplorer",
+        "uuid": "4cba82d5-94fa-42f8-b7a7-83d9c06e3f6b"
+      }
+    ],
+    "outlaws": [
+      {
+        "name": "Trespasser",
+        "uuid": "3cd8e4a1-47bc-4fee-9540-e2a0ea347b29"
+      }
+    ],
+    "quarters": ["Downtown", "Space Needle"],
+    "ranks": {
+      "assistant": [],
+      "trusted": [
+        {
+          "name": "MountainClimber",
+          "uuid": "5d7845f9-c2a6-4f83-b758-c32e761af9d4"
+        }
+      ],
+      "recruiter": [],
+      "sheriff": [],
+      "guard": [
+        {
+          "name": "CoastalGuard",
+          "uuid": "73e894f2-57b1-49d5-ba8c-fd3a95e2782f"
+        }
+      ]
+    }
+  }
+];
+
 export const FAKECUBA: Nation = 
 {
         "name": "Cuba",

@@ -280,7 +280,7 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
 
                     <div className="flex gap-4 items-center">
                         <h1 className="text-2xl text-blue1">Generals</h1>
-                        {nationData.ranks.soldier?.map((general: {name: string, uuid: string}) => (
+                        {nationData.ranks.general?.map((general: {name: string, uuid: string}) => (
                             <Player
                                 key={`${nationData.name}-general-${general.uuid}`}
                                 name={general.name}

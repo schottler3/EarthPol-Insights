@@ -85,7 +85,7 @@ export default function NationItem({ name, uuid, collapse, selectedItem, setSele
                                     <TownItem
                                         name={item.name}
                                         uuid={item.uuid}
-                                        key={`town-${item.name}`}
+                                        key={`nationItem-town-${item.name}`}
                                         selectedItem={selectedItem}
                                         setSelectedItem={setSelectedItem}
                                     ></TownItem>
