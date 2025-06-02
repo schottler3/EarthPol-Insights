@@ -5,7 +5,7 @@ let app: admin.app.App;
 if (!admin.apps.length) {
   app = admin.initializeApp({
     credential: admin.credential.cert({
-      projectId: process.env.PROJECT_ID,
+      projectId: process.env.projectID,
       clientEmail: process.env.CLIENT_EMAIL,
       privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n')
     }),
