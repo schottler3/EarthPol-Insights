@@ -159,7 +159,7 @@ export const getDiscordSrc = async (invite: string): Promise<Invite | null> => {
 
 export const verifyUser = async(uuid: string, code:number, time:string) : Promise<boolean> => {
     if(USINGFAKE){
-        return true;
+        return false;
     }  
 
     let query = 
