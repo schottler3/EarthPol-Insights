@@ -1,10 +1,50 @@
-import {FAKENATION, FAKETOWN, Nation, Player, Town, USINGFAKE } from "./types";
+import { adminDb } from "../api/firebase-admin";
+import { getDiscord } from "../databasing";
+import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE } from "./types";
 
-export const renderNation = async (query: string): Promise<Nation | null> => {
-    if(USINGFAKE){
-        const nat : Nation = FAKENATION[0] as any;
-        return nat;
+export const renderLocation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
+    switch(query){
+        case "5eda99c0-e430-4552-abae-4e7604579483":
+            return FAKECUBA as Nation;
+        case "93f28b00-51ba-43b2-930f-a63e496317a2": 
+            return FAKEJAPAN as Nation;
+        case "e38c9fbc-78d9-4e9b-a90f-870fba949693":
+            return FAKECASCADIA as Nation;
     }
+
+    try {
+        const response = await fetch('/api/location', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: [query]
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error fetching location data. Status: ${response.status}`);
+        }
+        
+        const locationData = await response.json();
+
+        return locationData[0];
+    } catch (error: any) {
+        return error;
+    }
+};
+
+export const renderNation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
+    switch(query){
+        case "5eda99c0-e430-4552-abae-4e7604579483":
+            return FAKECUBA as Nation;
+        case "93f28b00-51ba-43b2-930f-a63e496317a2": 
+            return FAKEJAPAN as Nation;
+        case "e38c9fbc-78d9-4e9b-a90f-870fba949693":
+            return FAKECASCADIA as Nation;
+    }
+
     try {
         const response = await fetch('/api/nations', {
             method: 'POST',
@@ -17,24 +57,27 @@ export const renderNation = async (query: string): Promise<Nation | null> => {
         });
         
         if (!response.ok) {
-            console.log(`Error fetching nation data. Status: ${response.status}`);
-            return null;
+            throw new Error(`Error fetching location data. Status: ${response.status}`);
         }
         
-        const nationDataInc = await response.json();
+        const locationData = await response.json();
 
-        const nationObject = nationDataInc[0];
-        return nationObject;
+        return locationData[0];
     } catch (error: any) {
-        console.log(error);
-        return null;
+        return error;
     }
 };
 
-export const renderTown = async (query: string): Promise<Town> => {
-    if(USINGFAKE){
-        return FAKETOWN[0] as any;
+export const renderTown = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
+    switch(query){
+        case "Cuba":
+            return FAKECUBA as unknown as Nation;
+        case "Japan": 
+            return FAKEJAPAN as unknown as Nation;
+        case "Cascadia":
+            return FAKECASCADIA as unknown as Nation;
     }
+
     try {
         const response = await fetch('/api/towns', {
             method: 'POST',
@@ -47,13 +90,12 @@ export const renderTown = async (query: string): Promise<Town> => {
         });
         
         if (!response.ok) {
-            throw new Error(`Error fetching town data. Status: ${response.status}`);
+            throw new Error(`Error fetching location data. Status: ${response.status}`);
         }
         
-        const townDataInc = await response.json();
+        const locationData = await response.json();
 
-        const townObject = townDataInc[0];
-        return townObject;
+        return locationData[0];
     } catch (error: any) {
         return error;
     }
@@ -72,31 +114,46 @@ export const renderSkin = async(uuid: string): Promise<string> => {
     }
 };
 
-export const checkDiscord = async (locationUUID: string): Promise<string | null> => {
-  try {
+export const checkDiscord = async (locationUUID: string) : Promise<string | null> => {
     if (!locationUUID) {
       console.error("Missing locationUUID parameter");
       return "";
     }
     
-    const response = await fetch('/api/discord', {
-      method: 'POST',
+    const discord: string | null = await getDiscord(locationUUID);
+
+    return discord;
+};
+
+export const getDiscordSrc = async (invite: string): Promise<Invite | null> => {
+  try {
+    if (!invite) return null;
+
+    // Extract invite code if full URL is provided
+    let inviteCode = invite;
+    if (invite.includes('/')) {
+      const inviteSplit = invite.split('/');
+      inviteCode = inviteSplit[inviteSplit.length-1];
+    }
+
+    // Use your own API endpoint as a proxy instead of calling Discord directly
+    const response = await fetch(`/api/discord-invite?invite=${inviteCode}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ locationUUID }) // Make sure locationUUID is properly passed
+      }
     });
 
     if (!response.ok) {
-      console.error(`Error fetching discord link. Status: ${response.status}`);
-      return "";
+      console.error(`Error fetching invite data. Status: ${response.status}`);
+      return null;
     }
-
+    
     const data = await response.json();
-    return data.discord;
-  } catch (error) {
-    console.error("Error checking discord:", error);
-    return "";
+    return data;
+  } catch (error: any) {
+    console.error('Error fetching discord data:', error);
+    return null;
   }
 };
 

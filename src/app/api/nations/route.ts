@@ -1,3 +1,4 @@
+import { FAKECASCADIA, FAKECUBA, FAKEJAPAN, Nation } from '@/app/lib/types';
 import { NextResponse } from 'next/server';
 
 export async function GET() : Promise<Response>{
@@ -31,6 +32,14 @@ export async function GET() : Promise<Response>{
 export async function POST(request: Request) : Promise<Response>{
   try {
     const body = await request.json();
+    switch(body){
+      case "Cuba":
+        return NextResponse.json(FAKECUBA);
+      case "Japan":
+        return NextResponse.json(FAKEJAPAN);
+      case "Cascadia":
+        return NextResponse.json(FAKECASCADIA);
+    }
     
     const response = await fetch('https://api.earthpol.com/astra/nations', {
       method: 'POST',

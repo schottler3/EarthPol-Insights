@@ -46,13 +46,20 @@ export const setDiscord = async function(uuid: string, locationUUID: string, cod
   }
 }
 
-export const removeDiscord = function(uuid:string){
+export const removeDiscord = async function(uuid:string){
     const locationRef = doc(db, 'discord', uuid);
-    setDoc(locationRef, {discord: null})
+    await setDoc(locationRef, {discord: null});
+    return true;
 }
 
-export const getDiscord = async function(uuid:string){
+export const getDiscord = async function(uuid:string): Promise<string | null>{
     const locationRef = doc(db, 'discord', uuid);
-    return await getDoc(locationRef);
+    const docSnap = await getDoc(locationRef);
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        return data.discord || null;
+    } else {
+        return null;
+    }
 }
 

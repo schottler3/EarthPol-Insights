@@ -2,12 +2,10 @@
 import { Dispatch, SetStateAction } from "react"
 
 export type Nation = {
-    allies: [
-        {
-            name: string,
-            uuid: string
-        }
-    ]
+    allies: {
+        name: string,
+        uuid: string
+    }[]
     board: string;
     capital: {
         name: string,
@@ -23,30 +21,26 @@ export type Nation = {
             yaw: number
         }
     };
-    enemies: [
-        {
-            name: string,
-            uuid: string
-        }
-    ]
+    enemies: {
+        name: string,
+        uuid: string
+    }[]
     king: {
         name: string,
         uuid: string
     };
     name: string;
     ranks: {
-        coleader: [];
-        minister: [];
-        recruiter: [];
-        soldier: [];
-        general: [];
+        "co-leader": { name: string; uuid: string }[];
+        minister: { name: string; uuid: string }[];
+        recruiter: { name: string; uuid: string }[];
+        soldier: { name: string; uuid: string }[];
+        general: { name: string; uuid: string }[];
     };
-    residents: [
-        {
-            name: string,
-            uuid: string
-        }
-    ]
+    residents: {
+        name: string,
+        uuid: string
+    }[]
     sanctioned: string[];
     stats: {
         numTownBlocks: number;
@@ -64,12 +58,10 @@ export type Nation = {
     timestamps: {
         registered: number;
     };
-    towns: [
-        {
-            name: string,
-            uuid: string
-        }
-    ]
+    towns: {
+        name: string,
+        uuid: string
+    }[]
     uuid: string;
 }
 
@@ -85,7 +77,7 @@ export type Town = {
     nation: {
         name: string,
         uuid: string
-    }
+    };
     timestamps: {
         registered: number;
         joinedNationAt?: number;
@@ -167,6 +159,13 @@ export function isNation(item: Town | Nation | null): item is Nation {
   return item !== null && 'towns' in item;
 }
 
+export type Invite = {
+    guildId: string;
+    serverName: string;
+    imageURL: string | null;
+    inviteURL: string;
+};
+
 export const USINGFAKE = true;
 
 export const FAKENATIONS = 
@@ -174,12 +173,19 @@ export const FAKENATIONS =
     {
         "name": "Cuba",
         "uuid": "5eda99c0-e430-4552-abae-4e7604579483"
+    },
+    {
+        "name": "Japan",
+        "uuid": "93f28b00-51ba-43b2-930f-a63e496317a2"
+    },
+    {
+        "name": "Cascadia",
+        "uuid": "e38c9fbc-78d9-4e9b-a90f-870fba949693"
     }
 ]
 
-export const FAKENATION = 
-[
-    {
+export const FAKECUBA: Nation = 
+{
         "name": "Cuba",
         "uuid": "5eda99c0-e430-4552-abae-4e7604579483",
         "board": "Welcome to the Empire of Cuba",
@@ -239,6 +245,10 @@ export const FAKENATION =
         ],
         "allies": [
             {
+                "name": "Cuba",
+                "uuid": "5eda99c0-e430-4552-abae-4e7604579483"
+            },
+            {
                 "name": "Japan",
                 "uuid": "93f28b00-51ba-43b2-930f-a63e496317a2"
             },
@@ -282,7 +292,273 @@ export const FAKENATION =
             ]
         }
     }
-]
+
+export const FAKEJAPAN: Nation = 
+{
+    "name": "Japan",
+    "uuid": "93f28b00-51ba-43b2-930f-a63e496317a2",
+    "board": "Welcome to the Empire of Japan | みなさん、こんにちは！",
+    "king": {
+      "name": "SakuraSan",
+      "uuid": "b71c2a48-3f76-49a2-9e4c-b9826376a8f2"
+    },
+    "capital": {
+      "name": "Tokyo",
+      "uuid": "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3"
+    },
+    "timestamps": {
+      "registered": 1719089562147
+    },
+    "status": {
+      "isPublic": true,
+      "isOpen": true,
+      "isNeutral": false
+    },
+    "stats": {
+      "numTownBlocks": 1587,
+      "numResidents": 23,
+      "numTowns": 4,
+      "numAllies": 5,
+      "numEnemies": 1,
+      "balance": 250.75
+    },
+    "coordinates": {
+      "spawn": {
+        "world": "world",
+        "x": 14582.47,
+        "y": 76.0,
+        "z": -2471.92,
+        "pitch": 12.45,
+        "yaw": -178.32
+      }
+    },
+    "residents": [
+      {
+        "name": "SakuraSan",
+        "uuid": "b71c2a48-3f76-49a2-9e4c-b9826376a8f2"
+      },
+      {
+        "name": "Kitsune42",
+        "uuid": "753cb829-69c4-48c5-9432-8dfa12631d7f"
+      },
+      {
+        "name": "MountFuji",
+        "uuid": "e275d96b-943c-4c7d-a67f-9f49b68f067d"
+      }
+    ],
+    "towns": [
+      {
+        "name": "Tokyo",
+        "uuid": "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3"
+      },
+      {
+        "name": "Kyoto",
+        "uuid": "ae0c6b97-1fd0-443c-bf82-9351b36ffec2"
+      },
+      {
+        "name": "Osaka",
+        "uuid": "d1a27e83-c910-4b86-9b85-1c151cd1b0a5"
+      },
+      {
+        "name": "Hiroshima",
+        "uuid": "6fc59b76-4b5c-414a-9842-cb26f7fbf25d"
+      }
+    ],
+    "allies": [
+      {
+        "name": "Cuba",
+        "uuid": "5eda99c0-e430-4552-abae-4e7604579483"
+      },
+      {
+        "name": "Cascadia",
+        "uuid": "e38c9fbc-78d9-4e9b-a90f-870fba949693"
+      },
+      {
+        "name": "Korea",
+        "uuid": "8af291a4-2d7a-4b86-b578-9a233c691057"
+      }
+    ],
+    "enemies": [
+      {
+        "name": "Mongolia",
+        "uuid": "c741a9c6-e8a7-4158-8c7f-61bd3ee16902"
+      }
+    ],
+    "sanctioned": [],
+    "ranks": {
+      "co-leader": [
+        {
+          "name": "Kitsune42",
+          "uuid": "753cb829-69c4-48c5-9432-8dfa12631d7f"
+        }
+      ],
+      "minister": [
+        {
+          "name": "NinjaWarrior",
+          "uuid": "9f6ed37a-25bf-4a5c-8e75-2f783c42e05f"
+        },
+        {
+          "name": "SamuraiCode",
+          "uuid": "63aa4187-ed9b-4ac6-8074-0fd43cc2c4ea"
+        }
+      ],
+      "recruiter": [
+        {
+          "name": "MountFuji",
+          "uuid": "e275d96b-943c-4c7d-a67f-9f49b68f067d"
+        }
+      ],
+      "soldier": [
+        {
+          "name": "ShogunWarrior",
+          "uuid": "db1a7c93-8942-4b78-9c4d-f5379871a532"
+        }
+      ],
+      "general": [
+        {
+          "name": "Kitsune42",
+          "uuid": "753cb829-69c4-48c5-9432-8dfa12631d7f"
+        }
+      ]
+    }
+  }
+
+export const FAKECASCADIA: Nation = 
+{
+    "name": "Cascadia",
+    "uuid": "e38c9fbc-78d9-4e9b-a90f-870fba949693",
+    "board": "The Pacific Northwest Awaits | Forests, Mountains, Rivers",
+    "king": {
+      "name": "PNWExplorer",
+      "uuid": "4cba82d5-94fa-42f8-b7a7-83d9c06e3f6b"
+    },
+    "capital": {
+      "name": "Portland",
+      "uuid": "a7c891f6-7d3e-495b-b276-c4a7328ab9e1"
+    },
+    "timestamps": {
+      "registered": 1719235614783
+    },
+    "status": {
+      "isPublic": true,
+      "isOpen": true,
+      "isNeutral": true
+    },
+    "stats": {
+      "numTownBlocks": 832,
+      "numResidents": 18,
+      "numTowns": 5,
+      "numAllies": 4,
+      "numEnemies": 0,
+      "balance": 183.25
+    },
+    "coordinates": {
+      "spawn": {
+        "world": "world",
+        "x": -12483.52,
+        "y": 68.0,
+        "z": -4219.18,
+        "pitch": -5.78,
+        "yaw": 92.46
+      }
+    },
+    "residents": [
+      {
+        "name": "PNWExplorer",
+        "uuid": "4cba82d5-94fa-42f8-b7a7-83d9c06e3f6b"
+      },
+      {
+        "name": "ForestKeeper",
+        "uuid": "37d9e142-5b76-4a3d-9e4c-61af8f8693a2"
+      },
+      {
+        "name": "RiverGuide",
+        "uuid": "ba1f63c8-9371-47d5-b89e-32f47582d841"
+      }
+    ],
+    "towns": [
+      {
+        "name": "Portland",
+        "uuid": "a7c891f6-7d3e-495b-b276-c4a7328ab9e1"
+      },
+      {
+        "name": "Seattle",
+        "uuid": "f25acd71-9e38-4712-89b4-f24a963c320e"
+      },
+      {
+        "name": "Vancouver",
+        "uuid": "28e7bf61-5923-4d8a-b1c7-63df8927e932"
+      },
+      {
+        "name": "Eugene",
+        "uuid": "9b731c82-4b5d-48a1-87d3-cb83e518ab75"
+      },
+      {
+        "name": "Bellingham",
+        "uuid": "d37cb216-79e2-4834-8b67-1a192d8f862f"
+      }
+    ],
+    "allies": [
+      {
+        "name": "Cuba",
+        "uuid": "5eda99c0-e430-4552-abae-4e7604579483"
+      },
+      {
+        "name": "Japan",
+        "uuid": "93f28b00-51ba-43b2-930f-a63e496317a2"
+      },
+      {
+        "name": "California",
+        "uuid": "2c95f4e7-38c9-4c8a-b23d-3d3465921b18"
+      },
+      {
+        "name": "Alaska",
+        "uuid": "f6d82c7f-52a1-47b9-8324-a531e7c4b517"
+      }
+    ],
+    "enemies": [],
+    "sanctioned": [],
+    "ranks": {
+      "co-leader": [
+        {
+          "name": "ForestKeeper",
+          "uuid": "37d9e142-5b76-4a3d-9e4c-61af8f8693a2"
+        }
+      ],
+      "minister": [
+        {
+          "name": "RiverGuide",
+          "uuid": "ba1f63c8-9371-47d5-b89e-32f47582d841"
+        },
+        {
+          "name": "MountainClimber",
+          "uuid": "5d7845f9-c2a6-4f83-b758-c32e761af9d4"
+        }
+      ],
+      "recruiter": [
+        {
+          "name": "ForestKeeper",
+          "uuid": "37d9e142-5b76-4a3d-9e4c-61af8f8693a2"
+        }
+      ],
+      "soldier": [
+        {
+          "name": "PacificDefender",
+          "uuid": "1a8b72c5-e96d-4973-8462-d27f8ab95e18"
+        },
+        {
+          "name": "CoastalGuard",
+          "uuid": "73e894f2-57b1-49d5-ba8c-fd3a95e2782f"
+        }
+      ],
+      "general": [
+        {
+          "name": "RainCity",
+          "uuid": "29e47b48-c631-4958-b07e-814e218ab5a9"
+        }
+      ]
+    }
+  }
 
 export const FAKETOWN = 
 [

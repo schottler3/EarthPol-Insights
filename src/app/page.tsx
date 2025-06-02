@@ -2,17 +2,15 @@
 import { useEffect, useRef, useState } from "react"
 import NationItem from "./components/NationItem";
 import Header from "./components/Header";
-import { FAKENATIONS, isTown, Nation, Town } from "./lib/types";
-import Verifier from "./components/Verifier";
+import { FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/types";
 import NationPage from "./components/NationPage";
 import TownPage from "./components/TownPage";
 
 interface NationItem {
   index: number;
   name: string;
+  uuid: string;
 }
-
-const usingFake: boolean = true;
 
 export default function EarthPol() {
 
@@ -23,7 +21,7 @@ export default function EarthPol() {
     const [selectedItem, setSelectedItem] = useState<Nation | Town | null>(null);
 
     useEffect(() => {
-        if(usingFake){
+        if(USINGFAKE){
             setNations(FAKENATIONS.map((nation, index) => ({
                 ...nation,
                 index
@@ -64,7 +62,7 @@ export default function EarthPol() {
                     
             </Header>
             
-            <div className="bg-charcoal pt-20 min-h-screen oswald-earth">
+            <div className="bg-charcoal pt-20 min-h-screen h-screen oswald-earth overflow-y-scroll no-scrollbar">
                 {loading ? (
                     <div className="text-white p-4">Loading...</div>
                 ) : error ? (
@@ -99,6 +97,7 @@ export default function EarthPol() {
                                         <NationItem
                                             key={index}
                                             name={item.name}
+                                            uuid={item.uuid}
                                             collapse={expanded}
                                             selectedItem={selectedItem}
                                             setSelectedItem={setSelectedItem}
@@ -114,10 +113,12 @@ export default function EarthPol() {
                                         {isTown(selectedItem) ? 
                                             <TownPage
                                                 townData={selectedItem}
+                                                setSelectedItem={setSelectedItem}
                                             />
                                             :
                                             <NationPage
                                                 nationData={selectedItem}
+                                                setSelectedItem={setSelectedItem}
                                             />
                                         }
                                     </div>

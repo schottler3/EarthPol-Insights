@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Nation, Town } from "../lib/types";
+import { Nation, ReactStateHandler, Town } from "../lib/types";
 import Verifier from "./Verifier";
-import { checkDiscord } from "../lib/queries";
+import { checkDiscord, renderSkin } from "../lib/queries";
+import LocationItem from "./LocationItem";
+import Player from "./Player";
 
-export default function NationPage({nationData}: {nationData: Nation}){
+export default function NationPage({nationData, setSelectedItem}: {nationData: Nation, setSelectedItem: ReactStateHandler}){
 
     const [isVerifying, setIsVerifying] = useState<boolean>(false);
     const verifierRef = useRef<HTMLDivElement>(null);
@@ -30,7 +32,7 @@ export default function NationPage({nationData}: {nationData: Nation}){
                 console.log("Discord link: " + discordLink);
             });
 
-        }, [nationData, discordLink]);
+        }, [nationData]);
     
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -96,9 +98,35 @@ export default function NationPage({nationData}: {nationData: Nation}){
                         <path d="M0.226497 6L6 11.7735L11.7735 6L6 0.226497L0.226497 6ZM179.774 6L174 0.226497L168.226 6L174 11.7735L179.774 6ZM6 6V7H174V6V5H6V6Z" fill="white"/>
                     </svg>
                 </div>
-                    <div className="text-gray-400">
-                        {nationData.board}
+                <div className="text-gray-400">
+                    {nationData.board}
+                </div>
+                <div className="flex gap-4 hover:cursor-pointer">
+                    <div className="has-tooltip">
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Town Blocks</span>
+                        {nationData.stats.numTownBlocks}
                     </div>
+                    <div className="has-tooltip">
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Residents</span>
+                        {nationData.stats.numResidents}
+                    </div>
+                    <div className="has-tooltip">
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Towns</span>
+                        {nationData.stats.numTowns}
+                    </div>
+                    <div className="has-tooltip">
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Allies</span>
+                        {nationData.stats.numAllies}
+                    </div>
+                    <div className="has-tooltip">
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Enemies</span>
+                        {nationData.stats.numEnemies}
+                    </div>
+                    <div className="has-tooltip">
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Balance</span>
+                        ${nationData.stats.balance}
+                    </div>
+                </div>
             </div>
             <div className="grid grid-cols-2 gap-8 mt-8">
                 <div className="flex flex-col gap-4"> 
@@ -106,8 +134,20 @@ export default function NationPage({nationData}: {nationData: Nation}){
                         <div className="font-bold text-2xl">
                             Capital: {nationData.capital.name}
                         </div>
-                        <div className="text-sm italic text-gray-400">
-                            {`${Math.floor(nationData.coordinates.spawn.x)}, ${Math.floor(nationData.coordinates.spawn.y)}, ${Math.floor(nationData.coordinates.spawn.z)}`}
+                        <div className="flex text-sm italic text-gray-400 gap-4">
+                            <div className="">
+                                {`${Math.floor(nationData.coordinates.spawn.x)}, ${Math.floor(nationData.coordinates.spawn.y)}, ${Math.floor(nationData.coordinates.spawn.z)}`}
+                            </div>
+                            <div className="has-tooltip hover:cursor-pointer">
+                                <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-28 ml-8 rounded-t-md rounded-br-md">Founded</span>
+                                {new Date(nationData.timestamps.registered).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </div>
                         </div>
                     </div>
                     <div className="flex flex-col">
@@ -115,89 +155,153 @@ export default function NationPage({nationData}: {nationData: Nation}){
                         </iframe>
                         <a className="text-sm text-gray-400" target="none" href={`https://earthpol.com/map/#world:${nationData.coordinates.spawn.x}:0:${nationData.coordinates.spawn.z}:500:0:0:0:1:flat`}>Map Link</a>
                     </div>
-                </div>
-                <div className="flex flex-col items-center text-md">
-                    <div className="flex flex-col">
-                        <h1>
-                            Allies:
-                        </h1>
-                        <div className="flex flex-row">
-                            {nationData.allies?.map((ally: {name: string, uuid: string}) => (
-                                <div key={`${nationData.name}-ally-${ally.uuid}`}>
-                                    {ally.name}
-                                </div>
+                    <div className="flex flex-col gap-4">
+                        <h1 className="text-2xl text-blue1">Towns</h1>
+                        <div className="grid grid-cols-8">
+                            {nationData.towns?.map((town: {name: string, uuid: string}) => (
+                                <LocationItem
+                                    key={`${nationData.name}-town-${town.uuid}`}
+                                    name={town.name}
+                                    uuid={town.uuid}
+                                    setSelectedItem={setSelectedItem}
+                                >
+                                </LocationItem>
                             ))}
                         </div>
                     </div>
-                    <div>
-                        {nationData.enemies?.map((enemy: {name: string, uuid: string}) => (
-                            <div key={`${nationData.name}-enemy-${enemy.uuid}`}>
-                                {enemy.name}
-                            </div>
+                </div>
+                <div className="flex flex-col items-left text-md ml-8">
+
+                    <div className="flex flex-row items-center gap-4">
+                        <h1 className="text-2xl text-blue1">Leader</h1>
+                        <Player
+                            name={nationData.king.name}
+                            uuid={nationData.king.uuid}
+                        ></Player>
+                    </div>
+                    
+                    {nationData.allies?.length > 0 ?
+                    (
+                    <div className="flex flex-row items-center gap-4">
+                        <h1 className="text-2xl text-blue1">
+                            Allies
+                        </h1>
+                        <div className="flex flex-row gap-4 p-4 max-w-[50vw] overflow-x-scroll no-scrollbar">
+                            {!isLoadingDiscord ? 
+                                nationData.allies?.map((ally: {name: string, uuid: string}) => (
+                                    <LocationItem
+                                        key={`${nationData.name}-ally-${ally.uuid}`}
+                                        name={ally.name}
+                                        uuid={ally.uuid}
+                                        setSelectedItem={setSelectedItem}
+                                    ></LocationItem>
+                                ))
+                                :
+                                null
+                            }
+                        </div>
+                    </div>
+                    )
+                    :
+                    null}
+                    
+                    {nationData.enemies?.length > 0 ?
+                    (
+                    <div className="flex flex-row items-center gap-4">
+                        <h1 className="text-2xl text-blue1">
+                            Enemies
+                        </h1>
+                        <div className="flex flex-row gap-4 p-4 max-w-[50vw] overflow-x-scroll no-scrollbar">
+                            {!isLoadingDiscord ? 
+                                nationData.enemies?.map((enemy: {name: string, uuid: string}) => (
+                                    <LocationItem
+                                        key={`${nationData.name}-ally-${enemy.uuid}`}
+                                        name={enemy.name}
+                                        uuid={enemy.uuid}
+                                        setSelectedItem={setSelectedItem}
+                                    ></LocationItem>
+                                ))
+                                :
+                                null
+                            }
+                        </div>
+                    </div>
+                    )
+                    :
+                    null}
+                    
+                    <div className="flex gap-4 items-center">
+                        <h1 className="text-2xl text-blue1">Coleaders</h1>
+                        {nationData.ranks["co-leader"]?.map((coleader: {name: string, uuid: string}) => (
+                            <Player
+                                key={`${nationData.name}-coleader-${coleader.uuid}`}
+                                name={coleader.name}
+                                uuid={coleader.uuid}
+                            >
+                            </Player>
                         ))}
                     </div>
-                    <div>
-                        {nationData.king.name}
-                    </div>
-                    <div>
-                        {nationData.ranks.coleader?.map((coleader: {name: string, uuid: string}) => (
-                            <div key={`${nationData.name}-coleader-${coleader.uuid}`}>
-                                {coleader.name}
-                            </div>
-                        ))}
-                    </div>
-                    <div>
+
+                    <div className="flex gap-4 items-center">
+                        <h1 className="text-2xl text-blue1">Ministers</h1>
                         {nationData.ranks.minister?.map((minister: {name: string, uuid: string}) => (
-                            <div key={`${nationData.name}-minister-${minister.uuid}`}>
-                                {minister.name}
-                            </div>
+                            <Player
+                                key={`${nationData.name}-minister-${minister.uuid}`}
+                                name={minister.name}
+                                uuid={minister.uuid}
+                            >
+                            </Player>
                         ))}
                     </div>
-                    <div>
+
+                    <div className="flex gap-4 items-center">
+                        <h1 className="text-2xl text-blue1">Recruiters</h1>
                         {nationData.ranks.recruiter?.map((recruiter: {name: string, uuid: string}) => (
-                            <div key={`${nationData.name}-recruiter-${recruiter.uuid}`}>
-                                {recruiter.name}
-                            </div>
+                            <Player
+                                key={`${nationData.name}-recruiter-${recruiter.uuid}`}
+                                name={recruiter.name}
+                                uuid={recruiter.uuid}
+                            >
+                            </Player>
                         ))}
                     </div>
-                    <div>
+
+                    <div className="flex gap-4 items-center">
+                        <h1 className="text-2xl text-blue1">Soldiers</h1>
                         {nationData.ranks.soldier?.map((soldier: {name: string, uuid: string}) => (
-                            <div key={`${nationData.name}-soldier-${soldier.uuid}`}>
-                                {soldier.name}
-                            </div>
+                            <Player
+                                key={`${nationData.name}-soldier-${soldier.uuid}`}
+                                name={soldier.name}
+                                uuid={soldier.uuid}
+                            >
+                            </Player>
                         ))}
                     </div>
-                    <div>
-                        {nationData.ranks.general?.map((general: {name: string, uuid: string}) => (
-                            <div key={`${nationData.name}-general-${general.uuid}`}>
-                                {general.name}
-                            </div>
+
+                    <div className="flex gap-4 items-center">
+                        <h1 className="text-2xl text-blue1">Generals</h1>
+                        {nationData.ranks.soldier?.map((general: {name: string, uuid: string}) => (
+                            <Player
+                                key={`${nationData.name}-general-${general.uuid}`}
+                                name={general.name}
+                                uuid={general.uuid}
+                            >
+                            </Player>
                         ))}
                     </div>
-                    <div>
-                        {nationData.residents?.map((resident: {name: string, uuid: string}) => (
-                            <div key={`${nationData.name}-resident-${resident.uuid}`}>
-                                {resident.name}
-                            </div>
-                        ))}
-                    </div>
-                    <div>
-                        {nationData.stats.numTownBlocks}
-                    </div>
-                    <div>
-                        {nationData.stats.numResidents}
-                    </div>
-                    <div>
-                        {nationData.stats.numTowns}
-                    </div>
-                    <div>
-                        {nationData.stats.numAllies}
-                    </div>
-                    <div>
-                        {nationData.stats.numEnemies}
-                    </div>
-                    <div>
-                        {nationData.stats.balance}
+
+                    <div className="flex flex-col py-4">
+                        <h1 className="text-2xl text-blue1">Residents:</h1>
+                        <div className="grid grid-cols-6 gap-8">
+                            {nationData.residents?.map((resident: {name: string, uuid: string}) => (
+                                <Player
+                                    key={`${nationData.name}-resident-${resident.uuid}`}
+                                    name={resident.name}
+                                    uuid={resident.uuid}
+                                >
+                                </Player>
+                            ))}
+                        </div>
                     </div>
                     <div>
                         {nationData.status.isPublic}
@@ -207,16 +311,6 @@ export default function NationPage({nationData}: {nationData: Nation}){
                     </div>
                     <div>
                         {nationData.status.isNeutral}
-                    </div>
-                    <div>
-                        {nationData.timestamps.registered}
-                    </div>
-                    <div>
-                        {nationData.towns?.map((town: {name: string, uuid: string}) => (
-                            <div key={`${nationData.name}-${town.uuid}`}>
-                                {town.name}
-                            </div>
-                        ))}
                     </div>
                 </div>
             </div>
