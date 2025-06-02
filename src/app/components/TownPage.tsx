@@ -1,6 +1,6 @@
-import { Town } from "../types";
+import { ReactStateHandler, Town } from "../lib/types";
 
-export default function TownPage({townData}: {townData: Town}){
+export default function TownPage({townData, setSelectedItem}: {townData: Town, setSelectedItem: ReactStateHandler}){
     return (
         <div>
             

@@ -26,186 +26,6 @@
 
 /* End Global */
 
-/* Home */
-
-@keyframes movement {
-  0% {
-      transform: translateY(-10vh) translateX(16vw) rotate(0deg);
-  }
-  100% {
-      transform: translateY(50vh) translateX(-16vw) rotate(360deg);
-  }
-}
-
-@keyframes fadeInOut {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.snowflake {
-  will-change: transform, opacity;
-  transition: opacity 2s ease-in-out;
-  position: absolute;
-  background-image: url('/images/snowflake.png');
-}
-
-.snowflake::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url(/images/snowflake.svg);
-  background-size: contain;
-  animation: fadeInOut var(--fall-duration) linear infinite;
-}
-
-.snowflake.clicked {
-  opacity: 0 !important;
-  pointer-events: none;
-}
-
-/* End Home */
-
-/* About */
-@keyframes mainPulse {
-  0% {
-    background-position: 0 -50%;
-  }
-  100% {
-    background-position: 0 150%;
-  }
-}
-
-.timeline-pulse {
-  background: linear-gradient(
-    to bottom,
-    white 0%,
-    white 20%,
-    rgb(158, 239, 229) 40%,
-    rgb(158, 239, 229) 50%,
-    white 80%,
-    white 100%
-  );
-  background-size: 100% 50%;
-  animation: mainPulse 32s linear infinite;
-}
-
-/* End About */
-
-/* Contact */
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  49% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  99% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes highlightText {
-  0% {
-    background: linear-gradient(to right, #4F7CAC 50%, transparent 50%);
-    background-size: 200% 100%;
-    background-position: 100% 0;
-  }
-  100% {
-    background: linear-gradient(to right, #4F7CAC 50%, transparent 50%);
-    background-size: 200% 100%;
-    background-position: 0 0;
-  }
-}
-
-.lightLine {
-  animation: highlightText .25s ease forwards;
-}
-
-.cursorBlink {
-  animation: blink 1s linear infinite;
-  transition: opacity 0.3s ease;
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-.hideCursor {
-  animation: fadeOut 1s forwards;
-  opacity: 0;
-}
-
-@keyframes ambient {
-  0% {
-    translate: 0 0;
-  }
-  20% {
-    translate: var(--random-x, 10px) var(--random-y, 10px);
-  }
-  40% {
-    translate: var(--random-y, 10px) var(--random-x, 10px);
-  }
-  60% {
-    translate: calc(var(--random-x, 10px) * -1) calc(var(--random-y, 10px) * -1);
-  }
-  80% {
-    translate: calc(var(--random-y, 10px) * -1) calc(var(--random-x, 10px) * -1);
-  }
-  100% {
-    translate: 0 0;
-  }
-}
-
-.disk {
-  transform-style: preserve-3d;
-  transition: transform 0.6s;
-  perspective: 1000px;
-}
-
-.disk-front, .disk-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-}
-
-.disk-back {
-  transform: rotateY(180deg);
-}
-
-.bubble {
-  animation: ambient 32s cubic-bezier(0.45, 0.05, 0.55, 0.95) alternate infinite;
-}
-
-.flipped {
-  transform: rotateY(180deg);
-}
-
-.popBlue {
-  background-color: rgb(158, 239, 229);
-  transition: background-color 0.2s ease;
-}
-
-.popAqua {
-  background-color: #4F7CAC;
-  transition: background-color 0.2s ease;
-}
-/* End Contact */
-
 /* Earthpol */
 
 @layer utilities {
@@ -219,6 +39,14 @@
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
+}
+
+.tooltip {
+  @apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+  @apply visible fixed z-50;
 }
 
 

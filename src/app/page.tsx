@@ -1,18 +1,16 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import NationItem from "./components/NationItem";
 import Header from "./components/Header";
-import { FAKENATIONS, isTown, Nation, Town } from "./types";
-import Verifier from "./components/Verifier";
+import { FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/types";
 import NationPage from "./components/NationPage";
 import TownPage from "./components/TownPage";
 
 interface NationItem {
   index: number;
   name: string;
+  uuid: string;
 }
-
-const usingFake: boolean = true;
 
 export default function EarthPol() {
 
@@ -21,10 +19,9 @@ export default function EarthPol() {
     const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<Nation | Town | null>(null);
-    const [isVerifying, setIsVerifying] = useState<boolean>(false);
 
     useEffect(() => {
-        if(usingFake){
+        if(USINGFAKE){
             setNations(FAKENATIONS.map((nation, index) => ({
                 ...nation,
                 index
@@ -59,33 +56,13 @@ export default function EarthPol() {
         }
     }, [])
 
-    useEffect(() => {
-        // This will run whenever selectedItem changes
-        console.log("Selected item changed to:", selectedItem?.name);
-        
-        // Close the verifier if it's open
-        if (isVerifying) {
-            console.log("Closing verifier due to selectedItem change");
-            setIsVerifying(false);
-        }
-    }, [selectedItem]);
-
     return (
         <>
             <Header>
                     
             </Header>
             
-            <div className="bg-charcoal pt-20 min-h-screen oswald-earth">
-                {isVerifying && selectedItem ? (
-                    <Verifier
-                        uuid={isTown(selectedItem) ? selectedItem?.mayor?.uuid : selectedItem?.king?.uuid}
-                    >
-                    </Verifier>
-                ) :
-                (
-                    null
-                )}
+            <div className="bg-charcoal pt-20 min-h-screen h-screen oswald-earth overflow-y-scroll no-scrollbar">
                 {loading ? (
                     <div className="text-white p-4">Loading...</div>
                 ) : error ? (
@@ -97,7 +74,7 @@ export default function EarthPol() {
                         <h1>appears to be down :(</h1>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-[20%_80%] h-screen">
+                    <div className="grid grid-cols-[20%_80%] h-screen w-full">
                         <div className="flex justify-center pt-10">
                             <div className="flex flex-col overflow-y-scroll no-scrollbar">
                                 <div className="text-white hover:cursor-pointer flex items-center gap-2" onClick={() => setExpanded(!expanded)}>
@@ -120,6 +97,7 @@ export default function EarthPol() {
                                         <NationItem
                                             key={index}
                                             name={item.name}
+                                            uuid={item.uuid}
                                             collapse={expanded}
                                             selectedItem={selectedItem}
                                             setSelectedItem={setSelectedItem}
@@ -128,20 +106,19 @@ export default function EarthPol() {
                                 }
                             </div>
                         </div>
-                        <div className="bg-navy overflow-y-scroll">
+                        <div className="bg-navy overflow-y-scroll no-scrollbar">
                             {selectedItem ? 
                                 <>
-                                    <div onClick={() => setIsVerifying(!isVerifying)} className="text-white text-md font-bold absolute top-24 right-6 p-2 bg-blue1 rounded-md hover:cursor-pointer">
-                                        Your {isTown(selectedItem) ? "town" : "nation"}?
-                                    </div>
-                                    <div className="bg-navy pt-8 text-white flex justify-center text-4xl">
+                                    <div className="bg-navy pt-8 text-white flex justify-center">
                                         {isTown(selectedItem) ? 
                                             <TownPage
                                                 townData={selectedItem}
+                                                setSelectedItem={setSelectedItem}
                                             />
                                             :
                                             <NationPage
                                                 nationData={selectedItem}
+                                                setSelectedItem={setSelectedItem}
                                             />
                                         }
                                     </div>

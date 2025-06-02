@@ -1,9 +1,9 @@
 import { useState, useEffect} from "react";
-import {Town, type Nation, type ReactStateHandler} from "../types";
-import { renderNation } from "../queries";
+import {Town, type Nation, type ReactStateHandler} from "../lib/types";
+import { renderNation } from "../lib/queries";
 import TownItem from "./TownItem";
 
-export default function NationItem({ name, collapse, selectedItem, setSelectedItem}: { name: string, collapse: boolean, selectedItem:Nation | Town | null, setSelectedItem: ReactStateHandler}) {
+export default function NationItem({ name, uuid, collapse, selectedItem, setSelectedItem}: { name: string, uuid:string, collapse: boolean, selectedItem:Nation | Town | null, setSelectedItem: ReactStateHandler}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [towns, setTowns] = useState<{name: string}[] | null>(null);
@@ -19,8 +19,8 @@ export default function NationItem({ name, collapse, selectedItem, setSelectedIt
         setLoading(true);
         setError(null);
 
-        renderNation(name).then((nationObject) => {
-            setNationData(nationObject);
+        renderNation(uuid, false).then((locationObject) => {
+            setNationData(locationObject as Nation);
         })
 
         setLoading(false);
@@ -74,7 +74,7 @@ export default function NationItem({ name, collapse, selectedItem, setSelectedIt
                 >
                     {loading && <div className="pl-2">Loading...</div>}
                     {error && <div className="pl-2 text-red-500">{error}</div>}
-                    {nationData && nationData.towns.length > 0 && (
+                    {nationData && nationData.towns && nationData.towns.length > 0 && (
                     <div className="text-gray-400 mb-2">
                         <div className="text-lg italic">Member Towns:</div>
                         {nationData?.towns.map((item: any, index: number) => (
@@ -84,6 +84,7 @@ export default function NationItem({ name, collapse, selectedItem, setSelectedIt
                                     >
                                     <TownItem
                                         name={item.name}
+                                        uuid={item.uuid}
                                         key={`town-${item.name}`}
                                         selectedItem={selectedItem}
                                         setSelectedItem={setSelectedItem}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Nation, Player, ReactStateHandler, Town } from "../types";
-import { renderSkin, renderTown} from "../queries";
+import { Nation, Player, ReactStateHandler, Town } from "../lib/types";
+import { renderSkin, renderTown} from "../lib/queries";
 
-export default function TownItem({name, selectedItem, setSelectedItem}: {name:string, selectedItem:Nation | Town | null, setSelectedItem:ReactStateHandler}) {
+export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {name:string, uuid:string, selectedItem:Nation | Town | null, setSelectedItem:ReactStateHandler}) {
 
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [players, setPlayers] = useState<{"name": string, "uuid":string}[] | null>(null);
@@ -20,9 +20,9 @@ export default function TownItem({name, selectedItem, setSelectedItem}: {name:st
                 setLoading(true);
                 setError(null);
                 
-                const townObject = await renderTown(name);
+                //const locationObject = await renderTown(uuid, true);
                 //console.log("Town data received:", townObject);
-                setTownData(townObject);
+                //setTownData(locationObject as Town);
                 
             } catch (err) {
                 console.error("Error fetching town data:", err);
