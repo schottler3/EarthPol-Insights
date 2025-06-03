@@ -55,7 +55,7 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
     }, [isVerifying]);
 
     return (
-        <div className="w-full px-8 mt-8">
+        <div className="w-full px-8 mt-8 h-screen">
             {isVerifying && nationData ? (
                 <div ref={verifierRef}>
                     <Verifier
@@ -292,7 +292,7 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
 
                     <div className="flex flex-col py-4">
                         <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="grid grid-cols-6 gap-8">
+                        <div className="flex flex-row gap-4">
                             {nationData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${nationData.name}-resident-${resident.uuid}`}

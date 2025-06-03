@@ -140,13 +140,57 @@ export type Town = {
 }
 
 export type Player = {
-  id: string;
-  name: string;
-  properties: {
     name: string;
-    value: string;
-  }[];
-  profileActions: any[];
+    uuid: string;
+    title: string | null;
+    surname: string | null;
+    formattedName: string;
+    about: string | null;
+    town: {
+        name: string;
+        uuid: string;
+    } | null;
+    nation: {
+        name: string;
+        uuid: string;
+    } | null;
+    timestamps: {
+        registered: number;
+        joinedTownAt: number | null;
+        lastOnline: number;
+    };
+    status: {
+        isOnline: boolean;
+        isNPC: boolean;
+        isMayor: boolean;
+        isKing: boolean;
+        hasTown: boolean;
+        hasNation: boolean;
+    };
+    stats: {
+        balance: number;
+        numFriends: number;
+    };
+    perms: {
+        build: boolean[];
+        destroy: boolean[];
+        switch: boolean[];
+        itemUse: boolean[];
+        flags: {
+            pvp: boolean;
+            explosion: boolean;
+            fire: boolean;
+            mobs: boolean;
+        };
+    };
+    ranks: {
+        townRanks: string[];
+        nationRanks: string[];
+    };
+    friends: {
+        name: string;
+        uuid: string;
+    }[];
 }
 
 export type ReactStateHandler = Dispatch<SetStateAction<Nation | Town | null>>;
@@ -1125,3 +1169,318 @@ export const FAKETOWN =
         }
     }
 ]
+
+export const FAKEPLAYERS = [
+  // Cuban leader
+  {
+    "name": "jhjhjh098k",
+    "uuid": "9a2657ea-e15c-4469-8886-6c101151eff0",
+    "title": "El Presidente",
+    "surname": "de Cuba",
+    "formattedName": "El Presidente jhjhjh098k de Cuba",
+    "about": "Leading the glorious revolution in the Caribbean since 2023! ¡Viva la Cuba!",
+    "town": {
+      "name": "Havana",
+      "uuid": "ff50d039-669d-413e-84e0-18c3fd370ea3"
+    },
+    "nation": {
+      "name": "Cuba",
+      "uuid": "5eda99c0-e430-4552-abae-4e7604579483"
+    },
+    "timestamps": {
+      "registered": 1719014000000,
+      "joinedTownAt": 1719014016273,
+      "lastOnline": 1717894650000
+    },
+    "status": {
+      "isOnline": true,
+      "isNPC": false,
+      "isMayor": true,
+      "isKing": true,
+      "hasTown": true,
+      "hasNation": true
+    },
+    "stats": {
+      "balance": 358.42,
+      "numFriends": 7
+    },
+    "perms": {
+      "build": [true, true, true, true],
+      "destroy": [true, true, true, true],
+      "switch": [true, true, true, true],
+      "itemUse": [true, true, true, true],
+      "flags": {
+        "pvp": true,
+        "explosion": false,
+        "fire": false,
+        "mobs": true
+      }
+    },
+    "ranks": {
+      "townRanks": ["mayor"],
+      "nationRanks": ["king"]
+    },
+    "friends": [
+      {
+        "name": "MrTytanic",
+        "uuid": "d904bb76-412d-4f6a-af9f-13853b5fc614"
+      },
+      {
+        "name": "schottler3",
+        "uuid": "2f6f620b-6d60-4c89-bd50-974aff8da13f"
+      }
+    ]
+  },
+  
+  // Japanese leader
+  {
+    "name": "SakuraSan",
+    "uuid": "b71c2a48-3f76-49a2-9e4c-b9826376a8f2",
+    "title": "Emperor",
+    "surname": "of the Rising Sun",
+    "formattedName": "Emperor SakuraSan of the Rising Sun",
+    "about": "Bringing honor and prosperity to the Empire of Japan. 日本へようこそ!",
+    "town": {
+      "name": "Tokyo",
+      "uuid": "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3"
+    },
+    "nation": {
+      "name": "Japan",
+      "uuid": "93f28b00-51ba-43b2-930f-a63e496317a2"
+    },
+    "timestamps": {
+      "registered": 1719089000000,
+      "joinedTownAt": 1719089462147,
+      "lastOnline": 1719289000000
+    },
+    "status": {
+      "isOnline": true,
+      "isNPC": false,
+      "isMayor": true,
+      "isKing": true,
+      "hasTown": true,
+      "hasNation": true
+    },
+    "stats": {
+      "balance": 425.75,
+      "numFriends": 5
+    },
+    "perms": {
+      "build": [true, true, true, true],
+      "destroy": [true, true, true, true],
+      "switch": [true, true, true, true],
+      "itemUse": [true, true, true, true],
+      "flags": {
+        "pvp": true,
+        "explosion": false,
+        "fire": false,
+        "mobs": true
+      }
+    },
+    "ranks": {
+      "townRanks": ["mayor"],
+      "nationRanks": ["king"]
+    },
+    "friends": [
+      {
+        "name": "Kitsune42",
+        "uuid": "753cb829-69c4-48c5-9432-8dfa12631d7f"
+      },
+      {
+        "name": "MountFuji",
+        "uuid": "e275d96b-943c-4c7d-a67f-9f49b68f067d"
+      }
+    ]
+  },
+  
+  // Cascadia leader
+  {
+    "name": "PNWExplorer",
+    "uuid": "4cba82d5-94fa-42f8-b7a7-83d9c06e3f6b",
+    "title": "President",
+    "surname": "of Cascadia",
+    "formattedName": "President PNWExplorer of Cascadia",
+    "about": "Leading the Pacific Northwest into a sustainable future of peace and conservation.",
+    "town": {
+      "name": "Portland",
+      "uuid": "a7c891f6-7d3e-495b-b276-c4a7328ab9e1"
+    },
+    "nation": {
+      "name": "Cascadia",
+      "uuid": "e38c9fbc-78d9-4e9b-a90f-870fba949693"
+    },
+    "timestamps": {
+      "registered": 1719230000000,
+      "joinedTownAt": 1719230614783,
+      "lastOnline": 1719300000000
+    },
+    "status": {
+      "isOnline": false,
+      "isNPC": false,
+      "isMayor": true,
+      "isKing": true,
+      "hasTown": true,
+      "hasNation": true
+    },
+    "stats": {
+      "balance": 278.50,
+      "numFriends": 8
+    },
+    "perms": {
+      "build": [true, true, true, true],
+      "destroy": [true, true, true, true],
+      "switch": [true, true, true, true],
+      "itemUse": [true, true, true, true],
+      "flags": {
+        "pvp": false,
+        "explosion": false,
+        "fire": false,
+        "mobs": true
+      }
+    },
+    "ranks": {
+      "townRanks": ["mayor"],
+      "nationRanks": ["king"]
+    },
+    "friends": [
+      {
+        "name": "ForestKeeper",
+        "uuid": "37d9e142-5b76-4a3d-9e4c-61af8f8693a2"
+      },
+      {
+        "name": "RiverGuide",
+        "uuid": "ba1f63c8-9371-47d5-b89e-32f47582d841"
+      },
+      {
+        "name": "RainCity",
+        "uuid": "29e47b48-c631-4958-b07e-814e218ab5a9"
+      }
+    ]
+  },
+  
+  // Regular player (Seattle mayor)
+  {
+    "name": "RainCity",
+    "uuid": "29e47b48-c631-4958-b07e-814e218ab5a9",
+    "title": null,
+    "surname": "the Emerald",
+    "formattedName": "RainCity the Emerald",
+    "about": "Builder of Seattle and coffee enthusiast. Rainy days are the best days!",
+    "town": {
+      "name": "Seattle",
+      "uuid": "f25acd71-9e38-4712-89b4-f24a963c320e"
+    },
+    "nation": {
+      "name": "Cascadia",
+      "uuid": "e38c9fbc-78d9-4e9b-a90f-870fba949693"
+    },
+    "timestamps": {
+      "registered": 1719233000000,
+      "joinedTownAt": 1719233614783,
+      "lastOnline": 1719294000000
+    },
+    "status": {
+      "isOnline": true,
+      "isNPC": false,
+      "isMayor": true,
+      "isKing": false,
+      "hasTown": true,
+      "hasNation": true
+    },
+    "stats": {
+      "balance": 178.25,
+      "numFriends": 4
+    },
+    "perms": {
+      "build": [true, true, true, true],
+      "destroy": [true, true, true, true],
+      "switch": [true, true, true, true],
+      "itemUse": [true, true, true, true],
+      "flags": {
+        "pvp": false,
+        "explosion": false,
+        "fire": false,
+        "mobs": false
+      }
+    },
+    "ranks": {
+      "townRanks": ["mayor"],
+      "nationRanks": ["general"]
+    },
+    "friends": [
+      {
+        "name": "PNWExplorer",
+        "uuid": "4cba82d5-94fa-42f8-b7a7-83d9c06e3f6b"
+      },
+      {
+        "name": "CoastalGuard",
+        "uuid": "73e894f2-57b1-49d5-ba8c-fd3a95e2782f"
+      }
+    ]
+  },
+  
+  // Regular player (Tokyo resident)
+  {
+    "name": "Kitsune42",
+    "uuid": "753cb829-69c4-48c5-9432-8dfa12631d7f",
+    "title": "Shogun",
+    "surname": null,
+    "formattedName": "Shogun Kitsune42",
+    "about": "Right hand of the Emperor. Architect of Tokyo's Imperial District. 狐の魂!",
+    "town": {
+      "name": "Tokyo",
+      "uuid": "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3"
+    },
+    "nation": {
+      "name": "Japan",
+      "uuid": "93f28b00-51ba-43b2-930f-a63e496317a2"
+    },
+    "timestamps": {
+      "registered": 1719090000000,
+      "joinedTownAt": 1719090462147,
+      "lastOnline": 1719283200000
+    },
+    "status": {
+      "isOnline": true,
+      "isNPC": false,
+      "isMayor": false,
+      "isKing": false,
+      "hasTown": true,
+      "hasNation": true
+    },
+    "stats": {
+      "balance": 218.15,
+      "numFriends": 6
+    },
+    "perms": {
+      "build": [true, true, true, false],
+      "destroy": [true, true, false, false],
+      "switch": [true, true, true, false],
+      "itemUse": [true, true, true, false],
+      "flags": {
+        "pvp": true,
+        "explosion": false,
+        "fire": false,
+        "mobs": true
+      }
+    },
+    "ranks": {
+      "townRanks": ["assistant", "trusted"],
+      "nationRanks": ["co-leader", "general"]
+    },
+    "friends": [
+      {
+        "name": "SakuraSan",
+        "uuid": "b71c2a48-3f76-49a2-9e4c-b9826376a8f2"
+      },
+      {
+        "name": "MountFuji",
+        "uuid": "e275d96b-943c-4c7d-a67f-9f49b68f067d"
+      },
+      {
+        "name": "SamuraiCode",
+        "uuid": "63aa4187-ed9b-4ac6-8074-0fd43cc2c4ea"
+      }
+    ]
+  }
+];

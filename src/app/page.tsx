@@ -61,11 +61,9 @@ export default function EarthPol() {
 
     return (
         <>
-            <Header>
-                    
-            </Header>
+            <Header/>
             
-            <div className="bg-charcoal pt-20 min-h-screen h-screen oswald-earth overflow-y-scroll no-scrollbar">
+            <div className="bg-charcoal pt-20 min-h-screen h-screen oswald-earth">
                 {loading ? (
                     <div className="text-white p-4">Loading...</div>
                 ) : error ? (
@@ -77,9 +75,10 @@ export default function EarthPol() {
                         <h1>appears to be down :(</h1>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-[20%_80%] h-screen w-full">
-                        <div className="flex justify-center pt-10">
-                            <div className="flex flex-col overflow-y-scroll no-scrollbar">
+                    <div className="grid grid-cols-[20%_80%] w-full">
+                        {/*Left side page (nationItems and townItems) */}
+                        <div className="flex justify-left pl-8 pt-10 overflow-y-auto max-h-screen no-scrollbar">
+                            <div className="flex flex-col">
                                 <div className="text-white hover:cursor-pointer flex items-center gap-2" onClick={() => setExpanded(!expanded)}>
                                     <svg 
                                         className={`w-4 h-4 transition-transform text-blue1 ${expanded ? 'rotate-180' : ''}`} 
@@ -109,7 +108,8 @@ export default function EarthPol() {
                                 }
                             </div>
                         </div>
-                        <div className="bg-navy overflow-y-scroll no-scrollbar">
+                        {/*Right side page */}
+                        <div className="bg-navy max-h-screen overflow-y-auto no-scrollbar">
                             {selectedItem ? 
                                 <>
                                     <div className="bg-navy pt-8 text-white flex justify-center">

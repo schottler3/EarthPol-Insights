@@ -55,7 +55,7 @@ export default function TownPage({townData, setSelectedItem}: {townData: Town, s
     }, [isVerifying]);
 
     return (
-        <div className="w-full px-8 mt-8">
+        <div className="w-full px-8 mt-8 h-screen">
             {isVerifying && townData ? (
                 <div ref={verifierRef}>
                     <Verifier
