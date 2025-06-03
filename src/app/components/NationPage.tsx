@@ -5,7 +5,7 @@ import { checkDiscord, renderSkin } from "../lib/queries";
 import LocationItem from "./LocationItem";
 import Player from "./Player";
 
-export default function NationPage({nationData, setSelectedItem}: {nationData: Nation, setSelectedItem: ReactStateHandler}){
+export default function NationPage({nationData}: {nationData: Nation}){
 
     const [isVerifying, setIsVerifying] = useState<boolean>(false);
     const verifierRef = useRef<HTMLDivElement>(null);
@@ -55,7 +55,7 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
     }, [isVerifying]);
 
     return (
-        <div className="w-full px-8 mt-8">
+        <div className="w-full px-8 mt-8 h-screen">
             {isVerifying && nationData ? (
                 <div ref={verifierRef}>
                     <Verifier
@@ -163,7 +163,6 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
                                     key={`${nationData.name}-town-${town.uuid}`}
                                     name={town.name}
                                     uuid={town.uuid}
-                                    setSelectedItem={setSelectedItem}
                                 >
                                 </LocationItem>
                             ))}
@@ -193,7 +192,6 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
                                         key={`${nationData.name}-ally-${ally.uuid}`}
                                         name={ally.name}
                                         uuid={ally.uuid}
-                                        setSelectedItem={setSelectedItem}
                                     ></LocationItem>
                                 ))
                                 :
@@ -218,7 +216,6 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
                                         key={`${nationData.name}-ally-${enemy.uuid}`}
                                         name={enemy.name}
                                         uuid={enemy.uuid}
-                                        setSelectedItem={setSelectedItem}
                                     ></LocationItem>
                                 ))
                                 :
@@ -280,7 +277,7 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
 
                     <div className="flex gap-4 items-center">
                         <h1 className="text-2xl text-blue1">Generals</h1>
-                        {nationData.ranks.soldier?.map((general: {name: string, uuid: string}) => (
+                        {nationData.ranks.general?.map((general: {name: string, uuid: string}) => (
                             <Player
                                 key={`${nationData.name}-general-${general.uuid}`}
                                 name={general.name}
@@ -292,7 +289,7 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
 
                     <div className="flex flex-col py-4">
                         <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="grid grid-cols-6 gap-8">
+                        <div className="flex flex-row gap-4">
                             {nationData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${nationData.name}-resident-${resident.uuid}`}

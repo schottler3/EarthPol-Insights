@@ -23,7 +23,7 @@ export default function Player({name, uuid}: {name:string, uuid:string}) {
                     e.currentTarget.src = `https://mc-heads.net/avatar/steve`;
                 }}
             />
-            <h1>
+            <h1 className="max-w-[10vw] overflow-x-auto">
                 {name}
             </h1>
         </div>

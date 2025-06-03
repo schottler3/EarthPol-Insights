@@ -2,9 +2,10 @@
 import { useEffect, useRef, useState } from "react"
 import NationItem from "./components/NationItem";
 import Header from "./components/Header";
-import { FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/types";
+import { FAKECUBA, FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/types";
 import NationPage from "./components/NationPage";
 import TownPage from "./components/TownPage";
+import { useAppContext } from "./context/AppContext";
 
 interface NationItem {
   index: number;
@@ -17,8 +18,7 @@ export default function EarthPol() {
     const [nations, setNations] = useState<NationItem[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [expanded, setExpanded] = useState<boolean>(false);
-    const [selectedItem, setSelectedItem] = useState<Nation | Town | null>(null);
+    const { selectedEntity, setSelectedEntity, expanded, setExpanded } = useAppContext();
 
     useEffect(() => {
         if(USINGFAKE){
@@ -26,6 +26,7 @@ export default function EarthPol() {
                 ...nation,
                 index
             })));
+            setSelectedEntity(FAKECUBA);
             setLoading(false);
         }
         else {
@@ -40,6 +41,8 @@ export default function EarthPol() {
                     const result = await response.json();
                     console.log('Fetched data:', result);
                     setNations(result);
+                    console.log(result[0])
+                    setSelectedEntity(result[0]);
                     setLoading(false);
                 } catch (e: unknown) {
                     const error = e instanceof Error ? e : new Error(String(e));
@@ -58,11 +61,9 @@ export default function EarthPol() {
 
     return (
         <>
-            <Header>
-                    
-            </Header>
+            <Header/>
             
-            <div className="bg-charcoal pt-20 min-h-screen h-screen oswald-earth overflow-y-scroll no-scrollbar">
+            <div className="bg-charcoal pt-20 min-h-screen h-screen oswald-earth">
                 {loading ? (
                     <div className="text-white p-4">Loading...</div>
                 ) : error ? (
@@ -74,9 +75,10 @@ export default function EarthPol() {
                         <h1>appears to be down :(</h1>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-[20%_80%] h-screen w-full">
-                        <div className="flex justify-center pt-10">
-                            <div className="flex flex-col overflow-y-scroll no-scrollbar">
+                    <div className="grid grid-cols-[20%_80%] w-full">
+                        {/*Left side page (nationItems and townItems) */}
+                        <div className="flex justify-left pl-8 pt-10 overflow-y-auto max-h-screen no-scrollbar">
+                            <div className="flex flex-col">
                                 <div className="text-white hover:cursor-pointer flex items-center gap-2" onClick={() => setExpanded(!expanded)}>
                                     <svg 
                                         className={`w-4 h-4 transition-transform text-blue1 ${expanded ? 'rotate-180' : ''}`} 
@@ -99,26 +101,23 @@ export default function EarthPol() {
                                             name={item.name}
                                             uuid={item.uuid}
                                             collapse={expanded}
-                                            selectedItem={selectedItem}
-                                            setSelectedItem={setSelectedItem}
                                         />
                                     ))
                                 }
                             </div>
                         </div>
-                        <div className="bg-navy overflow-y-scroll no-scrollbar">
-                            {selectedItem ? 
+                        {/*Right side page */}
+                        <div className="bg-navy max-h-screen overflow-y-auto no-scrollbar">
+                            {selectedEntity ? 
                                 <>
                                     <div className="bg-navy pt-8 text-white flex justify-center">
-                                        {isTown(selectedItem) ? 
+                                        {isTown(selectedEntity) ? 
                                             <TownPage
-                                                townData={selectedItem}
-                                                setSelectedItem={setSelectedItem}
+                                                townData={selectedEntity}
                                             />
                                             :
                                             <NationPage
-                                                nationData={selectedItem}
-                                                setSelectedItem={setSelectedItem}
+                                                nationData={selectedEntity}
                                             />
                                         }
                                     </div>

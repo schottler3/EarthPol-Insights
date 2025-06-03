@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Nation, Player, ReactStateHandler, Town } from "../lib/types";
+import { Nation, ReactStateHandler, Town } from "../lib/types";
 import { renderSkin, renderTown} from "../lib/queries";
+import Player from "./Player";
+import { useAppContext } from "../context/AppContext";
 
-export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {name:string, uuid:string, selectedItem:Nation | Town | null, setSelectedItem:ReactStateHandler}) {
+export default function TownItem({name, uuid}: {name:string, uuid:string}) {
 
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [players, setPlayers] = useState<{"name": string, "uuid":string}[] | null>(null);
@@ -11,6 +13,8 @@ export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {n
     const [error, setError] = useState<string | null>(null);
     const [townData, setTownData] = useState<Town | null>(null);
     const [imageData, setImageData] = useState<string | null>(null);
+    const { selectedEntity, setSelectedEntity } = useAppContext();
+
     
     useEffect(() => {
         if(isRendered) return;
@@ -20,9 +24,9 @@ export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {n
                 setLoading(true);
                 setError(null);
                 
-                //const locationObject = await renderTown(uuid, true);
-                //console.log("Town data received:", townObject);
-                //setTownData(locationObject as Town);
+                const locationObject = await renderTown(uuid, true);
+                console.log("Town data received:", locationObject);
+                setTownData(locationObject as Town);
                 
             } catch (err) {
                 console.error("Error fetching town data:", err);
@@ -38,7 +42,7 @@ export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {n
 
     function handleTownClick() : void {
         console.log(townData?.name)
-        setSelectedItem(townData);
+        setSelectedEntity(townData);
     }
 
     function handleExpandClick() : void {
@@ -83,25 +87,25 @@ export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {n
                         <div className="text-gray-400">No town data available</div>
                     ) : (
                         <div className="text-white">
-                            <p>Mayor: {townData.mayor?.name || "None"}</p>
+                            <p>Mayor:</p>
+                            <Player
+                                key={`${townData.name}-mayor-${townData.mayor.uuid}`}
+                                name={townData.mayor.name}
+                                uuid={townData.mayor.uuid}
+                            >
+                            </Player>
                             {townData.residents && townData.residents.length > 0 && (
                                 <div>
                                     <p className="font-semibold mt-2">Residents:</p>
-                                    <div className="pl-2 w-min">
-                                        {townData.residents.map((resident, index:number) => (
-                                            <div onClick={() => handleUserClick(resident.uuid)} key={resident.uuid || `resident-${index}`}>{resident.name}</div>
+                                    <div className="flex flex-col gap-4">
+                                        {townData.residents?.map((resident: {name: string, uuid: string}) => (
+                                            <Player
+                                                key={`${townData.name}-resident-${resident.uuid}`}
+                                                name={resident.name}
+                                                uuid={resident.uuid}
+                                            >
+                                            </Player>
                                         ))}
-                                        {imageData && (
-                                            <img 
-                                                src={imageData} 
-                                                alt="Player avatar"
-                                                className="w-8 h-8 mt-1"
-                                                onError={(e) => {
-                                                    console.log("Image failed to load, using fallback");
-                                                    e.currentTarget.src = `https://mc-heads.net/avatar/steve`;
-                                                }}
-                                            />
-                                        )}
                                     </div>
                                 </div>
                             )}

@@ -33,12 +33,12 @@ export async function POST(request: Request) : Promise<Response>{
   try {
     const body = await request.json();
     switch(body){
-      case "Cuba":
-        return NextResponse.json(FAKECUBA);
-      case "Japan":
-        return NextResponse.json(FAKEJAPAN);
-      case "Cascadia":
-        return NextResponse.json(FAKECASCADIA);
+        case "5eda99c0-e430-4552-abae-4e7604579483":
+            return NextResponse.json(FAKECUBA);
+        case "93f28b00-51ba-43b2-930f-a63e496317a2": 
+            return NextResponse.json(FAKEJAPAN);
+        case "e38c9fbc-78d9-4e9b-a90f-870fba949693":
+            return NextResponse.json(FAKECASCADIA);
     }
     
     const response = await fetch('https://api.earthpol.com/astra/nations', {

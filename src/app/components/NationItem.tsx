@@ -2,14 +2,16 @@ import { useState, useEffect} from "react";
 import {Town, type Nation, type ReactStateHandler} from "../lib/types";
 import { renderNation } from "../lib/queries";
 import TownItem from "./TownItem";
+import { useAppContext } from "../context/AppContext";
 
-export default function NationItem({ name, uuid, collapse, selectedItem, setSelectedItem}: { name: string, uuid:string, collapse: boolean, selectedItem:Nation | Town | null, setSelectedItem: ReactStateHandler}) {
+export default function NationItem({ name, uuid, collapse}: { name: string, uuid:string, collapse: boolean}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [towns, setTowns] = useState<{name: string}[] | null>(null);
     const [nationData, setNationData] = useState<Nation | null>(null);
     const [isRendered, setIsRendered] = useState<boolean>(false);
     const [isExpanded, setIsExpanded] = useState(false);
+    const { selectedEntity, setSelectedEntity } = useAppContext();
 
     useEffect(() => {
         setIsExpanded(collapse);
@@ -29,7 +31,7 @@ export default function NationItem({ name, uuid, collapse, selectedItem, setSele
     }, [collapse]);
 
     function handleNationClick() : void {
-        setSelectedItem(nationData);
+        setSelectedEntity(nationData);
     }
 
     function handleExpandClick() : void {
@@ -85,9 +87,7 @@ export default function NationItem({ name, uuid, collapse, selectedItem, setSele
                                     <TownItem
                                         name={item.name}
                                         uuid={item.uuid}
-                                        key={`town-${item.name}`}
-                                        selectedItem={selectedItem}
-                                        setSelectedItem={setSelectedItem}
+                                        key={`nationItem-town-${item.name}`}
                                     ></TownItem>
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 import { adminDb } from "../api/firebase-admin";
 import { getDiscord } from "../databasing";
-import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE } from "./types";
+import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE, FAKETOWNS, FAKEPLAYERS } from "./types";
 
 export const renderLocation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
     switch(query){
@@ -10,6 +10,18 @@ export const renderLocation = async (query: string, town: boolean | null): Promi
             return FAKEJAPAN as Nation;
         case "e38c9fbc-78d9-4e9b-a90f-870fba949693":
             return FAKECASCADIA as Nation;
+        // Havana (Cuba's capital)
+        case "ff50d039-669d-413e-84e0-18c3fd370ea3":
+            return FAKETOWNS[0] as Town;
+        // Tokyo (Japan's capital)
+        case "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3":
+            return FAKETOWNS[1] as Town;
+        // Portland (Cascadia's capital)
+        case "a7c891f6-7d3e-495b-b276-c4a7328ab9e1":
+            return FAKETOWNS[2] as Town;
+        // Seattle (Cascadia town)
+        case "f25acd71-9e38-4712-89b4-f24a963c320e":
+            return FAKETOWNS[3] as Town;
     }
 
     try {
@@ -69,13 +81,19 @@ export const renderNation = async (query: string, town: boolean | null): Promise
 };
 
 export const renderTown = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
-    switch(query){
-        case "Cuba":
-            return FAKECUBA as unknown as Nation;
-        case "Japan": 
-            return FAKEJAPAN as unknown as Nation;
-        case "Cascadia":
-            return FAKECASCADIA as unknown as Nation;
+    switch(query) {
+        // Havana (Cuba's capital)
+        case "ff50d039-669d-413e-84e0-18c3fd370ea3":
+            return FAKETOWNS[0] as Town;
+        // Tokyo (Japan's capital)
+        case "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3":
+            return FAKETOWNS[1] as Town;
+        // Portland (Cascadia's capital)
+        case "a7c891f6-7d3e-495b-b276-c4a7328ab9e1":
+            return FAKETOWNS[2] as Town;
+        // Seattle (Cascadia town)
+        case "f25acd71-9e38-4712-89b4-f24a963c320e":
+            return FAKETOWNS[3] as Town;
     }
 
     try {
@@ -113,6 +131,46 @@ export const renderSkin = async(uuid: string): Promise<string> => {
         return`https://mc-heads.net/avatar/steve`;
     }
 };
+
+export const getPlayerData = async(query: string) : Promise<Player> => {
+
+    if(USINGFAKE){
+        switch(query){
+            case "9a2657ea-e15c-4469-8886-6c101151eff0":
+                return FAKEPLAYERS[0];
+            case "b71c2a48-3f76-49a2-9e4c-b9826376a8f2":
+                return FAKEPLAYERS[1];
+            case "cba82d5-94fa-42f8-b7a7-83d9c06e3f6b":
+                return FAKEPLAYERS[2];
+            case "29e47b48-c631-4958-b07e-814e218ab5a9":
+                return FAKEPLAYERS[3];
+            case "753cb829-69c4-48c5-9432-8dfa12631d7f":
+                return FAKEPLAYERS[4];
+        }
+    }
+
+    try {
+        const response = await fetch('/api/players', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: [query]
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error fetching player data. Status: ${response.status}`);
+        }
+        
+        const playerData = await response.json();
+
+        return playerData[0];
+    } catch (error: any) {
+        return error;
+    }
+}
 
 export const checkDiscord = async (locationUUID: string) : Promise<string | null> => {
     if (!locationUUID) {
