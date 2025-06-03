@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import { FAKECUBA, FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/types";
 import NationPage from "./components/NationPage";
 import TownPage from "./components/TownPage";
+import { useAppContext } from "./context/AppContext";
 
 interface NationItem {
   index: number;
@@ -17,8 +18,7 @@ export default function EarthPol() {
     const [nations, setNations] = useState<NationItem[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [expanded, setExpanded] = useState<boolean>(false);
-    const [selectedItem, setSelectedItem] = useState<Nation | Town | null>(null);
+    const { selectedEntity, setSelectedEntity, expanded, setExpanded } = useAppContext();
 
     useEffect(() => {
         if(USINGFAKE){
@@ -26,7 +26,7 @@ export default function EarthPol() {
                 ...nation,
                 index
             })));
-            setSelectedItem(FAKECUBA);
+            setSelectedEntity(FAKECUBA);
             setLoading(false);
         }
         else {
@@ -42,7 +42,7 @@ export default function EarthPol() {
                     console.log('Fetched data:', result);
                     setNations(result);
                     console.log(result[0])
-                    setSelectedItem(result[0]);
+                    setSelectedEntity(result[0]);
                     setLoading(false);
                 } catch (e: unknown) {
                     const error = e instanceof Error ? e : new Error(String(e));
@@ -101,8 +101,6 @@ export default function EarthPol() {
                                             name={item.name}
                                             uuid={item.uuid}
                                             collapse={expanded}
-                                            selectedItem={selectedItem}
-                                            setSelectedItem={setSelectedItem}
                                         />
                                     ))
                                 }
@@ -110,18 +108,16 @@ export default function EarthPol() {
                         </div>
                         {/*Right side page */}
                         <div className="bg-navy max-h-screen overflow-y-auto no-scrollbar">
-                            {selectedItem ? 
+                            {selectedEntity ? 
                                 <>
                                     <div className="bg-navy pt-8 text-white flex justify-center">
-                                        {isTown(selectedItem) ? 
+                                        {isTown(selectedEntity) ? 
                                             <TownPage
-                                                townData={selectedItem}
-                                                setSelectedItem={setSelectedItem}
+                                                townData={selectedEntity}
                                             />
                                             :
                                             <NationPage
-                                                nationData={selectedItem}
-                                                setSelectedItem={setSelectedItem}
+                                                nationData={selectedEntity}
                                             />
                                         }
                                     </div>

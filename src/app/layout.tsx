@@ -1,7 +1,5 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-
 import "./globals.css";
+import { AppProvider } from "./context/AppContext";
 
 export const metadata = {
   title: "EPMC Insights",
@@ -28,7 +26,9 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
-        {children}  
+        <AppProvider>
+          {children}
+        </AppProvider>
       </body>  
     </html>
   );

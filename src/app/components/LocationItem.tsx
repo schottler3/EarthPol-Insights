@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { checkDiscord, getDiscordSrc, renderLocation } from "../lib/queries";
 import { Invite, ReactStateHandler } from "../lib/types";
+import { useAppContext } from "../context/AppContext";
 
-export default function LocationItem({name, uuid, setSelectedItem}: {name: string, uuid: string, setSelectedItem: ReactStateHandler }) {
+export default function LocationItem({name, uuid}: {name: string, uuid: string}) {
     const [discordInfo, setDiscordInfo] = useState<{data: Invite | null}>({ data: null });
     const [isLoading, setIsLoading] = useState(false);
     const hasLoadedRef = useRef(false);
+    const { selectedEntity, setSelectedEntity } = useAppContext();
 
     useEffect(() => {
 
@@ -60,7 +62,7 @@ export default function LocationItem({name, uuid, setSelectedItem}: {name: strin
                     )}
                     <h1 onClick={async () => {
                         const locationObject = await renderLocation(uuid, null);
-                        setSelectedItem(locationObject);
+                        setSelectedEntity(locationObject);
                     }}>
                         {name}
                     </h1>

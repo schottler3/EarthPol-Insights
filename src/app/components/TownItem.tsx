@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Nation, ReactStateHandler, Town } from "../lib/types";
 import { renderSkin, renderTown} from "../lib/queries";
 import Player from "./Player";
+import { useAppContext } from "../context/AppContext";
 
-export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {name:string, uuid:string, selectedItem:Nation | Town | null, setSelectedItem:ReactStateHandler}) {
+export default function TownItem({name, uuid}: {name:string, uuid:string}) {
 
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [players, setPlayers] = useState<{"name": string, "uuid":string}[] | null>(null);
@@ -12,6 +13,8 @@ export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {n
     const [error, setError] = useState<string | null>(null);
     const [townData, setTownData] = useState<Town | null>(null);
     const [imageData, setImageData] = useState<string | null>(null);
+    const { selectedEntity, setSelectedEntity } = useAppContext();
+
     
     useEffect(() => {
         if(isRendered) return;
@@ -39,7 +42,7 @@ export default function TownItem({name, uuid, selectedItem, setSelectedItem}: {n
 
     function handleTownClick() : void {
         console.log(townData?.name)
-        setSelectedItem(townData);
+        setSelectedEntity(townData);
     }
 
     function handleExpandClick() : void {

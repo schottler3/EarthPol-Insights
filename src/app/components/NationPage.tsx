@@ -5,7 +5,7 @@ import { checkDiscord, renderSkin } from "../lib/queries";
 import LocationItem from "./LocationItem";
 import Player from "./Player";
 
-export default function NationPage({nationData, setSelectedItem}: {nationData: Nation, setSelectedItem: ReactStateHandler}){
+export default function NationPage({nationData}: {nationData: Nation}){
 
     const [isVerifying, setIsVerifying] = useState<boolean>(false);
     const verifierRef = useRef<HTMLDivElement>(null);
@@ -163,7 +163,6 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
                                     key={`${nationData.name}-town-${town.uuid}`}
                                     name={town.name}
                                     uuid={town.uuid}
-                                    setSelectedItem={setSelectedItem}
                                 >
                                 </LocationItem>
                             ))}
@@ -193,7 +192,6 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
                                         key={`${nationData.name}-ally-${ally.uuid}`}
                                         name={ally.name}
                                         uuid={ally.uuid}
-                                        setSelectedItem={setSelectedItem}
                                     ></LocationItem>
                                 ))
                                 :
@@ -218,7 +216,6 @@ export default function NationPage({nationData, setSelectedItem}: {nationData: N
                                         key={`${nationData.name}-ally-${enemy.uuid}`}
                                         name={enemy.name}
                                         uuid={enemy.uuid}
-                                        setSelectedItem={setSelectedItem}
                                     ></LocationItem>
                                 ))
                                 :

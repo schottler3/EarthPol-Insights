@@ -5,7 +5,7 @@ import { checkDiscord, renderSkin } from "../lib/queries";
 import LocationItem from "./LocationItem";
 import Player from "./Player";
 
-export default function TownPage({townData, setSelectedItem}: {townData: Town, setSelectedItem: ReactStateHandler}){
+export default function TownPage({townData}: {townData: Town}){
 
     const [isVerifying, setIsVerifying] = useState<boolean>(false);
     const verifierRef = useRef<HTMLDivElement>(null);
@@ -142,7 +142,6 @@ export default function TownPage({townData, setSelectedItem}: {townData: Town, s
                             key={`${townData.name}-nation-${townData.nation.uuid}`}
                             name={townData.nation.name}
                             uuid={townData.nation.uuid}
-                            setSelectedItem={setSelectedItem}
                         ></LocationItem>
                     </div>
                     <div className="flex text-sm italic text-gray-400 gap-4">
