@@ -8,6 +8,8 @@ type AppContextType = {
   setSelectedEntity: Dispatch<SetStateAction<Nation | Town | null>>;
   expanded: boolean;
   setExpanded: Dispatch<SetStateAction<boolean>>;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 // Create the context with undefined as default value
@@ -17,13 +19,16 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [selectedEntity, setSelectedEntity] = useState<Nation | Town | null>(null);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <AppContext.Provider value={{
       selectedEntity,
       setSelectedEntity,
       expanded,
-      setExpanded
+      setExpanded,
+      isOpen,
+      setIsOpen
     }}>
       {children}
     </AppContext.Provider>

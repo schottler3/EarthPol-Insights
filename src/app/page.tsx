@@ -6,6 +6,7 @@ import { FAKECUBA, FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/ty
 import NationPage from "./components/NationPage";
 import TownPage from "./components/TownPage";
 import { useAppContext } from "./context/AppContext";
+import useScreenSize from "./hooks/useScreenSize"
 
 interface NationItem {
   index: number;
@@ -18,7 +19,23 @@ export default function EarthPol() {
     const [nations, setNations] = useState<NationItem[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { selectedEntity, setSelectedEntity, expanded, setExpanded } = useAppContext();
+    const { isMobile } = useScreenSize();
+    const prevIsMobileRef = useRef(isMobile);
+    const { selectedEntity, setSelectedEntity, expanded, setExpanded, isOpen, setIsOpen } = useAppContext();
+
+    useEffect(() => {
+    // Initial setup - open menu on desktop, close on mobile
+    if (prevIsMobileRef.current !== isMobile) {
+        if (!isMobile) {
+            // Changed to desktop - open the menu
+            setIsOpen(true);
+        } else {
+            // Changed to mobile - close the menu
+            setIsOpen(false);
+        }
+        prevIsMobileRef.current = isMobile;
+    }
+}, [isMobile, setIsOpen]);
 
     useEffect(() => {
         if(USINGFAKE){
@@ -57,13 +74,13 @@ export default function EarthPol() {
 
             fetchData();
         }
-    }, [])
+    },[])
 
     return (
         <>
             <Header/>
             
-            <div className="bg-charcoal pt-20 min-h-screen h-screen oswald-earth">
+            <div className="bg-charcoal pt-20 min-h-screen h-screen w-screen oswald-earth">
                 {loading ? (
                     <div className="text-white p-4">Loading...</div>
                 ) : error ? (
@@ -75,10 +92,62 @@ export default function EarthPol() {
                         <h1>appears to be down :(</h1>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-[20%_80%] w-full">
+                    <div className="sm:grid sm:grid-cols-[20%_80%] w-full">
                         {/*Left side page (nationItems and townItems) */}
-                        <div className="flex justify-left pl-8 pt-10 overflow-y-auto max-h-screen no-scrollbar">
-                            <div className="flex flex-col">
+                        <div className={`flex flex-col absolute sm:relative z-50 p-4 justify-left ml-8 mt-10 overflow-y-auto max-h-screen no-scrollbar ${isOpen ? `bg-charcoal` : ``}`}>
+                            <svg
+                                onClick={() => {
+                                    setIsOpen(!isOpen);
+                                    setExpanded(false);
+                                }}
+                                className="w-16 mb-2 -ml-6 sm:hidden"
+                                width="19"
+                                height="15"
+                                viewBox="0 0 19 15"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <line
+                                y1="0.5"
+                                x2="19"
+                                y2="0.5"
+                                stroke="white"
+                                strokeWidth="2"
+                                className="transition-all duration-300 origin-center"
+                                style={{
+                                    transform: isOpen ? 'rotate(45deg) translateY(7px)' : 'none'
+                                }}
+                                />
+                                <line
+                                y1="7.5"
+                                x2="19"
+                                y2="7.5"
+                                stroke="white"
+                                strokeWidth="2"
+                                className={`transition-all duration-300 ${isOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`}
+                                />
+                                <line
+                                y1="14.5"
+                                x2="19"
+                                y2="14.5"
+                                stroke="white"
+                                strokeWidth="2"
+                                className="transition-all duration-300 origin-center"
+                                style={{
+                                    transform: isOpen ? 'rotate(-45deg) translateY(-7px)' : 'none'
+                                }}
+                                />
+                            </svg>
+                            <div 
+                                className={
+                                    `duration-300 transition-opacity 
+                                    ${isOpen ? 
+                                        `flex flex-col opacity-100 relative` 
+                                        : 
+                                        ` opacity-0 invisible`
+                                    }`
+                                }
+                                >
                                 <div className="text-white hover:cursor-pointer flex items-center gap-2" onClick={() => setExpanded(!expanded)}>
                                     <svg 
                                         className={`w-4 h-4 transition-transform text-blue1 ${expanded ? 'rotate-180' : ''}`} 
