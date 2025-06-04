@@ -128,13 +128,13 @@ export default function NationPage({nationData}: {nationData: Nation}){
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-8 mt-8">
-                <div className="flex flex-col gap-4"> 
+            <div className="sm:grid sm:grid-cols-2 gap-8 mt-8">
+                <div className="flex flex-col text-center sm:text-left gap-4"> 
                     <div className="">
                         <div className="font-bold text-2xl">
                             Capital: {nationData.capital.name}
                         </div>
-                        <div className="flex text-sm italic text-gray-400 gap-4">
+                        <div className="flex justify-center sm:justify-start text-sm italic text-gray-400 gap-4">
                             <div className="">
                                 {`${Math.floor(nationData.coordinates.spawn.x)}, ${Math.floor(nationData.coordinates.spawn.y)}, ${Math.floor(nationData.coordinates.spawn.z)}`}
                             </div>
@@ -151,13 +151,13 @@ export default function NationPage({nationData}: {nationData: Nation}){
                         </div>
                     </div>
                     <div className="flex flex-col">
-                        <iframe src={`https://earthpol.com/map/#world:${nationData.coordinates.spawn.x}:0:${nationData.coordinates.spawn.z}:500:0:0:0:1:flat`} className="w-full h-[50vh]" sandbox="allow-same-origin allow-scripts">
+                        <iframe src={`https://earthpol.com/map/#world:${nationData.coordinates.spawn.x}:0:${nationData.coordinates.spawn.z}:500:0:0:0:1:flat`} className="w-full h-[25vh] sm:h-[50vh]" sandbox="allow-same-origin allow-scripts">
                         </iframe>
-                        <a className="text-sm text-gray-400" target="none" href={`https://earthpol.com/map/#world:${nationData.coordinates.spawn.x}:0:${nationData.coordinates.spawn.z}:500:0:0:0:1:flat`}>Map Link</a>
+                        <a className="text-sm text-gray-400 text-left" target="none" href={`https://earthpol.com/map/#world:${nationData.coordinates.spawn.x}:0:${nationData.coordinates.spawn.z}:500:0:0:0:1:flat`}>Map Link</a>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <h1 className="text-2xl text-blue1">Towns</h1>
-                        <div className="grid grid-cols-8">
+                        <h1 className="text-2xl text-left text-blue1">Towns</h1>
+                        <div className="flex gap-8">
                             {nationData.towns?.map((town: {name: string, uuid: string}) => (
                                 <LocationItem
                                     key={`${nationData.name}-town-${town.uuid}`}
@@ -168,12 +168,13 @@ export default function NationPage({nationData}: {nationData: Nation}){
                             ))}
                         </div>
                     </div>
+                    <hr className="relative sm:hidden p-4"></hr>
                 </div>
-                <div className="flex flex-col items-left text-md ml-8">
-
+                <div className="flex flex-col items-left text-md sm:ml-8">
                     <div className="flex flex-row items-center gap-4">
                         <h1 className="text-2xl text-blue1">Leader</h1>
                         <Player
+                            key={`${nationData.name}-king-${nationData.king.uuid}`}
                             name={nationData.king.name}
                             uuid={nationData.king.uuid}
                         ></Player>
@@ -226,68 +227,7 @@ export default function NationPage({nationData}: {nationData: Nation}){
                     )
                     :
                     null}
-                    
-                    <div className="flex gap-4 items-center">
-                        <h1 className="text-2xl text-blue1">Coleaders</h1>
-                        {nationData.ranks["co-leader"]?.map((coleader: {name: string, uuid: string}) => (
-                            <Player
-                                key={`${nationData.name}-coleader-${coleader.uuid}`}
-                                name={coleader.name}
-                                uuid={coleader.uuid}
-                            >
-                            </Player>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-4 items-center">
-                        <h1 className="text-2xl text-blue1">Ministers</h1>
-                        {nationData.ranks.minister?.map((minister: {name: string, uuid: string}) => (
-                            <Player
-                                key={`${nationData.name}-minister-${minister.uuid}`}
-                                name={minister.name}
-                                uuid={minister.uuid}
-                            >
-                            </Player>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-4 items-center">
-                        <h1 className="text-2xl text-blue1">Recruiters</h1>
-                        {nationData.ranks.recruiter?.map((recruiter: {name: string, uuid: string}) => (
-                            <Player
-                                key={`${nationData.name}-recruiter-${recruiter.uuid}`}
-                                name={recruiter.name}
-                                uuid={recruiter.uuid}
-                            >
-                            </Player>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-4 items-center">
-                        <h1 className="text-2xl text-blue1">Soldiers</h1>
-                        {nationData.ranks.soldier?.map((soldier: {name: string, uuid: string}) => (
-                            <Player
-                                key={`${nationData.name}-soldier-${soldier.uuid}`}
-                                name={soldier.name}
-                                uuid={soldier.uuid}
-                            >
-                            </Player>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-4 items-center">
-                        <h1 className="text-2xl text-blue1">Generals</h1>
-                        {nationData.ranks.general?.map((general: {name: string, uuid: string}) => (
-                            <Player
-                                key={`${nationData.name}-general-${general.uuid}`}
-                                name={general.name}
-                                uuid={general.uuid}
-                            >
-                            </Player>
-                        ))}
-                    </div>
-
-                    <div className="flex flex-col py-4">
+                    <div className="flex flex-col">
                         <h1 className="text-2xl text-blue1">Residents:</h1>
                         <div className="flex flex-row gap-4">
                             {nationData.residents?.map((resident: {name: string, uuid: string}) => (

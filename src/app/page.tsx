@@ -94,15 +94,15 @@ export default function EarthPol() {
                 ) : (
                     <div className="sm:grid sm:grid-cols-[20%_80%] w-full">
                         {/*Left side page (nationItems and townItems) */}
-                        <div className={`flex flex-col absolute sm:relative z-50 p-4 justify-left ml-8 mt-10 overflow-y-auto max-h-screen no-scrollbar ${isOpen ? `bg-charcoal` : ``}`}>
+                        <div className={`flex flex-col absolute sm:relative z-50 p-4 justify-left ml-8 mt-3 sm:mt-10 overflow-y-auto max-h-screen no-scrollbar ${isOpen ? `bg-charcoal` : ``}`}>
                             <svg
                                 onClick={() => {
                                     setIsOpen(!isOpen);
                                     setExpanded(false);
                                 }}
                                 className="w-16 mb-2 -ml-6 sm:hidden"
-                                width="19"
-                                height="15"
+                                width="24"
+                                height="19"
                                 viewBox="0 0 19 15"
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"

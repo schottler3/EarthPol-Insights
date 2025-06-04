@@ -3,7 +3,7 @@ import Image from 'next/image';
 export default function Header(){
 
     return (
-        <div className="fixed flex sm:h-16 md:h-20 lg:h-24 bg-white z-50 w-screen items-center">
+        <div className="fixed flex h-16 md:h-20 lg:h-24 bg-white z-50 w-screen items-center">
             <Image 
                 className="h-16 md:h-20 lg:h-24 ml-4"
                 src="/images/EPMC-Insights-Logo.svg"

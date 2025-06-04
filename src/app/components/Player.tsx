@@ -1,15 +1,23 @@
 import { useState, useEffect } from "react";
-import { renderSkin } from "../lib/queries";
+import { getPlayerData, renderSkin } from "../lib/queries";
+import { type Player } from "../lib/types";
 
 export default function Player({name, uuid}: {name:string, uuid:string}) {
 
     const [skinURL, setSkinURL] = useState<string>()
+    const [playerData, setPlayerData] = useState<Player | null>(null);
 
     useEffect(() => {
         const getSkin = async () => {
             setSkinURL(await renderSkin(uuid))
         }
+
+        const getData = async () => {
+            setPlayerData(await getPlayerData(uuid));
+        }
+
         getSkin();
+        getData();
     }, [uuid])
 
     return (
