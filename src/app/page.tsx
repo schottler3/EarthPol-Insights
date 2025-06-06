@@ -22,20 +22,29 @@ export default function EarthPol() {
     const { isMobile } = useScreenSize();
     const prevIsMobileRef = useRef(isMobile);
     const { selectedEntity, setSelectedEntity, expanded, setExpanded, isOpen, setIsOpen } = useAppContext();
+    const isFirstMount = useRef(true);
 
     useEffect(() => {
-    // Initial setup - open menu on desktop, close on mobile
-    if (prevIsMobileRef.current !== isMobile) {
-        if (!isMobile) {
-            // Changed to desktop - open the menu
-            setIsOpen(true);
-        } else {
-            // Changed to mobile - close the menu
-            setIsOpen(false);
+        // Initial state setup on first mount
+        if (isFirstMount.current) {
+            setIsOpen(!isMobile); // Open on desktop, closed on mobile
+            isFirstMount.current = false;
+            prevIsMobileRef.current = isMobile;
+            return;
         }
-        prevIsMobileRef.current = isMobile;
-    }
-}, [isMobile, setIsOpen]);
+
+        // Handle screen size changes
+        if (prevIsMobileRef.current !== isMobile) {
+            if (!isMobile) {
+                // Changed to desktop - open the menu
+                setIsOpen(true);
+            } else {
+                // Changed to mobile - close the menu
+                setIsOpen(false);
+            }
+            prevIsMobileRef.current = isMobile;
+        }
+    }, [isMobile, setIsOpen]);
 
     useEffect(() => {
         if(USINGFAKE){

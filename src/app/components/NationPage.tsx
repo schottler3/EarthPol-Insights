@@ -55,7 +55,7 @@ export default function NationPage({nationData}: {nationData: Nation}){
     }, [isVerifying]);
 
     return (
-        <div className="w-full px-8 mt-8 h-screen">
+        <div className="w-full px-8 mt-8 h-screen flex flex-col">
             {isVerifying && nationData ? (
                 <div ref={verifierRef}>
                     <Verifier
@@ -103,27 +103,27 @@ export default function NationPage({nationData}: {nationData: Nation}){
                 </div>
                 <div className="flex gap-4 hover:cursor-pointer">
                     <div className="has-tooltip">
-                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Town Blocks</span>
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Town Blocks</span>
                         {nationData.stats.numTownBlocks}
                     </div>
                     <div className="has-tooltip">
-                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Residents</span>
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Residents</span>
                         {nationData.stats.numResidents}
                     </div>
                     <div className="has-tooltip">
-                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Towns</span>
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Towns</span>
                         {nationData.stats.numTowns}
                     </div>
                     <div className="has-tooltip">
-                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Allies</span>
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Allies</span>
                         {nationData.stats.numAllies}
                     </div>
                     <div className="has-tooltip">
-                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Enemies</span>
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Enemies</span>
                         {nationData.stats.numEnemies}
                     </div>
                     <div className="has-tooltip">
-                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">Balance</span>
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Balance</span>
                         ${nationData.stats.balance}
                     </div>
                 </div>
@@ -139,7 +139,7 @@ export default function NationPage({nationData}: {nationData: Nation}){
                                 {`${Math.floor(nationData.coordinates.spawn.x)}, ${Math.floor(nationData.coordinates.spawn.y)}, ${Math.floor(nationData.coordinates.spawn.z)}`}
                             </div>
                             <div className="has-tooltip hover:cursor-pointer">
-                                <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-28 ml-8 rounded-t-md rounded-br-md">Founded</span>
+                                <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] ml-8 rounded-t-md rounded-br-md">Founded</span>
                                 {new Date(nationData.timestamps.registered).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
@@ -170,8 +170,8 @@ export default function NationPage({nationData}: {nationData: Nation}){
                     </div>
                     <hr className="relative sm:hidden p-4"></hr>
                 </div>
-                <div className="flex flex-col items-left text-md sm:ml-8">
-                    <div className="flex flex-row items-center gap-4">
+                <div className="flex flex-col items-left text-md sm:ml-8 mt-8 gap-4">
+                    <div className="flex flex-row items-center gap-4 bg-charcoal p-4 rounded-md">
                         <h1 className="text-2xl text-blue1">Leader</h1>
                         <Player
                             key={`${nationData.name}-king-${nationData.king.uuid}`}
@@ -182,11 +182,11 @@ export default function NationPage({nationData}: {nationData: Nation}){
                     
                     {nationData.allies?.length > 0 ?
                     (
-                    <div className="flex flex-row items-center gap-4">
+                    <div className="flex flex-col items-start gap-4">
                         <h1 className="text-2xl text-blue1">
-                            Allies
+                            Allies:
                         </h1>
-                        <div className="flex flex-row gap-4 p-4 max-w-[50vw] overflow-x-scroll no-scrollbar">
+                        <div className="flex flex-row gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
                             {!isLoadingDiscord ? 
                                 nationData.allies?.map((ally: {name: string, uuid: string}) => (
                                     <LocationItem
@@ -206,11 +206,11 @@ export default function NationPage({nationData}: {nationData: Nation}){
                     
                     {nationData.enemies?.length > 0 ?
                     (
-                    <div className="flex flex-row items-center gap-4">
+                    <div className="flex flex-col items-start gap-4">
                         <h1 className="text-2xl text-blue1">
-                            Enemies
+                            Enemies:
                         </h1>
-                        <div className="flex flex-row gap-4 p-4 max-w-[50vw] overflow-x-scroll no-scrollbar">
+                        <div className="flex flex-row gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
                             {!isLoadingDiscord ? 
                                 nationData.enemies?.map((enemy: {name: string, uuid: string}) => (
                                     <LocationItem
@@ -229,7 +229,7 @@ export default function NationPage({nationData}: {nationData: Nation}){
                     null}
                     <div className="flex flex-col">
                         <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="flex flex-row gap-4">
+                        <div className="flex flex-row gap-4 bg-charcoal p-4 rounded-md">
                             {nationData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${nationData.name}-resident-${resident.uuid}`}
