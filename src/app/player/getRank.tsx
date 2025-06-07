@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
 import { Player } from "../lib/types";
 
-export default function getRank(playerData: Player): ReactElement | null {
+// Change the return type to RankInfo | null
+export default function getRank(playerData: Player): { name: string; url: string; } | null {
     if (!playerData?.ranks?.nationRanks) return null;
     
     const rankPriority: Record<string, number> = {
@@ -47,12 +47,6 @@ export default function getRank(playerData: Player): ReactElement | null {
         }
     });
     
-    if (!highestRankFound) return null;
-    const { url, name: rankName } = highestRankFound;
-    return (
-        <div className="has-tooltip bg-aqua1 rounded-r-full pr-1">
-            <span className="tooltip -mt-6">{rankName}</span>
-            <img className="w-8 h-auto aspect-square hover:cursor-pointer" src={url} alt={rankName}/>
-        </div>
-    );
-};
+    // Return the RankInfo object or null
+    return highestRankFound;
+}

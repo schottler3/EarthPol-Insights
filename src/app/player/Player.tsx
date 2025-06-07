@@ -8,7 +8,7 @@ export default function Player({name, uuid}: {name:string, uuid:string}) {
 
     const [skinURL, setSkinURL] = useState<string>()
     const [playerData, setPlayerData] = useState<Player | null>(null);
-    const [highestRank, setHighestRank] = useState<ReactElement | null>(null);
+    const [highestRank, setHighestRank] = useState<{name: string, url: string} | null>(null);
 
     useEffect(() => {
         const getSkin = async () => {
@@ -24,8 +24,9 @@ export default function Player({name, uuid}: {name:string, uuid:string}) {
     }, [uuid])
 
     useEffect(() => {
-        if(playerData != null)
+        if(playerData != null){
             setHighestRank(getRank(playerData));
+        }
     }, [playerData]);
 
     return (
@@ -49,7 +50,12 @@ export default function Player({name, uuid}: {name:string, uuid:string}) {
                 >
                     {name}
                 </Link>
-                {highestRank ? highestRank : null}
+                {highestRank ? 
+                    (<div className="has-tooltip bg-aqua1 rounded-r-full pr-1">
+                        <span className="tooltip -mt-6">{highestRank.name}</span>
+                        <img className="w-8 h-auto aspect-square hover:cursor-pointer" src={highestRank.url} alt={highestRank.name}/>
+                    </div>)
+                : null}
             </div>
         </div>
     )

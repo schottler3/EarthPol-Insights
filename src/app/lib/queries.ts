@@ -146,6 +146,8 @@ export const getPlayerData = async(query: string) : Promise<Player | null> => {
                 return FAKEPLAYERS[3] as Player;
             case "753cb829-69c4-48c5-9432-8dfa12631d7f":
                 return FAKEPLAYERS[4] as Player;
+            case "SakuraSan":
+                return FAKEPLAYERS[1] as Player;
             default:
                 return null;
         }

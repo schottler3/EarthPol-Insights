@@ -59,7 +59,7 @@ export default function LocationItem({name, uuid}: {name: string, uuid: string})
                             alt={`${name} Discord server`}
                         />
                     )}
-                    <Link href={`/location?uuid=${uuid}`} className="hover:text-blue1">
+                    <Link href={`/location?uuid=${uuid}`} className="hover:text-blue1 font-bold text-white">
                         {name}
                     </Link>
                 </div>
