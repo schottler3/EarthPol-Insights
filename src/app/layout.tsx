@@ -1,5 +1,6 @@
 import "./globals.css";
-import { AppProvider } from "./context/AppContext";
+import LeftMenu from "./components/LeftMenu";
+import Header from "./components/Header";
 
 export const metadata = {
   title: "EPMC Insights",
@@ -23,12 +24,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin='anonymous' />
         <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet" />
       </head>
-      <body
-        className={`antialiased`}
-      >
-        <AppProvider>
-          {children}
-        </AppProvider>
+      <body className="antialiased">
+          <Header />
+          
+          <div className="flex w-screen h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] lg:h-[calc(100vh-6rem)]">
+            <LeftMenu />
+            <main className="flex-1 overflow-y-auto pl-0 sm:pl-64 bg-navy">
+              {children}
+            </main>
+        </div>
       </body>  
     </html>
   );

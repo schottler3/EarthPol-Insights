@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Nation, ReactStateHandler, Town } from "../lib/types";
-import Verifier from "./Verifier";
+import Verifier from "../components/Verifier";
 import { checkDiscord, renderSkin } from "../lib/queries";
-import LocationItem from "./LocationItem";
-import Player from "./Player";
+import LocationItem from "../location/LocationItem";
+import Player from "../player/Player";
 
 export default function TownPage({townData}: {townData: Town}){
 

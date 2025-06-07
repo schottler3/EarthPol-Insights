@@ -132,43 +132,46 @@ export const renderSkin = async(uuid: string): Promise<string> => {
     }
 };
 
-export const getPlayerData = async(query: string) : Promise<Player> => {
+export const getPlayerData = async(query: string) : Promise<Player | null> => {
 
     if(USINGFAKE){
         switch(query){
             case "9a2657ea-e15c-4469-8886-6c101151eff0":
-                return FAKEPLAYERS[0];
+                return FAKEPLAYERS[0] as Player;
             case "b71c2a48-3f76-49a2-9e4c-b9826376a8f2":
-                return FAKEPLAYERS[1];
+                return FAKEPLAYERS[1] as Player;
             case "cba82d5-94fa-42f8-b7a7-83d9c06e3f6b":
-                return FAKEPLAYERS[2];
+                return FAKEPLAYERS[2] as Player;
             case "29e47b48-c631-4958-b07e-814e218ab5a9":
-                return FAKEPLAYERS[3];
+                return FAKEPLAYERS[3] as Player;
             case "753cb829-69c4-48c5-9432-8dfa12631d7f":
-                return FAKEPLAYERS[4];
+                return FAKEPLAYERS[4] as Player;
+            default:
+                return null;
         }
     }
+    else{
+        try {
+            const response = await fetch('/api/players', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: [query]
+                }),
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error fetching player data. Status: ${response.status}`);
+            }
+            
+            const playerData = await response.json();
 
-    try {
-        const response = await fetch('/api/players', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                query: [query]
-            }),
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Error fetching player data. Status: ${response.status}`);
+            return playerData[0];
+        } catch (error: any) {
+            return error;
         }
-        
-        const playerData = await response.json();
-
-        return playerData[0];
-    } catch (error: any) {
-        return error;
     }
 }
 

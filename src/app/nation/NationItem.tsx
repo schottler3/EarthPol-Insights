@@ -1,17 +1,17 @@
 import { useState, useEffect} from "react";
 import {Town, type Nation, type ReactStateHandler} from "../lib/types";
 import { renderNation } from "../lib/queries";
-import TownItem from "./TownItem";
-import { useAppContext } from "../context/AppContext";
+import TownItem from "../town/TownItem";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function NationItem({ name, uuid, collapse}: { name: string, uuid:string, collapse: boolean}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [towns, setTowns] = useState<{name: string}[] | null>(null);
     const [nationData, setNationData] = useState<Nation | null>(null);
     const [isRendered, setIsRendered] = useState<boolean>(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const { selectedEntity, setSelectedEntity } = useAppContext();
+    const router = useRouter();
 
     useEffect(() => {
         setIsExpanded(collapse);
@@ -30,15 +30,9 @@ export default function NationItem({ name, uuid, collapse}: { name: string, uuid
         
     }, [collapse]);
 
-    function handleNationClick() : void {
-        setSelectedEntity(nationData);
-    }
-
     function handleExpandClick() : void {
         setIsExpanded(!isExpanded);
     }
-
-    //console.log(nationData);
 
     return (
         <>
@@ -60,9 +54,9 @@ export default function NationItem({ name, uuid, collapse}: { name: string, uuid
                         >
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
-                        <div onClick={handleNationClick}>
+                        <Link href={`/nation?uuid=${uuid}`} className="hover:text-blue1">
                             {name}
-                        </div>
+                        </Link>
                     </div>
                 </div>
                 <div 
@@ -94,7 +88,7 @@ export default function NationItem({ name, uuid, collapse}: { name: string, uuid
                         ))}
                     </div>
                     )}
-                    {towns && towns.length === 0 && (
+                    {nationData?.towns && nationData.towns.length === 0 && (
                         <div className="pl-2">No towns found</div>
                     )}
                 </div>

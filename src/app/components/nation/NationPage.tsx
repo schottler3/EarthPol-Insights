@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Nation, ReactStateHandler, Town } from "../lib/types";
-import Verifier from "./Verifier";
-import { checkDiscord, renderSkin } from "../lib/queries";
-import LocationItem from "./LocationItem";
-import Player from "./Player";
+import { Nation, ReactStateHandler, Town } from "../../lib/types";
+import Verifier from "../Verifier";
+import { checkDiscord, renderSkin } from "../../lib/queries";
+import LocationItem from "../../location/LocationItem";
+import Player from "../../player/Player";
 
-export default function NationPage({nationData}: {nationData: Nation}){
+export default function page({nationData}: {nationData: Nation}){
 
     const [isVerifying, setIsVerifying] = useState<boolean>(false);
     const verifierRef = useRef<HTMLDivElement>(null);

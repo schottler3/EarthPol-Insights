@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Nation, ReactStateHandler, Town } from "../lib/types";
 import { renderSkin, renderTown} from "../lib/queries";
-import Player from "./Player";
-import { useAppContext } from "../context/AppContext";
+import Player from "../player/Player";
+import Link from "next/link";
 
 export default function TownItem({name, uuid}: {name:string, uuid:string}) {
 
@@ -13,8 +13,6 @@ export default function TownItem({name, uuid}: {name:string, uuid:string}) {
     const [error, setError] = useState<string | null>(null);
     const [townData, setTownData] = useState<Town | null>(null);
     const [imageData, setImageData] = useState<string | null>(null);
-    const { selectedEntity, setSelectedEntity } = useAppContext();
-
     
     useEffect(() => {
         if(isRendered) return;
@@ -39,12 +37,7 @@ export default function TownItem({name, uuid}: {name:string, uuid:string}) {
         
         fetchTownData();
     }, [name, isRendered]);
-
-    function handleTownClick() : void {
-        console.log(townData?.name)
-        setSelectedEntity(townData);
-    }
-
+    
     function handleExpandClick() : void {
         setIsExpanded(!isExpanded);
     }
@@ -72,9 +65,9 @@ export default function TownItem({name, uuid}: {name:string, uuid:string}) {
                 >
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
-                <div onClick={handleTownClick}>
+                <Link href={`/town?uuid=${uuid}`} className="hover:text-blue1">
                     {name}
-                </div>
+                </Link>
             </div>
             
             {isExpanded && (

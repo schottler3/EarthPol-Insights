@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import { checkDiscord, getDiscordSrc, renderLocation } from "../lib/queries";
 import { Invite, ReactStateHandler } from "../lib/types";
-import { useAppContext } from "../context/AppContext";
+import Link from "next/link";
 
 export default function LocationItem({name, uuid}: {name: string, uuid: string}) {
     const [discordInfo, setDiscordInfo] = useState<{data: Invite | null}>({ data: null });
     const [isLoading, setIsLoading] = useState(false);
     const hasLoadedRef = useRef(false);
-    const { selectedEntity, setSelectedEntity } = useAppContext();
 
     useEffect(() => {
 
@@ -60,12 +59,9 @@ export default function LocationItem({name, uuid}: {name: string, uuid: string})
                             alt={`${name} Discord server`}
                         />
                     )}
-                    <h1 onClick={async () => {
-                        const locationObject = await renderLocation(uuid, null);
-                        setSelectedEntity(locationObject);
-                    }}>
+                    <Link href={`/location?uuid=${uuid}`} className="hover:text-blue1">
                         {name}
-                    </h1>
+                    </Link>
                 </div>
             )}
         </div>
