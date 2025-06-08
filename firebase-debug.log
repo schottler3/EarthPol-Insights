@@ -1,0 +1,107 @@
+[debug] [2025-06-07T06:36:44.281Z] ----------------------------------------------------------------------
+[debug] [2025-06-07T06:36:44.287Z] Command:       /root/.nvm/versions/node/v20.19.2/bin/node /root/.nvm/versions/node/v20.19.2/bin/firebase deploy --only hosting,functions
+[debug] [2025-06-07T06:36:44.288Z] CLI Version:   14.5.1
+[debug] [2025-06-07T06:36:44.288Z] Platform:      linux
+[debug] [2025-06-07T06:36:44.288Z] Node Version:  v20.19.2
+[debug] [2025-06-07T06:36:44.288Z] Time:          Sat Jun 07 2025 01:36:44 GMT-0500 (Central Daylight Time)
+[debug] [2025-06-07T06:36:44.288Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-06-07T06:36:44.290Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-06-07T06:36:44.487Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-06-07T06:36:44.487Z] > authorizing via signed-in user (lucasschottler@gmail.com)
+[debug] [2025-06-07T06:36:44.487Z] [iam] checking project earthpol-insights for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-06-07T06:36:44.488Z] Checked if tokens are valid: false, expires at: 1749175342736
+[debug] [2025-06-07T06:36:44.488Z] Checked if tokens are valid: false, expires at: 1749175342736
+[debug] [2025-06-07T06:36:44.488Z] > refreshing access token with scopes: []
+[debug] [2025-06-07T06:36:44.489Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-06-07T06:36:44.489Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-06-07T06:36:44.628Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-06-07T06:36:44.629Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2025-06-07T06:36:44.740Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-06-07T06:36:44.740Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-06-07T06:36:44.885Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/earthpol-insights:testIamPermissions [none]
+[debug] [2025-06-07T06:36:44.886Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/earthpol-insights:testIamPermissions x-goog-quota-user=projects/earthpol-insights
+[debug] [2025-06-07T06:36:44.886Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/earthpol-insights:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-07T06:36:45.106Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/earthpol-insights:testIamPermissions 200
+[debug] [2025-06-07T06:36:45.106Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/earthpol-insights:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-07T06:36:45.107Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:45.107Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:45.107Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/earthpol-insights [none]
+[debug] [2025-06-07T06:36:45.355Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/earthpol-insights 200
+[debug] [2025-06-07T06:36:45.356Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/earthpol-insights {"projectId":"earthpol-insights","projectNumber":"550138244897","displayName":"EarthPol-Insights","name":"projects/earthpol-insights","resources":{"hostingSite":"earthpol-insights"},"state":"ACTIVE","etag":"1_2062002f-f9ab-488e-977a-c377c07c3bf6"}
+[debug] [2025-06-07T06:36:46.726Z] defaultcredentials: writing to file /root/.config/firebase/lucasschottler_gmail_com_application_default_credentials.json
+[debug] [2025-06-07T06:36:46.730Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:46.730Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:46.731Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites pageToken=&pageSize=10
+[debug] [2025-06-07T06:36:47.157Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites 200
+[debug] [2025-06-07T06:36:47.157Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites {"sites":[{"name":"projects/earthpol-insights/sites/earthpol-insights","defaultUrl":"https://earthpol-insights.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-06-07T06:36:47.158Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:47.158Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:47.158Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites 
+[debug] [2025-06-07T06:36:47.344Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites 200
+[debug] [2025-06-07T06:36:47.344Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites {"sites":[{"name":"projects/earthpol-insights/sites/earthpol-insights","defaultUrl":"https://earthpol-insights.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-06-07T06:36:47.344Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:47.344Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:47.344Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/earthpol-insights/webApps/-/config [none]
+[debug] [2025-06-07T06:36:47.508Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/earthpol-insights/webApps/-/config 200
+[debug] [2025-06-07T06:36:47.509Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/earthpol-insights/webApps/-/config {"projectId":"earthpol-insights","appId":"1:550138244897:web:43fe595ea9bf57f7f29860","storageBucket":"earthpol-insights.firebasestorage.app","apiKey":"AIzaSyDgsO-AlUIsBrbKd8GDBygCMiOzqmSFv60","authDomain":"earthpol-insights.firebaseapp.com","messagingSenderId":"550138244897","measurementId":"G-28X0Q0LFBF"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 15.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-06-07T06:36:49.676Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:49.676Z] Checked if tokens are valid: true, expires at: 1749281803740
+[debug] [2025-06-07T06:36:49.677Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites/earthpol-insights [none]
+[debug] [2025-06-07T06:36:49.791Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites/earthpol-insights 200
+[debug] [2025-06-07T06:36:49.791Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/earthpol-insights/sites/earthpol-insights {"name":"projects/earthpol-insights/sites/earthpol-insights","defaultUrl":"https://earthpol-insights.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.2.0-canary.1
+
+[info]    - Environments: .env.local
+
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info]    Collecting page data ...
+
+[info] Firebase Admin initialized with local credentials
+
+[info] Firebase Admin initialized with local credentials
+
+[info] Firebase Admin initialized with local credentials
+
+[info]    Generating static pages (0/17) ...
+
+[info]    Generating static pages (4/17) 
+
+[info]    Generating static pages (8/17) 
+
+[info]  ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/location". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at s (/root/EarthPol-Insights/.next/server/chunks/298.js:3:213696)
+    at d (/root/EarthPol-Insights/.next/server/chunks/298.js:3:230631)
+    at d (/root/EarthPol-Insights/.next/server/app/location/page.js:1:2762)
+    at nP (/root/EarthPol-Insights/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:45671)
+    at nA (/root/EarthPol-Insights/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:47446)
+    at nI (/root/EarthPol-Insights/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:65238)
+    at n$ (/root/EarthPol-Insights/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:62869)
+    at nO (/root/EarthPol-Insights/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:46023)
+    at nA (/root/EarthPol-Insights/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:47492)
+    at nA (/root/EarthPol-Insights/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:20:62220)
+Error occurred prerendering page "/location". Read more: https://nextjs.org/docs/messages/prerender-error
+Export encountered an error on /location/page: /location, exiting the build.
+
+[info]  ⨯ Static worker exited with code: 1 and signal: null
+
+[debug] [2025-06-07T06:37:14.096Z] Error: ENOENT: no such file or directory, open '/root/EarthPol-Insights/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.

@@ -1,31 +1,29 @@
 import { useEffect, useRef, useState } from "react"
-import { checkDiscord, getDiscordSrc, renderLocation } from "../lib/queries";
-import { Invite, ReactStateHandler } from "../lib/types";
-import { useAppContext } from "../context/AppContext";
+import { getDiscordSrc } from "../lib/queries";
+import { Invite } from "../lib/types";
+import Link from "next/link";
 
 export default function LocationItem({name, uuid}: {name: string, uuid: string}) {
     const [discordInfo, setDiscordInfo] = useState<{data: Invite | null}>({ data: null });
     const [isLoading, setIsLoading] = useState(false);
     const hasLoadedRef = useRef(false);
-    const { selectedEntity, setSelectedEntity } = useAppContext();
 
+
+    /*
+    TODO
+    Once added for /nations.discord at POST
+    */
+    /*
     useEffect(() => {
-
-        if (hasLoadedRef.current) return;
         
-        // Prevent duplicate requests with loading state
         setIsLoading(true);
         
         const getInviteInfo = async () => {
             try {
-                const discordLink = await checkDiscord(uuid);
-                if (discordLink) {
-                    const info = await getDiscordSrc(discordLink);
-                    setDiscordInfo({ data: info });
-                    hasLoadedRef.current = true;
-                } else {
-                    setDiscordInfo({ data: null });
-                }
+                let discordLink = "";
+                const info = await getDiscordSrc(discordLink);
+                setDiscordInfo({ data: info });
+                hasLoadedRef.current = true;
             } catch (error) {
                 console.error(`Error loading invite info for ${name}:`, error);
             } finally {
@@ -35,7 +33,8 @@ export default function LocationItem({name, uuid}: {name: string, uuid: string})
 
         getInviteInfo();
         
-    }, [uuid, name]);
+    }, [name]);
+    */
 
     return (
         <div className="relative">
@@ -60,12 +59,9 @@ export default function LocationItem({name, uuid}: {name: string, uuid: string})
                             alt={`${name} Discord server`}
                         />
                     )}
-                    <h1 onClick={async () => {
-                        const locationObject = await renderLocation(uuid, null);
-                        setSelectedEntity(locationObject);
-                    }}>
+                    <Link href={`/location?uuid=${uuid}`} className="hover:text-blue1 font-bold text-white">
                         {name}
-                    </h1>
+                    </Link>
                 </div>
             )}
         </div>

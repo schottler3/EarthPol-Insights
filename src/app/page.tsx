@@ -1,134 +1,35 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
-import NationItem from "./components/NationItem";
-import Header from "./components/Header";
-import { FAKECUBA, FAKENATIONS, isTown, Nation, Town, USINGFAKE } from "./lib/types";
-import NationPage from "./components/NationPage";
-import TownPage from "./components/TownPage";
-import { useAppContext } from "./context/AppContext";
+import Link from 'next/link';
 
-interface NationItem {
-  index: number;
-  name: string;
-  uuid: string;
-}
-
-export default function EarthPol() {
-
-    const [nations, setNations] = useState<NationItem[] | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const { selectedEntity, setSelectedEntity, expanded, setExpanded } = useAppContext();
-
-    useEffect(() => {
-        if(USINGFAKE){
-            setNations(FAKENATIONS.map((nation, index) => ({
-                ...nation,
-                index
-            })));
-            setSelectedEntity(FAKECUBA);
-            setLoading(false);
-        }
-        else {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('/api/earthpol/nations');
-                    
-                    if (!response.ok) {
-                        throw new Error(`Error! Status: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    console.log('Fetched data:', result);
-                    setNations(result);
-                    console.log(result[0])
-                    setSelectedEntity(result[0]);
-                    setLoading(false);
-                } catch (e: unknown) {
-                    const error = e instanceof Error ? e : new Error(String(e));
-                    console.error('Error fetching data:', error);
-                    if(!nations){
-                        setError(error.message);
-                        setLoading(false);
-                    }
-                    
-                }
-            };
-
-            fetchData();
-        }
-    }, [])
-
+export default function page() {
     return (
-        <>
-            <Header/>
-            
-            <div className="bg-charcoal pt-20 min-h-screen h-screen oswald-earth">
-                {loading ? (
-                    <div className="text-white p-4">Loading...</div>
-                ) : error ? (
-                    <div className="text-red-500 p-4">Error: {error}</div>
-                ) : !nations ? (
-                    <div className="text-white text-4xl flex flex-col justify-center h-screen items-center">
-                        <h1>The server at</h1>
-                        <a className="text-aqua1 font-bold" href="https://api.earthpol.com/astra/">https://api.earthpol.com/astra/</a>
-                        <h1>appears to be down :(</h1>
+        <div className="h-full flex justify-center items-center" style={{backgroundImage: "url('/images/map.jpg')"}}>
+            <div className="flex flex-col max-w-[40vw] mx-auto bg-charcoal bg-opacity-80 p-8 rounded-md">
+                <h1 className="text-3xl font-bold text-blue1 mb-6">
+                    Welcome to EarthPol Insights
+                </h1>
+                <div className="text-lg text-white space-y-4">
+                    <p>
+                        EarthPol Insights provides a streamlined interface to access and visualize data from the EarthPol Minecraft server. 
+                        Our dashboard brings together information about nations, towns, players, and more in one convenient location.
+                    </p>
+                    <p>
+                        Browse through the sidebar to explore nations and towns, or use the search function to find specific players
+                        and their affiliations. Whether you're planning diplomatic strategies or just curious about the server's 
+                        geopolitical landscape, EarthPol Insights has you covered.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                        <Link href="https://earthpol.com" 
+                            className="px-4 py-2 bg-blue1 font-bold text-white rounded hover:bg-aqua1 hover:text-navy transition text-center">
+                            Visit Official EarthPol Website
+                        </Link>
+                        <Link href="https://earthpol.com/docs/api" 
+                            className="px-4 py-2 border border-blue1 font-bold text-blue1 rounded hover:bg-aqua1 hover:text-navy transition text-center">
+                            Explore EarthPol API Documentation
+                        </Link>
                     </div>
-                ) : (
-                    <div className="grid grid-cols-[20%_80%] w-full">
-                        {/*Left side page (nationItems and townItems) */}
-                        <div className="flex justify-left pl-8 pt-10 overflow-y-auto max-h-screen no-scrollbar">
-                            <div className="flex flex-col">
-                                <div className="text-white hover:cursor-pointer flex items-center gap-2" onClick={() => setExpanded(!expanded)}>
-                                    <svg 
-                                        className={`w-4 h-4 transition-transform text-blue1 ${expanded ? 'rotate-180' : ''}`} 
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        viewBox="0 0 24 24" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        strokeWidth="2"
-                                    >
-                                        <polyline points="6 9 12 15 18 9"></polyline>
-                                    </svg>
-                                    <h2>
-                                        {expanded ? 'Collapse All' : 'Expand All'}
-                                    </h2>
-                                </div>
-                                {
-                                    nations.map((item: NationItem, index: number) => (
-                                        <NationItem
-                                            key={index}
-                                            name={item.name}
-                                            uuid={item.uuid}
-                                            collapse={expanded}
-                                        />
-                                    ))
-                                }
-                            </div>
-                        </div>
-                        {/*Right side page */}
-                        <div className="bg-navy max-h-screen overflow-y-auto no-scrollbar">
-                            {selectedEntity ? 
-                                <>
-                                    <div className="bg-navy pt-8 text-white flex justify-center">
-                                        {isTown(selectedEntity) ? 
-                                            <TownPage
-                                                townData={selectedEntity}
-                                            />
-                                            :
-                                            <NationPage
-                                                nationData={selectedEntity}
-                                            />
-                                        }
-                                    </div>
-                                </>
-                                :
-                                null
-                            }
-                        </div>
-                    </div>
-            )}
+                </div>
+            </div>
         </div>
-    </>
-)
+    )
 }
