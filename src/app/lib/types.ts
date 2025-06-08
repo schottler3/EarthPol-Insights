@@ -210,7 +210,7 @@ export type Invite = {
     inviteURL: string;
 };
 
-export const USINGFAKE = true;
+export const USINGFAKE = false;
 
 export const FAKENATIONS = 
 [

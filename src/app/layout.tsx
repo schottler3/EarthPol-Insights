@@ -28,8 +28,9 @@ export default function RootLayout({
           <Header />
           
           <div className="flex w-screen h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] lg:h-[calc(100vh-6rem)]">
-            <LeftMenu />
-            <main className="flex-1 overflow-y-auto pl-0 sm:pl-64 bg-navy">
+            <div className="w-min">
+            <LeftMenu /></div>
+            <main className="overflow-y-auto overflow-x-hidden no-scrollbar w-full bg-navy">
               {children}
             </main>
         </div>

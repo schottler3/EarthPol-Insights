@@ -15,12 +15,7 @@ export default function Player({name, uuid}: {name:string, uuid:string}) {
             setSkinURL(await renderSkin(uuid))
         }
 
-        const getData = async () => {
-            setPlayerData(await getPlayerData(uuid));
-        }
-
         getSkin();
-        getData();
     }, [uuid])
 
     useEffect(() => {

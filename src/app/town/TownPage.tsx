@@ -1,87 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { Nation, ReactStateHandler, Town } from "../lib/types";
-import Verifier from "../components/Verifier";
-import { checkDiscord, renderSkin } from "../lib/queries";
+import { Town } from "../lib/types";
 import LocationItem from "../location/LocationItem";
 import Player from "../player/Player";
 
 export default function TownPage({townData}: {townData: Town}){
 
-    const [isVerifying, setIsVerifying] = useState<boolean>(false);
-    const verifierRef = useRef<HTMLDivElement>(null);
-    const [discordLink, setDiscordLink] = useState<string>("");
-    const [isLoadingDiscord, setIsLoadingDiscord] = useState<boolean>(true);
-
-    useEffect(() => {
-            if (isVerifying) {
-                console.log("Closing verifier due to selectedItem change");
-                setIsVerifying(false);
-            }
-
-            const fetchDiscordLink = async () => {
-                setIsLoadingDiscord(true);
-                const link:string | null = await checkDiscord(townData.uuid);
-                if(!link)
-                    setDiscordLink("")
-                else
-                    setDiscordLink(link);
-            };
-            
-            fetchDiscordLink().then(() => {
-                setIsLoadingDiscord(false);
-                console.log("Discord link: " + discordLink);
-            });
-
-        }, [townData]);
-    
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (
-            isVerifying && 
-            verifierRef.current && 
-            !verifierRef.current.contains(event.target as Node)
-            ) {
-            setIsVerifying(false);
-            }
-        }
-        
-        if (isVerifying) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-        
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isVerifying]);
-
     return (
         <div className="w-full px-8 mt-8 h-screen flex flex-col">
-            {isVerifying && townData ? (
-                <div ref={verifierRef}>
-                    <Verifier
-                        uuid={townData.mayor.uuid}
-                        locationUUID={townData.uuid}
-                        onClose={() => setIsVerifying(false)}
-                    />
-                </div>
-            ) :
-            (
-                isLoadingDiscord ?
-                (
-                    null
-                )
-                :
-                (
-                    discordLink ? 
-                    <h1 onClick={() => setIsVerifying(!isVerifying)} className="text-blue1 text-md font-bold absolute top-24 right-6 p-2 bg-charcoal rounded-md hover:cursor-pointer">
-                        Change Invite
-                    </h1>
-                    :
-                    <h1 onClick={() => setIsVerifying(!isVerifying)} className="text-white text-md font-bold absolute top-24 right-6 p-2 bg-blue1 rounded-md hover:cursor-pointer">
-                        Your Town?
-                    </h1>
-                )
-            )}
             <div className="text-lg flex flex-col items-center">
                 <div className="text-5xl text-center font-bold">
                     {townData.name}
@@ -176,7 +100,7 @@ export default function TownPage({townData}: {townData: Town}){
                     </div>
                     <div className="flex flex-col py-4">
                         <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="flex flex-row gap-4 bg-charcoal p-4 rounded-md">
+                        <div className="grid grid-cols-3 gap-4 bg-charcoal p-4 rounded-md">
                             {townData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${townData.name}-resident-${resident.uuid}`}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
-import { checkDiscord, getDiscordSrc, renderLocation } from "../lib/queries";
-import { Invite, ReactStateHandler } from "../lib/types";
+import { getDiscordSrc } from "../lib/queries";
+import { Invite } from "../lib/types";
 import Link from "next/link";
 
 export default function LocationItem({name, uuid}: {name: string, uuid: string}) {
@@ -8,23 +8,22 @@ export default function LocationItem({name, uuid}: {name: string, uuid: string})
     const [isLoading, setIsLoading] = useState(false);
     const hasLoadedRef = useRef(false);
 
-    useEffect(() => {
 
-        if (hasLoadedRef.current) return;
+    /*
+    TODO
+    Once added for /nations.discord at POST
+    */
+    /*
+    useEffect(() => {
         
-        // Prevent duplicate requests with loading state
         setIsLoading(true);
         
         const getInviteInfo = async () => {
             try {
-                const discordLink = await checkDiscord(uuid);
-                if (discordLink) {
-                    const info = await getDiscordSrc(discordLink);
-                    setDiscordInfo({ data: info });
-                    hasLoadedRef.current = true;
-                } else {
-                    setDiscordInfo({ data: null });
-                }
+                let discordLink = "";
+                const info = await getDiscordSrc(discordLink);
+                setDiscordInfo({ data: info });
+                hasLoadedRef.current = true;
             } catch (error) {
                 console.error(`Error loading invite info for ${name}:`, error);
             } finally {
@@ -34,7 +33,8 @@ export default function LocationItem({name, uuid}: {name: string, uuid: string})
 
         getInviteInfo();
         
-    }, [uuid, name]);
+    }, [name]);
+    */
 
     return (
         <div className="relative">

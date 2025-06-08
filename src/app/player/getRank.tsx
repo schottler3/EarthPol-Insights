@@ -5,7 +5,6 @@ export default function getRank(playerData: Player): { name: string; url: string
     if (!playerData?.ranks?.nationRanks) return null;
     
     const rankPriority: Record<string, number> = {
-        "king": 6,
         "co-leader": 5,
         "minister": 4,
         "general": 3,
@@ -17,6 +16,13 @@ export default function getRank(playerData: Player): { name: string; url: string
         name: string;
         url: string;
     }
+
+    if(playerData.status.isKing){
+        return {name: "King", url: "/images/ranks/King.png"};
+    }
+    else if(playerData.status.isMayor){
+        return {name: "Mayor", url: "/images/ranks/Star.svg"};
+    }
     
     let highestRankFound: RankInfo | null = null;
     let highestPriority = 0;
@@ -25,9 +31,6 @@ export default function getRank(playerData: Player): { name: string; url: string
         if (rankPriority[rank] > highestPriority) {
             highestPriority = rankPriority[rank];
             switch (rank) {
-                case "king":
-                    highestRankFound = {name: "King", url: "/images/ranks/King.png"};
-                    break;
                 case "co-leader":
                     highestRankFound = {name: "Co-leader", url: "/images/ranks/Queen.png"};
                     break;

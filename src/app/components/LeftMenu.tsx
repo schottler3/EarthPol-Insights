@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import useScreenSize from "../hooks/useScreenSize";
 import NationItem from "../nation/NationItem";
 import { FAKENATIONS, USINGFAKE } from "../lib/types";
+import TownItem from "../town/TownItem";
 
 export default function LeftMenu() {
     const [expanded, setExpanded] = useState<boolean>(false);
@@ -11,10 +12,17 @@ export default function LeftMenu() {
     const prevIsMobileRef = useRef(isMobile);
     const isFirstMount = useRef(true);
     const [nations, setNations] = useState<NationItem[] | null>(null);
+    const [towns, setTowns] = useState<TownItem[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     interface NationItem {
+        index: number;
+        name: string;
+        uuid: string;
+    }
+
+    interface TownItem {
         index: number;
         name: string;
         uuid: string;
@@ -53,14 +61,13 @@ export default function LeftMenu() {
         else {
             const fetchData = async () => {
                 try {
-                    const response = await fetch('/api/earthpol/nations');
+                    const response = await fetch('/api/nations');
                     
                     if (!response.ok) {
                         throw new Error(`Error! Status: ${response.status}`);
                     }
                     
                     const result = await response.json();
-                    console.log('Fetched data:', result);
                     setNations(result);
                     setLoading(false);
                 } catch (e: unknown) {
@@ -72,6 +79,26 @@ export default function LeftMenu() {
                     }
                     
                 }
+                try {
+                    const response = await fetch('/api/towns');
+                    
+                    if (!response.ok) {
+                        throw new Error(`Error! Status: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    setTowns(result);
+                    setLoading(false);
+                } catch (e: unknown) {
+                    const error = e instanceof Error ? e : new Error(String(e));
+                    console.error('Error fetching data:', error);
+                    if(!nations){
+                        setError(error.message);
+                        setLoading(false);
+                    }
+                    
+                }
+
             };
 
             fetchData();
@@ -79,7 +106,7 @@ export default function LeftMenu() {
     },[])
 
     return (
-        <div className={`flex flex-col fixed w-64 h-screen z-50 justify-left pl-8 pt-3 overflow-y-auto max-h-screen no-scrollbar ${isOpen ? `bg-charcoal` : ``}`}>
+        <div className={`flex flex-col w-auto h-screen z-50 justify-left pl-8 pt-3 overflow-y-auto max-h-screen no-scrollbar ${isOpen ? `bg-charcoal` : ``}`}>
             <svg
                 onClick={() => {
                     setIsOpen(!isOpen);
@@ -125,7 +152,7 @@ export default function LeftMenu() {
             </svg>
             <div 
                 className={
-                    `duration-300 transition-opacity 
+                    `duration-300 transition-opacity
                     ${isOpen ? 
                         `flex flex-col opacity-100 relative` 
                         : 
@@ -148,6 +175,7 @@ export default function LeftMenu() {
                         {expanded ? 'Collapse All' : 'Expand All'}
                     </h2>
                 </div>
+                <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Nations: {nations?.length}</h1>
                 {
                     nations?.map((item: NationItem, index: number) => (
                         <NationItem
@@ -155,6 +183,16 @@ export default function LeftMenu() {
                             name={item.name}
                             uuid={item.uuid}
                             collapse={expanded}
+                        />
+                    ))
+                }
+                <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Towns: {towns?.length}</h1>
+                {
+                    towns?.map((item: NationItem, index: number) => (
+                        <TownItem
+                            key={index}
+                            name={item.name}
+                            uuid={item.uuid}
                         />
                     ))
                 }

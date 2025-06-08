@@ -7,45 +7,38 @@ import Link from "next/link";
 export default function TownItem({name, uuid}: {name:string, uuid:string}) {
 
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const [players, setPlayers] = useState<{"name": string, "uuid":string}[] | null>(null);
-    const [isRendered, setIsRendered] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [townData, setTownData] = useState<Town | null>(null);
-    const [imageData, setImageData] = useState<string | null>(null);
-    
-    useEffect(() => {
-        if(isRendered) return;
-        
-        const fetchTownData = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                
-                const locationObject = await renderTown(uuid, true);
-                console.log("Town data received:", locationObject);
-                setTownData(locationObject as Town);
-                
-            } catch (err) {
-                console.error("Error fetching town data:", err);
-                setError(err instanceof Error ? err.message : "Unknown error");
-            } finally {
-                setLoading(false);
-                setIsRendered(true);
-            }
-        };
-        
-        fetchTownData();
-    }, [name, isRendered]);
+    const [isRendered, setIsRendered] = useState<boolean>(false);
+
+    const fetchTownData = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            const locationObject = await renderTown(uuid, true);
+            setTownData(locationObject as Town);
+            
+        } catch (err) {
+            console.error("Error fetching town data:", err);
+            setError(err instanceof Error ? err.message : "Unknown error");
+        } finally {
+            setLoading(false);
+        }
+    };
     
     function handleExpandClick() : void {
-        setIsExpanded(!isExpanded);
+        if(isRendered){
+            setIsExpanded(!isExpanded);
+        }
+        else{
+            fetchTownData().then(() => {
+                setIsExpanded(!isExpanded);
+                setIsRendered(true);
+            });
+        }
     }
-
-    async function handleUserClick(uuid: string) {
-        console.log("Clicked UUID:", uuid);
-        setImageData(await renderSkin(uuid));
-}
 
     return (
         <div className="mb-2">

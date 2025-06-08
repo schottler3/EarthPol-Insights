@@ -1,87 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Nation, ReactStateHandler, Town } from "../lib/types";
-import Verifier from "../components/Verifier";
-import { checkDiscord, renderSkin } from "../lib/queries";
+import { Nation } from "../lib/types";
 import LocationItem from "../location/LocationItem";
 import Player from "../player/Player";
 
 export default function page({nationData}: {nationData: Nation}){
-
-    const [isVerifying, setIsVerifying] = useState<boolean>(false);
-    const verifierRef = useRef<HTMLDivElement>(null);
-    const [discordLink, setDiscordLink] = useState<string>("");
-    const [isLoadingDiscord, setIsLoadingDiscord] = useState<boolean>(true);
-
-    useEffect(() => {
-        if (isVerifying) {
-            console.log("Closing verifier due to selectedItem change");
-            setIsVerifying(false);
-        }
-
-        const fetchDiscordLink = async () => {
-            setIsLoadingDiscord(true);
-            const link:string | null = await checkDiscord(nationData.uuid);
-            if(!link)
-                setDiscordLink("")
-            else
-                setDiscordLink(link);
-        };
-        
-        fetchDiscordLink().then(() => {
-            setIsLoadingDiscord(false);
-            console.log("Discord link: " + discordLink);
-        });
-
-    }, [nationData]);
-    
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (
-            isVerifying && 
-            verifierRef.current && 
-            !verifierRef.current.contains(event.target as Node)
-            ) {
-            setIsVerifying(false);
-            }
-        }
-        
-        if (isVerifying) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-        
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isVerifying]);
-
     return (
         <div className="w-full px-8 pt-8 flex flex-col">
-            {isVerifying && nationData ? (
-                <div ref={verifierRef}>
-                    <Verifier
-                        uuid={nationData.king.uuid}
-                        locationUUID={nationData.uuid}
-                        onClose={() => setIsVerifying(false)}
-                    />
-                </div>
-            ) :
-            (
-                isLoadingDiscord ?
-                (
-                    null
-                )
-                :
-                (
-                    discordLink ? 
-                    <h1 onClick={() => setIsVerifying(!isVerifying)} className="text-blue1 text-md font-bold absolute top-24 right-6 p-2 bg-charcoal rounded-md hover:cursor-pointer">
-                        Change Invite
-                    </h1>
-                    :
-                    <h1 onClick={() => setIsVerifying(!isVerifying)} className="text-white text-md font-bold absolute top-24 right-6 p-2 bg-blue1 rounded-md hover:cursor-pointer">
-                        Your Nation?
-                    </h1>
-                )
-            )}
             <div className="text-lg flex flex-col items-center">
                 <div className="text-5xl text-center font-bold">
                     {nationData.name}
@@ -187,16 +110,13 @@ export default function page({nationData}: {nationData: Nation}){
                             Allies:
                         </h1>
                         <div className="flex flex-row gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
-                            {!isLoadingDiscord ? 
-                                nationData.allies?.map((ally: {name: string, uuid: string}) => (
-                                    <LocationItem
-                                        key={`${nationData.name}-ally-${ally.uuid}`}
-                                        name={ally.name}
-                                        uuid={ally.uuid}
-                                    ></LocationItem>
-                                ))
-                                :
-                                null
+                            {nationData.allies?.map((ally: {name: string, uuid: string}) => (
+                                <LocationItem
+                                    key={`${nationData.name}-ally-${ally.uuid}`}
+                                    name={ally.name}
+                                    uuid={ally.uuid}
+                                ></LocationItem>
+                            ))
                             }
                         </div>
                     </div>
@@ -211,16 +131,13 @@ export default function page({nationData}: {nationData: Nation}){
                             Enemies:
                         </h1>
                         <div className="flex flex-row gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
-                            {!isLoadingDiscord ? 
-                                nationData.enemies?.map((enemy: {name: string, uuid: string}) => (
-                                    <LocationItem
-                                        key={`${nationData.name}-ally-${enemy.uuid}`}
-                                        name={enemy.name}
-                                        uuid={enemy.uuid}
-                                    ></LocationItem>
-                                ))
-                                :
-                                null
+                            {nationData.enemies?.map((enemy: {name: string, uuid: string}) => (
+                                <LocationItem
+                                    key={`${nationData.name}-ally-${enemy.uuid}`}
+                                    name={enemy.name}
+                                    uuid={enemy.uuid}
+                                ></LocationItem>
+                            ))
                             }
                         </div>
                     </div>
@@ -229,7 +146,7 @@ export default function page({nationData}: {nationData: Nation}){
                     null}
                     <div className="flex flex-col">
                         <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="flex flex-row gap-4 bg-charcoal p-4 rounded-md">
+                        <div className="grid grid-cols-3 gap-4 bg-charcoal p-4 rounded-md">
                             {nationData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${nationData.name}-resident-${resident.uuid}`}

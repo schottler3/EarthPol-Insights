@@ -177,17 +177,6 @@ export const getPlayerData = async(query: string) : Promise<Player | null> => {
     }
 }
 
-export const checkDiscord = async (locationUUID: string) : Promise<string | null> => {
-    if (!locationUUID) {
-      console.error("Missing locationUUID parameter");
-      return "";
-    }
-    
-    const discord: string | null = await getDiscord(locationUUID);
-
-    return discord;
-};
-
 export const getDiscordSrc = async (invite: string): Promise<Invite | null> => {
   try {
     if (!invite) return null;
