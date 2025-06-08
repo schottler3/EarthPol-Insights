@@ -1,5 +1,3 @@
-import { adminDb } from "../api/firebase-admin";
-import { getDiscord } from "../databasing";
 import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE, FAKETOWNS, FAKEPLAYERS } from "./types";
 
 export const renderLocation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {

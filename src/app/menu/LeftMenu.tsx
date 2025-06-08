@@ -68,6 +68,7 @@ export default function LeftMenu() {
                     }
                     
                     const result = await response.json();
+                    result.sort((a:NationItem, b:NationItem) => a.name.localeCompare(b.name));
                     setNations(result);
                     setLoading(false);
                 } catch (e: unknown) {
@@ -87,6 +88,7 @@ export default function LeftMenu() {
                     }
                     
                     const result = await response.json();
+                    result.sort((a:TownItem, b:TownItem) => a.name.localeCompare(b.name));
                     setTowns(result);
                     setLoading(false);
                 } catch (e: unknown) {
@@ -106,7 +108,7 @@ export default function LeftMenu() {
     },[])
 
     return (
-        <div className={`flex flex-col w-auto h-screen z-50 justify-left pl-8 pt-3 overflow-y-auto max-h-screen no-scrollbar ${isOpen ? `bg-charcoal` : ``}`}>
+        <div className={`flex flex-col w-auto h-full z-50 justify-left pl-8 pt-3 overflow-y-auto no-scrollbar ${isOpen ? `bg-charcoal` : ``}`}>
             <svg
                 onClick={() => {
                     setIsOpen(!isOpen);
@@ -187,15 +189,17 @@ export default function LeftMenu() {
                     ))
                 }
                 <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Towns: {towns?.length}</h1>
-                {
-                    towns?.map((item: NationItem, index: number) => (
-                        <TownItem
-                            key={index}
-                            name={item.name}
-                            uuid={item.uuid}
-                        />
-                    ))
-                }
+                <div className="h-max">
+                    {
+                        towns?.map((item: NationItem, index: number) => (
+                            <TownItem
+                                key={index}
+                                name={item.name}
+                                uuid={item.uuid}
+                            />
+                        ))
+                    }
+                </div>
             </div>
         </div>
     )
