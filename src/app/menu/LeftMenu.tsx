@@ -1,9 +1,9 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
 import useScreenSize from "../hooks/useScreenSize";
-import NationItem from "../nation/NationItem";
+import NationItem from "./NationItem";
 import { FAKENATIONS, USINGFAKE } from "../lib/types";
-import TownItem from "../town/TownItem";
+import TownItem from "./TownItem";
 
 export default function LeftMenu() {
     const [expanded, setExpanded] = useState<boolean>(false);

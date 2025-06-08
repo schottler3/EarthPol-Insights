@@ -1,7 +1,7 @@
 import { useState, useEffect} from "react";
 import { type Nation } from "../lib/types";
 import { renderNation } from "../lib/queries";
-import TownItem from "../town/TownItem";
+import TownItem from "./TownItem";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -56,7 +56,7 @@ export default function NationItem({ name, uuid, collapse}: { name: string, uuid
                     >
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
-                    <Link href={`/nation?uuid=${uuid}`} className="hover:text-blue1">
+                    <Link href={`/nation/${uuid}`} className="hover:text-blue1">
                         {name}
                     </Link>
                 </div>

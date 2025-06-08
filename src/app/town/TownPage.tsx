@@ -58,16 +58,22 @@ export default function TownPage({townData}: {townData: Town}){
             </div>
             <div className="grid grid-cols-2 gap-8 mt-8">
                 <div className="flex flex-col justify-left gap-4"> 
-                    <h1 className="text-aqua1 text-2xl font-bold">
-                        Parent Nation:
-                    </h1>
-                    <div className="flex items-left">
-                        <LocationItem
-                            key={`${townData.name}-nation-${townData.nation.uuid}`}
-                            name={townData.nation.name}
-                            uuid={townData.nation.uuid}
-                        ></LocationItem>
-                    </div>
+                    {townData.nation.uuid ? (
+                        <>
+                            <h1 className="text-aqua1 text-2xl font-bold">
+                                Parent Nation:
+                            </h1>
+                            <div className="flex items-left">
+                                <LocationItem
+                                    key={`${townData.name}-nation-${townData.nation.uuid}`}
+                                    name={townData.nation.name}
+                                    uuid={townData.nation.uuid}
+                                ></LocationItem>
+                            </div>
+                        </>
+                        )
+                        : null
+                    }
                     <div className="flex text-sm italic text-gray-400 gap-4">
                         <div className="">
                             {`${Math.floor(townData.coordinates.spawn.x)}, ${Math.floor(townData.coordinates.spawn.y)}, ${Math.floor(townData.coordinates.spawn.z)}`}

@@ -1,69 +1,26 @@
-import { useEffect, useRef, useState } from "react"
-import { getDiscordSrc } from "../lib/queries";
-import { Invite } from "../lib/types";
 import Link from "next/link";
 
-export default function LocationItem({name, uuid}: {name: string, uuid: string}) {
-    const [discordInfo, setDiscordInfo] = useState<{data: Invite | null}>({ data: null });
-    const [isLoading, setIsLoading] = useState(false);
-    const hasLoadedRef = useRef(false);
-
-
-    /*
-    TODO
-    Once added for /nations.discord at POST
-    */
-    /*
-    useEffect(() => {
-        
-        setIsLoading(true);
-        
-        const getInviteInfo = async () => {
-            try {
-                let discordLink = "";
-                const info = await getDiscordSrc(discordLink);
-                setDiscordInfo({ data: info });
-                hasLoadedRef.current = true;
-            } catch (error) {
-                console.error(`Error loading invite info for ${name}:`, error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        getInviteInfo();
-        
-    }, [name]);
-    */
+export default function LocationItem({name, uuid, type}: {name: string, uuid: string, type?: string}) {
+    const getHref = () => {
+        if (type === 'nation') return `/nation/${uuid}`;
+        else return `/town/${uuid}`;
+    };
 
     return (
         <div className="relative">
-            {isLoading ? (
-                <div className="w-10 h-10 bg-gray-200 animate-pulse rounded-full"></div>
-            ) : (
-                <div className="flex flex-col items-center hover:cursor-pointer">
-                    {discordInfo?.data?.imageURL ? (
-                        <div className="has-tooltip">
-                            <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-8 rounded-t-md rounded-br-md">{discordInfo.data.serverName}</span>
-                            <img
-                                onClick={() => discordInfo?.data?.inviteURL && window.open(discordInfo.data.inviteURL, '_blank')}
-                                className="w-10 h-10 rounded-full" 
-                                src={discordInfo.data?.imageURL} 
-                                alt={`${name} Discord server`}
-                            />
-                        </div>
-                    ) : (
-                        <img
-                            className="w-10 h-10 rounded-full" 
-                            src="/images/Earth.svg"
-                            alt={`${name} Discord server`}
-                        />
-                    )}
-                    <Link href={`/location?uuid=${uuid}`} className="hover:text-blue1 font-bold text-white">
-                        {name}
-                    </Link>
-                </div>
-            )}
+            <div className="flex flex-col items-center hover:cursor-pointer">
+                <Link 
+                    href={getHref()}
+                    className="hover:text-blue1 flex flex-col items-center font-bold text-white"
+                >
+                    <img
+                        className="w-10 h-10 rounded-full" 
+                        src="/images/Earth.svg"
+                        alt={`${name}`}
+                    />
+                    {name}
+                </Link>
+            </div>
         </div>
     )
 }
