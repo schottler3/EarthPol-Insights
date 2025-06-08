@@ -58,7 +58,7 @@ export default function TownItem({name, uuid}: {name:string, uuid:string}) {
                 >
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
-                <Link href={`/town?uuid=${uuid}`} className="hover:text-blue1">
+                <Link href={`/town/${uuid}`} className="hover:text-blue1">
                     {name}
                 </Link>
             </div>

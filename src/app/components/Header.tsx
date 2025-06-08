@@ -16,7 +16,7 @@ export default function Header(){
             try {
                 const data = await getPlayerData(search);
                 if(data != null)
-                    router.push(`/player?uuid=${data.uuid}`)
+                    router.push(`/player/${data.uuid}`)
             } catch (e) {
                 console.log(e);
             }
