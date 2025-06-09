@@ -68,6 +68,7 @@ export default function TownPage({townData}: {townData: Town}){
                                     key={`${townData.name}-nation-${townData.nation.uuid}`}
                                     name={townData.nation.name}
                                     uuid={townData.nation.uuid}
+                                    type="nation"
                                 ></LocationItem>
                             </div>
                         </>

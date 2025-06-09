@@ -41,7 +41,7 @@ export default function Player({name, uuid}: {name:string, uuid:string}) {
                     hover:cursor-pointer hover:text-blue1 
                     ${highestRank ? `` : `border-r-4 rounded-r-full`}`
                     }
-                    href={`/player?uuid=${uuid}`}
+                    href={`/player/${uuid}`}
                 >
                     {name}
                 </Link>

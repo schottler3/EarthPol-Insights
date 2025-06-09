@@ -80,12 +80,13 @@ export default function page({nationData}: {nationData: Nation}){
                     </div>
                     <div className="flex flex-col gap-4">
                         <h1 className="text-2xl text-left text-blue1">Towns</h1>
-                        <div className="flex gap-8">
+                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-8">
                             {nationData.towns?.map((town: {name: string, uuid: string}) => (
                                 <LocationItem
                                     key={`${nationData.name}-town-${town.uuid}`}
                                     name={town.name}
                                     uuid={town.uuid}
+                                    type="town"
                                 >
                                 </LocationItem>
                             ))}
@@ -115,6 +116,7 @@ export default function page({nationData}: {nationData: Nation}){
                                     key={`${nationData.name}-ally-${ally.uuid}`}
                                     name={ally.name}
                                     uuid={ally.uuid}
+                                    type="nation"
                                 ></LocationItem>
                             ))
                             }
@@ -136,6 +138,7 @@ export default function page({nationData}: {nationData: Nation}){
                                     key={`${nationData.name}-ally-${enemy.uuid}`}
                                     name={enemy.name}
                                     uuid={enemy.uuid}
+                                    type="nation"
                                 ></LocationItem>
                             ))
                             }

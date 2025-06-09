@@ -1,4 +1,4 @@
-import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE, FAKETOWNS, FAKEPLAYERS } from "./types";
+import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE, FAKETOWNS, FAKEPLAYERS, Shop } from "./types";
 
 export const renderLocation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
     switch(query){
@@ -96,6 +96,30 @@ export const renderTown = async (query: string, town: boolean | null): Promise<T
 
     try {
         const response = await fetch('/api/towns', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: [query]
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error fetching location data. Status: ${response.status}`);
+        }
+        
+        const locationData = await response.json();
+
+        return locationData[0];
+    } catch (error: any) {
+        return error;
+    }
+};
+
+export const renderShops = async (query: string): Promise<Shop[] | null> => {
+    try {
+        const response = await fetch('/api/shop', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
