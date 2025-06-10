@@ -117,7 +117,29 @@ export const renderTown = async (query: string, town: boolean | null): Promise<T
     }
 };
 
-export const renderShops = async (query: string): Promise<Shop[] | null> => {
+export const renderShops = async (): Promise<Shop[] | null> => {
+    try {
+        const response = await fetch(`/api/shop`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            console.error(`Error fetching shops data. Status: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error: any) {
+        console.error('Error fetching shops data:', error);
+        return null;
+    }
+};
+
+export const renderPlayerShop = async (query: string): Promise<Shop | null> => {
     try {
         const response = await fetch('/api/shop', {
             method: 'POST',
@@ -130,12 +152,36 @@ export const renderShops = async (query: string): Promise<Shop[] | null> => {
         });
         
         if (!response.ok) {
-            throw new Error(`Error fetching location data. Status: ${response.status}`);
+            throw new Error(`Error fetching shop data. Status: ${response.status}`);
         }
         
-        const locationData = await response.json();
+        const shopData = await response.json();
 
-        return locationData[0];
+        return shopData[0];
+    } catch (error: any) {
+        return error;
+    }
+};
+
+export const renderPlayerShops = async (query: string): Promise<Shop[] | null> => {
+    try {
+        const response = await fetch('/api/shop', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: [query]
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error fetching shops data. Status: ${response.status}`);
+        }
+        
+        const shopsData = await response.json();
+
+        return shopsData[0];
     } catch (error: any) {
         return error;
     }

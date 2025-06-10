@@ -1,11 +1,13 @@
 "use client"
 
 import { useEffect, useState, Suspense } from 'react';
-import { Player, Shop } from '../../lib/types';
-import { getPlayerData, renderShops, renderSkin } from '../../lib/queries';
+import { Player, type Shop } from '../../lib/types';
+import { getPlayerData, renderPlayerShops, renderSkin } from '../../lib/queries';
 import { useParams } from 'next/navigation';
 import getRank from '../getRank';
 import LocationItem from '../../location/LocationItem';
+import ShopItem from '@/app/components/ShopItem';
+import ShopLoading from '@/app/shops/ShopLoading';
 
 function PlayerContent() {
   const params = useParams();
@@ -40,7 +42,7 @@ function PlayerContent() {
       try {
         if (uuid) {
           setIsShopLoading(true);
-          const data: Shop[] | null = await renderShops(uuid);
+          const data: Shop[] | null = await renderPlayerShops(uuid);
           if (data) {
             setPlayerShops(data);
           }
@@ -55,30 +57,6 @@ function PlayerContent() {
     renderPlayer();
     getShops();
   }, [uuid]);
-
-  function parseItemStack(itemString: string): { raw: string, item: string, count: number } {
-    let raw = "unknown_item";
-    let item = "Unknown Item";
-    let count = 0;
-    
-    // Match pattern: ItemStack{ITEM_NAME x NUMBER}
-    const regex = /ItemStack\{([A-Z_]+) x (\d+)(?:,.*?)?\}/;
-    const match = itemString.match(regex);
-    
-    if (match && match.length >= 3) {
-      const toSplit = match[1].split('_');
-      
-      raw = toSplit.join('_').toLowerCase();
-      
-      item = toSplit
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ');
-      
-      count = parseInt(match[2], 10);
-    }
-    
-    return { raw, item, count };
-}
     
   if (loading) return <div className="p-4 text-white">Loading player data...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
@@ -138,40 +116,17 @@ function PlayerContent() {
         <div>
           <h1 className="text-3xl text-white font-bold">Shops:</h1>
           {isShopLoading ? (
-            <div className="flex justify-center items-center h-full w-full">
-              <div className="animate-spin h-24 w-40 flex flex-col items-center justify-evenly text-white font-bold leading-none" style={{ backgroundImage: "url('/images/Oak.webp')" }}>
-                <span className="mb-0 pb-0">Username</span>
-                <span className="my-0 py-0">Amount</span>
-                <span className="my-0 py-0">Price</span>
-                <span className="mt-0 pt-0">Item</span>
-              </div>
-            </div>
+            <ShopLoading/>
           ) : (
-            <div>
-              {playerShops.map((shop) => {
-                console.log(shop)
-                const { raw, item, count } = parseItemStack(shop.item || '');
-                return (
-                  <div key={shop.id} className="p-4 m-2 bg-gray1 rounded-md text-white">
-                    <img className="w-8 h-8" src={`https://mc.nerothe.com/img/1.21.4/minecraft_${raw}.png`}></img>
-                    <div className="flex flex-col">
-                      <div className="text-lg font-bold">{item} x {count}</div>
-                      <div className="flex flex-col text-sm">
-                        <span>Price: {shop.price || '?'}</span>
-                        <span>Available: {shop.stock || '?'}</span>
-                        <span>{shop.location?.world || 'Unknown'} ({shop.location?.x || '?'},{shop.location?.z || '?'})</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )
-          }
+            playerShops.map((shop: Shop, index: number) => (
+              <ShopItem
+                key={`profile-shop-${uuid}-${index}`}
+                data={shop}
+              ></ShopItem>
+            ))
+          )}
         </div>
-        :
-        null
-      }
+      : null}
     </div>
   );
 }

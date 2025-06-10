@@ -44,6 +44,9 @@ export default function Header(){
                     </h2>
                 </div>
                 <div className="flex items-center gap-2 ml-auto mr-8">
+                    <Link className="px-4 py-1 bg-blue1 text-white font-bold hover:text-aqua1 hover:bg-gray-600 rounded-md" href="/shops">
+                        All Shops
+                    </Link>
                     <input 
                         onChange={(e) => setSearch(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()} 
