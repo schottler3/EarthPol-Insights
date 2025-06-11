@@ -8,6 +8,7 @@ import getRank from '../getRank';
 import LocationItem from '../../location/LocationItem';
 import ShopItem from '@/app/components/ShopItem';
 import ShopLoading from '@/app/shops/ShopLoading';
+import Shops from '@/app/shops/Shops';
 
 function PlayerContent() {
   const params = useParams();
@@ -63,7 +64,7 @@ function PlayerContent() {
   if (!playerData) return <div className="p-4 text-white">Player not found</div>;
 
   return (
-    <div className="grid grid-cols-2 pt-16 h-full">
+    <div className="grid grid-cols-[35%_65%] pt-16 h-full">
       <div className="flex flex-col gap-8 ml-8">
         <div className="flex flex-row items-center rounded-md">
           <h1 className="text-white text-4xl">
@@ -76,7 +77,7 @@ function PlayerContent() {
             </div>
           )}
         </div>
-        <div className="flex bg-gray1 w-1/2 rounded-md bg-opacity-80 gap-8">
+        <div className="flex bg-gray1 w-full rounded-md bg-opacity-80 gap-8">
           <img 
             src={skinURL} 
             alt="Player avatar"
@@ -115,16 +116,13 @@ function PlayerContent() {
       {playerShops && playerShops?.length > 0 ? 
         <div>
           <h1 className="text-3xl text-white font-bold">Shops:</h1>
-          {isShopLoading ? (
-            <ShopLoading/>
-          ) : (
-            playerShops.map((shop: Shop, index: number) => (
-              <ShopItem
-                key={`profile-shop-${uuid}-${index}`}
-                data={shop}
-              ></ShopItem>
-            ))
-          )}
+            {isShopLoading ? (
+              <ShopLoading/>
+            ) : (
+              <Shops
+                data={playerShops}
+              ></Shops>
+            )}
         </div>
       : null}
     </div>

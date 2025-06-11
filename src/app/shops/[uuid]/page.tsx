@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import ShopLoading from "../ShopLoading";
 import PlayerItem from "@/app/player/Player";
+import LocationItem from "@/app/location/LocationItem";
 
 export default function page() {
 
@@ -80,13 +81,44 @@ export default function page() {
                             </div>
                             : null
                         }
-                        <div className="flex flex-col gap-2 items-center border-2 border-aqua1 p-8 rounded-md bg-gray1">
+                        <div className="flex flex-col gap-2 relative items-center border-2 border-aqua1 p-8 rounded-md bg-gray1">
                             <img src={`https://mc.nerothe.com/img/1.21.4/minecraft_${raw}.png`}></img>
                             <div className="flex gap-2">
                                 <h1 className="text-blue1">{count}</h1>
                                 <h1>{item}</h1>
                             </div>
                             <h1>${shopData?.price}</h1>
+                            <div className="flex gap-2">
+                              Stock:
+                              {shopData && shopData.stock > 0 ?
+                                  <h1 className="text-green-500">
+                                      {shopData.stock}
+                                  </h1>
+                              :
+                                  <h1 className="text-red-500">
+                                      Out
+                                  </h1>
+                              }
+                          </div>
+                        </div>
+                        <div className="flex items-evenly">
+                          {playerData && playerData.town ?
+                            <LocationItem
+                              name={playerData?.town?.name}
+                              uuid={playerData?.town?.uuid}
+                              type="town"
+                            ></LocationItem>
+                            : null
+                          }
+                          {playerData && playerData.nation?.uuid ? (
+                            <LocationItem
+                              name={playerData?.nation?.name}
+                              uuid={playerData?.nation?.uuid}
+                              type="nation"
+                            ></LocationItem>
+                          )
+                            : null
+                          }
                         </div>
                     </div>
                 </div>

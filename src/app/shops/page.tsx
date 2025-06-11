@@ -4,6 +4,7 @@ import { Shop } from "../lib/types";
 import { renderShops } from "../lib/queries";
 import ShopItem from "../components/ShopItem";
 import ShopLoading from "./ShopLoading";
+import Shops from "./Shops";
 
 function ShopsContent() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -28,24 +29,16 @@ function ShopsContent() {
   }, [])
 
   return (
-    <div className="h-full">
+    <div>
       {isLoading ? 
-        <div className="flex flex-col h-full items-center justify-center">
-          <h1 className="text-white text-5xl pt-32">Shops are Loading...</h1>
-          <ShopLoading/>
+        <div className="flex flex-col h-full items-center justify-center gap-16 pt-32">
+            <h1 className="text-white text-5xl">Shops are Loading...</h1>
+            <ShopLoading/>
         </div> 
-        :
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
-          {shops && shops.length > 0 ?
-            shops.map((shop: Shop, index: number) => (
-              <ShopItem
-                key={`Shop-${shop.owner}-${shop.id}`}
-                data={shop}
-              />
-            ))
-            : <div className="col-span-full text-center text-white p-8">No shops found</div>
-          }
-        </div>
+      :
+        <Shops
+          data={shops}
+        ></Shops>
       }
     </div>
   )
