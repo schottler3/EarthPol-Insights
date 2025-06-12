@@ -4,6 +4,7 @@ import { type Shop } from "../lib/types";
 
 export default function ShopItem({data}: {data: Shop}){
     const { raw, item, count, enchants } = parseItemStack(data.item || '');
+    const proportion = data.stock / count;
 
     console.log(data)
 
@@ -12,7 +13,7 @@ export default function ShopItem({data}: {data: Shop}){
 
     return (
         <Link className="relative" href={`/shops/${data.id}`}>
-            <div key={data.id} className="p-4 m-2 h-full bg-gray1 hover:text-aqua1 hover:bg-gray-600 rounded-md text-white">
+            <div key={data.id} className="p-4 h-full bg-gray1 hover:text-aqua1 hover:bg-gray-600 rounded-md text-white">
             <img className="w-8 h-8" src={`https://mc.nerothe.com/img/1.21.4/minecraft_${raw}.png`}></img>
             <div className="flex flex-col">
                 <div className="text-lg font-bold">{item} x {count}</div>
@@ -30,6 +31,9 @@ export default function ShopItem({data}: {data: Shop}){
                 <div className="flex flex-col text-sm">
                 <span>Price: {data.price || '?'}</span>
                 </div>
+            </div>
+            <div className={`absolute top-4 right-4 ${data.stock > 0 ? (proportion < .5 ? `text-orange-500` : (proportion >= 1 ? `text-green-500` : `text-yellow-500`)) : `text-red-500`}`}>
+                Stock: {data.stock}
             </div>
             </div>
         </Link>
