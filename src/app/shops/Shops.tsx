@@ -49,7 +49,7 @@ export default function Shops({data}: {data: Shop[] | null}){
     }
 
     return (
-        <div className="h-full pt-16 sm:pt-4 p-4 flex flex-col gap-2">
+        <div className="h-full sm:pt-4 p-4 flex flex-col gap-2">
             <input onChange={(e) => handleSearch(e.target.value)} className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
             <div className="flex text-blue1 *:bg-charcoal gap-4 flex-wrap select-none">
                 <Category
@@ -98,7 +98,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                     data={shop}
                     />
                 ))
-                : <div className="col-span-full text-center text-white p-8">No shops found</div>
+                : <div className="text-center text-white p-8">No shops found</div>
                 }
             </div>
         </div>

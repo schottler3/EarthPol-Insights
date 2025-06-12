@@ -29,7 +29,7 @@ function ShopsContent() {
   }, [])
 
   return (
-    <div className="h-full">
+    <div className="pt-6">
       {isLoading ? 
         <div className="flex flex-col h-full items-center justify-center gap-16 pt-32">
             <h1 className="text-white text-5xl">Shops are Loading...</h1>

@@ -6,7 +6,7 @@ import Player from "../players/Player";
 export default function TownPage({townData}: {townData: Town}){
 
     return (
-        <div className="w-full px-8 mt-8 h-screen flex flex-col">
+        <div className="w-full p-8 h-screen flex flex-col">
             <div className="text-lg flex flex-col items-center">
                 <div className="text-5xl text-center font-bold">
                     {townData.name}

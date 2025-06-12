@@ -27,11 +27,11 @@ export default function RootLayout({
       <body className="antialiased flex flex-col h-screen">
         <Header />
         
-        <div className="flex flex-grow overflow-hidden pt-6">
+        <div className="flex overflow-hidden h-full">
           <div className="w-min bg-charcoal">
             <LeftMenu />
           </div>
-          <main className="bg-navy w-full overflow-y-auto no-scrollbar pb-8">
+          <main className="bg-navy h-full w-full overflow-y-auto no-scrollbar">
             {children}
           </main>
         </div>

@@ -25,10 +25,10 @@ export default function Header(){
 
     return (
         <>
-            <div className={`w-screen ${headerHeight}`}>
+            <div className={`w-screen max-${headerHeight}`}>
             </div>
 
-            <div className={`fixed top-0 left-0 ${headerHeight} bg-white z-50 w-screen flex items-center`}>
+            <div className={`${headerHeight} bg-white z-50 w-screen flex items-center`}>
                 <Link href="/">
                     <Image 
                         className={`h-20 w-auto sm:h-24 ml-4`}

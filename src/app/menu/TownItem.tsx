@@ -17,8 +17,8 @@ export default function TownItem({name, uuid}: {name:string, uuid:string}) {
             setLoading(true);
             setError(null);
             
-            const locationObject = await renderTown(uuid, true);
-            setTownData(locationObject as Town);
+            const locationObject: Town | null = await renderTown(uuid);
+            setTownData(locationObject);
             
         } catch (err) {
             console.error("Error fetching town data:", err);
@@ -83,7 +83,7 @@ export default function TownItem({name, uuid}: {name:string, uuid:string}) {
                             {townData.residents && townData.residents.length > 0 && (
                                 <div className="">
                                     <p className="font-semibold mt-2">Residents:</p>
-                                    <div className="flex flex-col gap-4">
+                                    <div className="flex flex-col gap-4 max-h-96 overflow-y-auto">
                                         {townData.residents?.map((resident: {name: string, uuid: string}) => (
                                             <Player
                                                 key={`${townData.name}-resident-${resident.uuid}`}

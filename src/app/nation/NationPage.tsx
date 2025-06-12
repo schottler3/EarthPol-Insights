@@ -5,7 +5,7 @@ import Player from "../players/Player";
 
 export default function Page({nationData}: {nationData: Nation}){
     return (
-        <div className="px-8 pt-8 flex flex-col">
+        <div className="p-8 flex flex-col">
             <div className="text-lg flex flex-col items-center">
                 <div className="text-5xl text-center font-bold">
                     {nationData.name}

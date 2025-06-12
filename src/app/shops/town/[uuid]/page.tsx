@@ -2,7 +2,7 @@
 import { renderNation, renderShops, renderTown } from "@/app/lib/queries";
 import { Shop, Town } from "@/app/lib/types";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Shops from "../../Shops";
 import ShopLoading from "../../ShopLoading";
 
@@ -73,7 +73,7 @@ export default function Page(){
     return (
         <div className="h-full">
             {isLoading ? <ShopLoading /> : (
-                <>
+                <Suspense fallback={<></>}>
                     {townShops && townShops.length > 0 ? (
                         <Shops data={townShops} />
                     ) : (
@@ -81,7 +81,7 @@ export default function Page(){
                             No shops found for this towns's residents.
                         </div>
                     )}
-                </>
+                </Suspense>
             )}
         </div>
     )
