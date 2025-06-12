@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Nation, ReactStateHandler, Town } from "../lib/types";
 import { renderSkin, renderTown} from "../lib/queries";
-import Player from "../player/Player";
+import Player from "../players/Player";
 import Link from "next/link";
 
 export default function TownItem({name, uuid}: {name:string, uuid:string}) {
@@ -64,7 +64,7 @@ export default function TownItem({name, uuid}: {name:string, uuid:string}) {
             </div>
             
             {isExpanded && (
-                <div className="pl-6 mt-1">
+                <div className="pl-6 mt-1 h-full">
                     {loading ? (
                         <div className="text-gray-400">Loading town data...</div>
                     ) : error ? (
@@ -81,7 +81,7 @@ export default function TownItem({name, uuid}: {name:string, uuid:string}) {
                             >
                             </Player>
                             {townData.residents && townData.residents.length > 0 && (
-                                <div>
+                                <div className="">
                                     <p className="font-semibold mt-2">Residents:</p>
                                     <div className="flex flex-col gap-4">
                                         {townData.residents?.map((resident: {name: string, uuid: string}) => (

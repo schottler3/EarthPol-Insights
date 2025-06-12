@@ -1,6 +1,6 @@
 import { Nation } from "../lib/types";
 import LocationItem from "../location/LocationItem";
-import Player from "../player/Player";
+import Player from "../players/Player";
 
 export default function page({nationData}: {nationData: Nation}){
     return (
@@ -79,16 +79,23 @@ export default function page({nationData}: {nationData: Nation}){
                         <a className="text-sm text-gray-400 text-left" target="none" href={`https://earthpol.com/map/#world:${nationData.coordinates.spawn.x}:0:${nationData.coordinates.spawn.z}:500:0:0:0:1:flat`}>Map Link</a>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <h1 className="text-2xl text-left text-blue1">Towns</h1>
-                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-8">
+                        <h1 className="text-2xl text-left text-blue1">Towns: {nationData.towns.length}</h1>
+                        <div className="flex flex-wrap gap-8">
                             {nationData.towns?.map((town: {name: string, uuid: string}) => (
-                                <LocationItem
-                                    key={`${nationData.name}-town-${town.uuid}`}
-                                    name={town.name}
-                                    uuid={town.uuid}
-                                    type="town"
-                                >
-                                </LocationItem>
+                                <div className="flex flex-col items-center gap-1" key={`${nationData.name}-town-${town.uuid}`}>
+                                    { town.uuid == nationData.capital.uuid ?
+                                        <div className="has-tooltip">
+                                            <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[16vh] rounded-t-md rounded-br-md">Capital</span>
+                                            <img className="flex hover:cursor-pointer w-auto h-4" src="/images/Crown.svg"></img>
+                                        </div>
+                                    : <div className="h-4"></div> }
+                                    <LocationItem
+                                        name={town.name}
+                                        uuid={town.uuid}
+                                        type="town"
+                                    >
+                                    </LocationItem>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -108,9 +115,9 @@ export default function page({nationData}: {nationData: Nation}){
                     (
                     <div className="flex flex-col items-start gap-4">
                         <h1 className="text-2xl text-blue1">
-                            Allies:
+                            Allies: {nationData.allies.length}
                         </h1>
-                        <div className="flex flex-row gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
+                        <div className="flex flex-wrap gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
                             {nationData.allies?.map((ally: {name: string, uuid: string}) => (
                                 <LocationItem
                                     key={`${nationData.name}-ally-${ally.uuid}`}
@@ -130,9 +137,9 @@ export default function page({nationData}: {nationData: Nation}){
                     (
                     <div className="flex flex-col items-start gap-4">
                         <h1 className="text-2xl text-blue1">
-                            Enemies:
+                            Enemies: {nationData.enemies.length}
                         </h1>
-                        <div className="flex flex-row gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
+                        <div className="flex flex-wrap gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
                             {nationData.enemies?.map((enemy: {name: string, uuid: string}) => (
                                 <LocationItem
                                     key={`${nationData.name}-ally-${enemy.uuid}`}
@@ -148,8 +155,8 @@ export default function page({nationData}: {nationData: Nation}){
                     :
                     null}
                     <div className="flex flex-col">
-                        <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="grid grid-cols-3 gap-4 bg-charcoal p-4 rounded-md">
+                        <h1 className="text-2xl text-blue1">Residents: {nationData.residents.length}</h1>
+                        <div className="flex flex-wrap gap-4 bg-charcoal p-4 rounded-md">
                             {nationData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${nationData.name}-resident-${resident.uuid}`}

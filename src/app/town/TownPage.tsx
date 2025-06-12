@@ -1,6 +1,6 @@
 import { Town } from "../lib/types";
 import LocationItem from "../location/LocationItem";
-import Player from "../player/Player";
+import Player from "../players/Player";
 
 export default function TownPage({townData}: {townData: Town}){
 
@@ -106,8 +106,8 @@ export default function TownPage({townData}: {townData: Town}){
                         ></Player>
                     </div>
                     <div className="flex flex-col py-4">
-                        <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="grid grid-cols-3 gap-4 bg-charcoal p-4 rounded-md">
+                        <h1 className="text-2xl text-blue1">Residents: {townData.residents.length}</h1>
+                        <div className="flex flex-wrap gap-4 bg-charcoal p-4 rounded-md">
                             {townData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${townData.name}-resident-${resident.uuid}`}

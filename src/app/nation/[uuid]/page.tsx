@@ -29,6 +29,7 @@ function NationContent() {
 
     if (uuid) {
       loadNation();
+
     }
   }, [uuid]);
 

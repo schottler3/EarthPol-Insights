@@ -5,7 +5,7 @@ import { Player, Shop } from "@/app/lib/types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import ShopLoading from "../ShopLoading";
-import PlayerItem from "@/app/player/Player";
+import PlayerItem from "@/app/players/Player";
 import LocationItem from "@/app/location/LocationItem";
 
 export default function page() {

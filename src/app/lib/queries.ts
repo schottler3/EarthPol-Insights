@@ -189,14 +189,16 @@ export const renderPlayerShops = async (query: string): Promise<Shop[] | null> =
 
 export const renderSkin = async(uuid: string): Promise<string> => {
     try {
-            
         const crafatarUrl = `https://crafatar.com/avatars/${uuid}?overlay`;
-
-        return`https://crafatar.com/avatars/${uuid}?overlay`;
-
+        
+        if (!uuid || uuid.length < 32) {
+            return `https://mc-heads.net/avatar/steve`;
+        }
+        
+        return crafatarUrl;
     } catch (error) {
-        console.error("Error fetching player:", error);
-        return`https://mc-heads.net/avatar/steve`;
+        console.error("Error fetching player skin:", error);
+        return `https://mc-heads.net/avatar/steve`;
     }
 };
 
