@@ -1,27 +1,6 @@
 import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE, FAKETOWNS, FAKEPLAYERS, Shop } from "./types";
 
 export const renderLocation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
-    switch(query){
-        case "5eda99c0-e430-4552-abae-4e7604579483":
-            return FAKECUBA as Nation;
-        case "93f28b00-51ba-43b2-930f-a63e496317a2": 
-            return FAKEJAPAN as Nation;
-        case "e38c9fbc-78d9-4e9b-a90f-870fba949693":
-            return FAKECASCADIA as Nation;
-        // Havana (Cuba's capital)
-        case "ff50d039-669d-413e-84e0-18c3fd370ea3":
-            return FAKETOWNS[0] as Town;
-        // Tokyo (Japan's capital)
-        case "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3":
-            return FAKETOWNS[1] as Town;
-        // Portland (Cascadia's capital)
-        case "a7c891f6-7d3e-495b-b276-c4a7328ab9e1":
-            return FAKETOWNS[2] as Town;
-        // Seattle (Cascadia town)
-        case "f25acd71-9e38-4712-89b4-f24a963c320e":
-            return FAKETOWNS[3] as Town;
-    }
-
     try {
         const response = await fetch('/api/location', {
             method: 'POST',
@@ -46,15 +25,6 @@ export const renderLocation = async (query: string, town: boolean | null): Promi
 };
 
 export const renderNation = async (query: string): Promise<Nation | null> => {
-    switch(query){
-        case "5eda99c0-e430-4552-abae-4e7604579483":
-            return FAKECUBA as Nation;
-        case "93f28b00-51ba-43b2-930f-a63e496317a2": 
-            return FAKEJAPAN as Nation;
-        case "e38c9fbc-78d9-4e9b-a90f-870fba949693":
-            return FAKECASCADIA as Nation;
-    }
-
     try {
         const response = await fetch('/api/nations', {
             method: 'POST',
@@ -78,22 +48,7 @@ export const renderNation = async (query: string): Promise<Nation | null> => {
     }
 };
 
-export const renderTown = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
-    switch(query) {
-        // Havana (Cuba's capital)
-        case "ff50d039-669d-413e-84e0-18c3fd370ea3":
-            return FAKETOWNS[0] as Town;
-        // Tokyo (Japan's capital)
-        case "47dc1e57-8b5a-4b83-a9d4-7f92c621e9d3":
-            return FAKETOWNS[1] as Town;
-        // Portland (Cascadia's capital)
-        case "a7c891f6-7d3e-495b-b276-c4a7328ab9e1":
-            return FAKETOWNS[2] as Town;
-        // Seattle (Cascadia town)
-        case "f25acd71-9e38-4712-89b4-f24a963c320e":
-            return FAKETOWNS[3] as Town;
-    }
-
+export const renderTown = async (query: string): Promise<Town | null> => {
     try {
         const response = await fetch('/api/towns', {
             method: 'POST',

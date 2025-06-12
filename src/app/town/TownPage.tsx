@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Town } from "../lib/types";
 import LocationItem from "../location/LocationItem";
 import Player from "../players/Player";
@@ -106,15 +107,35 @@ export default function TownPage({townData}: {townData: Town}){
                             ))}
                         </div>
                     </div>
-                    <div>
-                        {townData.status.isPublic}
+                    <div className="flex gap-4">
+                        <div className="flex gap-2">
+                            <h1>
+                                IsPublic:
+                            </h1>
+                            <h1 className={`font-bold ${townData.status.isPublic ? `text-green-500` : `text-red-500`}`}>
+                                {`${townData.status.isPublic}`}
+                            </h1>
+                        </div>
+                        <div className="flex gap-2">
+                            <h1>
+                                IsOpen:
+                            </h1>
+                            <h1 className={`font-bold ${townData.status.isOpen ? `text-green-500` : `text-red-500`}`}>
+                                {`${townData.status.isOpen}`}
+                            </h1>
+                        </div>
+                        <div className="flex gap-2">
+                            <h1>
+                                IsNeutral:
+                            </h1>
+                            <h1 className={`font-bold ${townData.status.isNeutral ? `text-green-500` : `text-red-500`}`}>
+                                {`${townData.status.isNeutral}`}
+                            </h1>
+                        </div>
                     </div>
-                    <div>
-                        {townData.status.isOpen}
-                    </div>
-                    <div>
-                        {townData.status.isNeutral}
-                    </div>
+                    <Link href={`../shops/town/${townData.uuid}`} className="bg-charcoal rounded-full p-8 h-16 w-16 text-center flex justify-center items-center font-bold hover:cursor-pointer hover:bg-gray1 hover:text-aqua1">
+                        Shops
+                    </Link>
                 </div>
             </div>
         </div>
