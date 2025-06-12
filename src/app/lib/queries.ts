@@ -45,7 +45,7 @@ export const renderLocation = async (query: string, town: boolean | null): Promi
     }
 };
 
-export const renderNation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
+export const renderNation = async (query: string): Promise<Nation | null> => {
     switch(query){
         case "5eda99c0-e430-4552-abae-4e7604579483":
             return FAKECUBA as Nation;
@@ -178,12 +178,13 @@ export const renderPlayerShops = async (query: string): Promise<Shop[] | null> =
         if (!response.ok) {
             throw new Error(`Error fetching shops data. Status: ${response.status}`);
         }
+
         
         const shopsData = await response.json();
 
         return shopsData[0];
     } catch (error: any) {
-        return error;
+        return null;
     }
 };
 

@@ -10,49 +10,37 @@ export default function TownPage({townData}: {townData: Town}){
                 <div className="text-5xl text-center font-bold">
                     {townData.name}
                 </div>
-                <div className="flex items-center justify-center -gap-1">
-                    <svg 
-                        width="100%" 
-                        height="12" 
-                        viewBox="0 0 180 12" 
-                        fill="none" 
-                        xmlns="http://www.w3.org/2000/svg"
-                        className=""
-                    >
-                        <path d="M0.226497 6L6 11.7735L11.7735 6L6 0.226497L0.226497 6ZM179.774 6L174 0.226497L168.226 6L174 11.7735L179.774 6ZM6 6V7H174V6V5H6V6Z" fill="white"/>
-                    </svg>
-                </div>
                 <div className="text-gray-400">
                     {townData.board}
                 </div>
                 <div className="flex gap-4 hover:cursor-pointer">
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Town Blocks</span>
-                        {townData.stats.numTownBlocks}
+                        {townData.stats?.numTownBlocks}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Max Town Blocks</span>
-                        {townData.stats.maxTownBlocks}
+                        {townData.stats?.maxTownBlocks}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Residents</span>
-                        {townData.stats.numResidents}
+                        {townData.stats?.numResidents}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Bonus Blocks</span>
-                        {townData.stats.bonusBlocks}
+                        {townData.stats?.bonusBlocks}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Trusted</span>
-                        {townData.stats.numTrusted}
+                        {townData.stats?.numTrusted}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Outlaws</span>
-                        {townData.stats.numOutlaws}
+                        {townData.stats?.numOutlaws}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh]8 rounded-t-md rounded-br-md">Balance</span>
-                        ${townData.stats.balance}
+                        ${townData.stats?.balance}
                     </div>
                 </div>
             </div>

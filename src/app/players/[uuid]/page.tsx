@@ -44,6 +44,7 @@ function PlayerContent() {
         if (uuid) {
           setIsShopLoading(true);
           const data: Shop[] | null = await renderPlayerShops(uuid);
+          console.log(data);
           if (data) {
             setPlayerShops(data);
           }
@@ -96,6 +97,7 @@ function PlayerContent() {
                 <LocationItem
                   name={playerData.nation.name}
                   uuid={playerData.nation.uuid}
+                  type="nation"
                 />
               </div>
             ) : null}
@@ -107,6 +109,7 @@ function PlayerContent() {
                 <LocationItem
                   name={playerData.town.name}
                   uuid={playerData.town.uuid}
+                  type="town"
                 />
               </div>
             ) : null}

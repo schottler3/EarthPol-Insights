@@ -108,13 +108,13 @@ export default function LeftMenu() {
     },[])
 
     return (
-        <div className={`flex flex-col fixed h-full z-50 justify-left pl-8 pr-8 pt-6 overflow-y-auto no-scrollbar ${isOpen ? `bg-charcoal left-0` : ``}`}>
+        <div className="relative">
             <svg
                 onClick={() => {
                     setIsOpen(!isOpen);
                     setExpanded(false);
                 }}
-                className="w-16 mb-2 -ml-6 sm:hidden absolute left-4 top-4"
+                className="sm:hidden z-50 absolute left-4 top-6"
                 width="24"
                 height="19"
                 viewBox="0 0 19 15"
@@ -140,7 +140,7 @@ export default function LeftMenu() {
                     strokeWidth="2"
                     className={`transition-all duration-300 ${isOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`}
                 />
-                    <line
+                <line
                     y1="14.5"
                     x2="19"
                     y2="14.5"
@@ -152,47 +152,61 @@ export default function LeftMenu() {
                     }}
                 />
             </svg>
-            <div 
-                className={
-                    `duration-300 transition-opacity
-                    ${isOpen ? 
-                        `flex flex-col opacity-100 relative` 
-                        : 
-                        ` opacity-0 invisible hidden`
-                    }`
-                }
-                >
-                <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Nations: {nations?.length}</h1>
-                {
-                    nations?.map((item: NationItem, index: number) => (
-                        <NationItem
-                            key={index}
-                            name={item.name}
-                            uuid={item.uuid}
-                        />
-                    ))
-                }
-                <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Towns: {towns?.length}</h1>
-                <div className="h-max">
+            <div className={`flex flex-col w-min relative max-h-screen z-40 justify-left pl-8 pr-8 pt-10 overflow-y-auto no-scrollbar ${isOpen ? `bg-charcoal` : `hidden`}`}>
+                <div 
+                    className={
+                        `duration-300 transition-opacity
+                        ${isOpen ? 
+                            `flex flex-col opacity-100 relative` 
+                            : 
+                            ` opacity-0 invisible hidden`
+                        }`
+                    }
+                    >
+                    <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Nations: {nations?.length}</h1>
                     {
-                        towns?.map((item: NationItem, index: number) => (
-                            <TownItem
+                        nations?.map((item: NationItem, index: number) => (
+                            <NationItem
                                 key={index}
                                 name={item.name}
                                 uuid={item.uuid}
                             />
                         ))
                     }
+                    <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Towns: {towns?.length}</h1>
+                    <div className="h-max">
+                        {
+                            towns?.map((item: NationItem, index: number) => (
+                                <TownItem
+                                    key={index}
+                                    name={item.name}
+                                    uuid={item.uuid}
+                                />
+                            ))
+                        }
+                    </div>
                 </div>
+
+                 <div 
+                    className={`hidden sm:block absolute right-4 top-4 z-50 text-white font-bold hover:cursor-pointer`}
+                    onClick={() => {setIsOpen(!isOpen)}}
+                >
+                    {isOpen ?
+                        <h1>&lt; Close</h1>
+                        :
+                        null
+                    }
+                </div>
+                
             </div>
             <div 
-                className={`hidden sm:block fixed left-2 top-1/2 -translate-y-1/2 items-center text-white font-bold hover:cursor-pointer`}
+                className={`hidden sm:block fixed left-2 translate-y-[40vh] z-50 text-white font-bold hover:cursor-pointer`}
                 onClick={() => {setIsOpen(!isOpen)}}
             >
-                {isOpen ?
-                    <h1>&lt;</h1>
-                    :
+                {!isOpen ?
                     <h1>&gt;</h1>
+                    :
+                    null
                 }
             </div>
         </div>

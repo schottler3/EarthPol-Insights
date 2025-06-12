@@ -17,7 +17,7 @@ function NationContent() {
     async function loadNation() {
       try {
         if(uuid){
-          const data = await renderNation(uuid, false);
+          const data = await renderNation(uuid);
           setNationData(data as Nation);
           setLoading(false);
         }
@@ -34,7 +34,7 @@ function NationContent() {
   }, [uuid]);
 
   return (
-    <div className="min-h-screen text-white">
+    <div className="text-white">
       {loading ? (
         <div className="p-4">Loading...</div>
       ) : error ? (

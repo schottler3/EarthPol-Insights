@@ -18,22 +18,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-hidden">
+    <html lang="en" className="h-full">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin='anonymous' />
         <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased flex flex-col h-screen">
         <Header />
         
-        <div className="flex w-screen h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] lg:h-[calc(100vh-6rem)]">
-          <div className="w-min">
-              <LeftMenu /></div>
-              <main className="overflow-y-auto overflow-x-hidden no-scrollbar w-full bg-navy">
-                {children}
-              </main>
+        <div className="flex flex-grow overflow-hidden pt-6">
+          <div className="w-min bg-charcoal">
+            <LeftMenu />
           </div>
+          <main className="bg-navy w-full overflow-y-auto no-scrollbar pb-8">
+            {children}
+          </main>
+        </div>
       </body>  
     </html>
   );

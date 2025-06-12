@@ -6,8 +6,6 @@ export default function ShopItem({data}: {data: Shop}){
     const { raw, item, count, enchants } = parseItemStack(data.item || '');
     const proportion = data.stock / count;
 
-    console.log(data)
-
     if(data.price >= 999)
         return null;
 

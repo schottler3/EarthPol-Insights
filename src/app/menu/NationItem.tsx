@@ -26,7 +26,7 @@ export default function NationItem({ name, uuid}: { name: string, uuid:string}) 
             setLoading(true);
             setError(null);
 
-            renderNation(uuid, false).then((locationObject) => {
+            renderNation(uuid).then((locationObject) => {
                 setNationData(locationObject as Nation);
             }).then(() => {
                 setLoading(false);
