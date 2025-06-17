@@ -34,7 +34,9 @@ export default function Shops({data}: {data: Shop[] | null}){
                     return false;
                 }
 
-                if (searchQuery && searchQuery.length > 0 && !item.toLowerCase().includes(searchQuery.toLowerCase()))
+                if (searchQuery && searchQuery.length > 0 && 
+                    !shop.item.toLowerCase().includes(searchQuery.toLowerCase()) && 
+                    !item.toLowerCase().includes(searchQuery.toLowerCase()))
                     return false;
 
                 // Check if item belongs to any selected category

@@ -210,7 +210,13 @@ export type Player = {
   }[];
 }
 
-export type ReactStateHandler = Dispatch<SetStateAction<Nation | Town | null>>;
+export function isTown(item: Town | Nation | null): item is Town {
+  return item !== null && 'nation' in item;
+}
+
+export function isNation(item: Town | Nation | null): item is Nation {
+  return item !== null && 'towns' in item;
+}
 
 export type Invite = {
     guildId: string;

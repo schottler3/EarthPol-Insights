@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Nation, ReactStateHandler, Town } from "../lib/types";
-import { renderSkin, renderTown} from "../lib/queries";
+import { useState } from "react";
+import { Town } from "../lib/types";
+import { renderTown} from "../lib/queries";
 import Player from "../players/Player";
 import Link from "next/link";
 

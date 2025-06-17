@@ -88,7 +88,7 @@ export default function page() {
                                 <h1>{item}</h1>
                             </div>
                             <h1>${shopData?.price}</h1>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 text-center">
                               { shopData && shopData.stock >= 0 ? (
                                 <div>
                                   Stock:
