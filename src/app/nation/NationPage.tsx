@@ -1,25 +1,14 @@
+import Link from "next/link";
 import { Nation } from "../lib/types";
 import LocationItem from "../location/LocationItem";
-import Player from "../player/Player";
+import Player from "../players/Player";
 
-export default function page({nationData}: {nationData: Nation}){
+export default function Page({nationData}: {nationData: Nation}){
     return (
-        <div className="w-full px-8 pt-8 flex flex-col">
+        <div className="p-8 flex flex-col">
             <div className="text-lg flex flex-col items-center">
                 <div className="text-5xl text-center font-bold">
                     {nationData.name}
-                </div>
-                <div className="flex items-center justify-center -gap-1">
-                    <svg 
-                        width="100%" 
-                        height="12" 
-                        viewBox="0 0 180 12" 
-                        fill="none" 
-                        xmlns="http://www.w3.org/2000/svg"
-                        className=""
-                    >
-                        <path d="M0.226497 6L6 11.7735L11.7735 6L6 0.226497L0.226497 6ZM179.774 6L174 0.226497L168.226 6L174 11.7735L179.774 6ZM6 6V7H174V6V5H6V6Z" fill="white"/>
-                    </svg>
                 </div>
                 <div className="text-gray-400">
                     {nationData.board}
@@ -27,27 +16,27 @@ export default function page({nationData}: {nationData: Nation}){
                 <div className="flex gap-4 hover:cursor-pointer">
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Town Blocks</span>
-                        {nationData.stats.numTownBlocks}
+                        {nationData.stats?.numTownBlocks}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Residents</span>
-                        {nationData.stats.numResidents}
+                        {nationData.stats?.numResidents}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Towns</span>
-                        {nationData.stats.numTowns}
+                        {nationData.stats?.numTowns}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Allies</span>
-                        {nationData.stats.numAllies}
+                        {nationData.stats?.numAllies}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Enemies</span>
-                        {nationData.stats.numEnemies}
+                        {nationData.stats?.numEnemies}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Balance</span>
-                        ${nationData.stats.balance}
+                        ${nationData.stats?.balance}
                     </div>
                 </div>
             </div>
@@ -79,15 +68,23 @@ export default function page({nationData}: {nationData: Nation}){
                         <a className="text-sm text-gray-400 text-left" target="none" href={`https://earthpol.com/map/#world:${nationData.coordinates.spawn.x}:0:${nationData.coordinates.spawn.z}:500:0:0:0:1:flat`}>Map Link</a>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <h1 className="text-2xl text-left text-blue1">Towns</h1>
-                        <div className="flex gap-8">
+                        <h1 className="text-2xl text-left text-blue1">Towns: {nationData.towns.length}</h1>
+                        <div className="flex flex-wrap gap-8">
                             {nationData.towns?.map((town: {name: string, uuid: string}) => (
-                                <LocationItem
-                                    key={`${nationData.name}-town-${town.uuid}`}
-                                    name={town.name}
-                                    uuid={town.uuid}
-                                >
-                                </LocationItem>
+                                <div className="flex flex-col items-center gap-1" key={`${nationData.name}-town-${town.uuid}`}>
+                                    { town.uuid == nationData.capital.uuid ?
+                                        <div className="has-tooltip">
+                                            <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[16vh] rounded-t-md rounded-br-md">Capital</span>
+                                            <img className="flex hover:cursor-pointer w-auto h-4" src="/images/Crown.svg"></img>
+                                        </div>
+                                    : <div className="h-4"></div> }
+                                    <LocationItem
+                                        name={town.name}
+                                        uuid={town.uuid}
+                                        type="town"
+                                    >
+                                    </LocationItem>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -107,14 +104,15 @@ export default function page({nationData}: {nationData: Nation}){
                     (
                     <div className="flex flex-col items-start gap-4">
                         <h1 className="text-2xl text-blue1">
-                            Allies:
+                            Allies: {nationData.allies.length}
                         </h1>
-                        <div className="flex flex-row gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
+                        <div className="flex flex-wrap gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
                             {nationData.allies?.map((ally: {name: string, uuid: string}) => (
                                 <LocationItem
                                     key={`${nationData.name}-ally-${ally.uuid}`}
                                     name={ally.name}
                                     uuid={ally.uuid}
+                                    type="nation"
                                 ></LocationItem>
                             ))
                             }
@@ -128,14 +126,15 @@ export default function page({nationData}: {nationData: Nation}){
                     (
                     <div className="flex flex-col items-start gap-4">
                         <h1 className="text-2xl text-blue1">
-                            Enemies:
+                            Enemies: {nationData.enemies.length}
                         </h1>
-                        <div className="flex flex-row gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
+                        <div className="flex flex-wrap gap-4 w-full max-w-full overflow-x-scroll no-scrollbar bg-charcoal p-4 rounded-md">
                             {nationData.enemies?.map((enemy: {name: string, uuid: string}) => (
                                 <LocationItem
                                     key={`${nationData.name}-ally-${enemy.uuid}`}
                                     name={enemy.name}
                                     uuid={enemy.uuid}
+                                    type="nation"
                                 ></LocationItem>
                             ))
                             }
@@ -145,8 +144,8 @@ export default function page({nationData}: {nationData: Nation}){
                     :
                     null}
                     <div className="flex flex-col">
-                        <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="grid grid-cols-3 gap-4 bg-charcoal p-4 rounded-md">
+                        <h1 className="text-2xl text-blue1">Residents: {nationData.residents.length}</h1>
+                        <div className="flex flex-wrap gap-4 bg-charcoal p-4 rounded-md">
                             {nationData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${nationData.name}-resident-${resident.uuid}`}
@@ -157,15 +156,35 @@ export default function page({nationData}: {nationData: Nation}){
                             ))}
                         </div>
                     </div>
-                    <div>
-                        {nationData.status.isPublic}
+                    <div className="flex gap-4">
+                        <div className="flex gap-2">
+                            <h1>
+                                IsPublic:
+                            </h1>
+                            <h1 className={`font-bold ${nationData.status.isPublic ? `text-green-500` : `text-red-500`}`}>
+                                {`${nationData.status.isPublic}`}
+                            </h1>
+                        </div>
+                        <div className="flex gap-2">
+                            <h1>
+                                IsOpen:
+                            </h1>
+                            <h1 className={`font-bold ${nationData.status.isOpen ? `text-green-500` : `text-red-500`}`}>
+                                {`${nationData.status.isOpen}`}
+                            </h1>
+                        </div>
+                        <div className="flex gap-2">
+                            <h1>
+                                IsNeutral:
+                            </h1>
+                            <h1 className={`font-bold ${nationData.status.isNeutral ? `text-green-500` : `text-red-500`}`}>
+                                {`${nationData.status.isNeutral}`}
+                            </h1>
+                        </div>
                     </div>
-                    <div>
-                        {nationData.status.isOpen}
-                    </div>
-                    <div>
-                        {nationData.status.isNeutral}
-                    </div>
+                    <Link href={`../shops/nation/${nationData.uuid}`} className="bg-charcoal rounded-full p-8 h-16 w-16 text-center flex justify-center items-center font-bold hover:cursor-pointer hover:bg-gray1 hover:text-aqua1">
+                        Shops
+                    </Link>
                 </div>
             </div>
         </div>

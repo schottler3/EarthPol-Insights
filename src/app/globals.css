@@ -43,10 +43,33 @@
 
 .tooltip {
   @apply invisible absolute;
+  /* Position directly above the parent */
+  bottom: calc(100% + 5px); /* 5px gap between tooltip and parent */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  @apply bg-charcoal text-white text-sm px-2 py-1 rounded;
+  @apply opacity-0 transition-opacity duration-200;
+}
+
+.has-tooltip {
+  @apply relative inline-block;
 }
 
 .has-tooltip:hover .tooltip {
-  @apply visible fixed z-50;
+  @apply visible opacity-100 z-50;
+}
+
+/* Add a small arrow pointing down */
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #1A1A1A transparent transparent transparent;
 }
 
 

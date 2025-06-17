@@ -17,8 +17,8 @@ function TownContent() {
     async function loadTown() {
       try {
         if(uuid){
-          const data = await renderTown(uuid, false);
-          setTownData(data as Town);
+          const data: Town | null = await renderTown(uuid);
+          setTownData(data);
           setLoading(false);
         }
       } catch (err) {

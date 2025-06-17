@@ -1,26 +1,15 @@
+import Link from "next/link";
 import { Town } from "../lib/types";
 import LocationItem from "../location/LocationItem";
-import Player from "../player/Player";
+import Player from "../players/Player";
 
 export default function TownPage({townData}: {townData: Town}){
 
     return (
-        <div className="w-full px-8 mt-8 h-screen flex flex-col">
+        <div className="w-full p-8 h-screen flex flex-col">
             <div className="text-lg flex flex-col items-center">
                 <div className="text-5xl text-center font-bold">
                     {townData.name}
-                </div>
-                <div className="flex items-center justify-center -gap-1">
-                    <svg 
-                        width="100%" 
-                        height="12" 
-                        viewBox="0 0 180 12" 
-                        fill="none" 
-                        xmlns="http://www.w3.org/2000/svg"
-                        className=""
-                    >
-                        <path d="M0.226497 6L6 11.7735L11.7735 6L6 0.226497L0.226497 6ZM179.774 6L174 0.226497L168.226 6L174 11.7735L179.774 6ZM6 6V7H174V6V5H6V6Z" fill="white"/>
-                    </svg>
                 </div>
                 <div className="text-gray-400">
                     {townData.board}
@@ -28,31 +17,31 @@ export default function TownPage({townData}: {townData: Town}){
                 <div className="flex gap-4 hover:cursor-pointer">
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Town Blocks</span>
-                        {townData.stats.numTownBlocks}
+                        {townData.stats?.numTownBlocks}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Max Town Blocks</span>
-                        {townData.stats.maxTownBlocks}
+                        {townData.stats?.maxTownBlocks}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Residents</span>
-                        {townData.stats.numResidents}
+                        {townData.stats?.numResidents}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Bonus Blocks</span>
-                        {townData.stats.bonusBlocks}
+                        {townData.stats?.bonusBlocks}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Trusted</span>
-                        {townData.stats.numTrusted}
+                        {townData.stats?.numTrusted}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Outlaws</span>
-                        {townData.stats.numOutlaws}
+                        {townData.stats?.numOutlaws}
                     </div>
                     <div className="has-tooltip">
                         <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh]8 rounded-t-md rounded-br-md">Balance</span>
-                        ${townData.stats.balance}
+                        ${townData.stats?.balance}
                     </div>
                 </div>
             </div>
@@ -68,6 +57,7 @@ export default function TownPage({townData}: {townData: Town}){
                                     key={`${townData.name}-nation-${townData.nation.uuid}`}
                                     name={townData.nation.name}
                                     uuid={townData.nation.uuid}
+                                    type="nation"
                                 ></LocationItem>
                             </div>
                         </>
@@ -105,8 +95,8 @@ export default function TownPage({townData}: {townData: Town}){
                         ></Player>
                     </div>
                     <div className="flex flex-col py-4">
-                        <h1 className="text-2xl text-blue1">Residents:</h1>
-                        <div className="grid grid-cols-3 gap-4 bg-charcoal p-4 rounded-md">
+                        <h1 className="text-2xl text-blue1">Residents: {townData.residents.length}</h1>
+                        <div className="flex flex-wrap gap-4 bg-charcoal p-4 rounded-md">
                             {townData.residents?.map((resident: {name: string, uuid: string}) => (
                                 <Player
                                     key={`${townData.name}-resident-${resident.uuid}`}
@@ -117,15 +107,35 @@ export default function TownPage({townData}: {townData: Town}){
                             ))}
                         </div>
                     </div>
-                    <div>
-                        {townData.status.isPublic}
+                    <div className="flex gap-4">
+                        <div className="flex gap-2">
+                            <h1>
+                                IsPublic:
+                            </h1>
+                            <h1 className={`font-bold ${townData.status.isPublic ? `text-green-500` : `text-red-500`}`}>
+                                {`${townData.status.isPublic}`}
+                            </h1>
+                        </div>
+                        <div className="flex gap-2">
+                            <h1>
+                                IsOpen:
+                            </h1>
+                            <h1 className={`font-bold ${townData.status.isOpen ? `text-green-500` : `text-red-500`}`}>
+                                {`${townData.status.isOpen}`}
+                            </h1>
+                        </div>
+                        <div className="flex gap-2">
+                            <h1>
+                                IsNeutral:
+                            </h1>
+                            <h1 className={`font-bold ${townData.status.isNeutral ? `text-green-500` : `text-red-500`}`}>
+                                {`${townData.status.isNeutral}`}
+                            </h1>
+                        </div>
                     </div>
-                    <div>
-                        {townData.status.isOpen}
-                    </div>
-                    <div>
-                        {townData.status.isNeutral}
-                    </div>
+                    <Link href={`../shops/town/${townData.uuid}`} className="bg-charcoal rounded-full p-8 h-16 w-16 text-center flex justify-center items-center font-bold hover:cursor-pointer hover:bg-gray1 hover:text-aqua1">
+                        Shops
+                    </Link>
                 </div>
             </div>
         </div>

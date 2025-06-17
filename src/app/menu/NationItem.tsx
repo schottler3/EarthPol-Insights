@@ -5,7 +5,7 @@ import TownItem from "./TownItem";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function NationItem({ name, uuid, collapse}: { name: string, uuid:string, collapse: boolean}) {
+export default function NationItem({ name, uuid}: { name: string, uuid:string}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [nationData, setNationData] = useState<Nation | null>(null);
@@ -14,10 +14,9 @@ export default function NationItem({ name, uuid, collapse}: { name: string, uuid
     const router = useRouter();
 
     useEffect(() => {
-        setIsExpanded(collapse);
         if(isRendered)
             return;
-    }, [collapse]);
+    }, []);
 
     function handleExpandClick() : void {
         if(isRendered){
@@ -27,7 +26,7 @@ export default function NationItem({ name, uuid, collapse}: { name: string, uuid
             setLoading(true);
             setError(null);
 
-            renderNation(uuid, false).then((locationObject) => {
+            renderNation(uuid).then((locationObject) => {
                 setNationData(locationObject as Nation);
             }).then(() => {
                 setLoading(false);

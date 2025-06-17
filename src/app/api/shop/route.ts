@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function GET() : Promise<Response>{
   try {
-    const response = await fetch('https://api.earthpol.com/astra/nations', {
+    const response = await fetch('https://api.earthpol.com/astra/shops', {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -21,10 +21,10 @@ export async function GET() : Promise<Response>{
     }
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching EarthPol data:', error);
-    return NextResponse.json(
-      null
-    );
+      console.error('Error fetching EarthPol data:', error);
+      return NextResponse.json(
+        null
+      );
   }
 }
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) : Promise<Response>{
   try {
     const body = await request.json();
     
-    const response = await fetch('https://api.earthpol.com/astra/nations', {
+    const response = await fetch('https://api.earthpol.com/astra/shops', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,20 +44,20 @@ export async function POST(request: Request) : Promise<Response>{
     });
     
     if (!response.ok) {
-      console.log(`Error! Status: ${response.status}`);
-      return NextResponse.json(
-        null
-      );;
+      throw new Error(`Error! Status: ${response.status}`);
     }
     
     const data = await response.json();
     if (!data) {
-      console.log('No data found');
+      throw new Error('No data found');
     }
     
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error querying EarthPol nations:', error);
-    return NextResponse.json(null);
+    console.error('Error querying EarthPol shops:', error);
+    return NextResponse.json(
+      { error: 'Failed to query data from EarthPol API' },
+      { status: 500 }
+    );
   }
 }
