@@ -67,10 +67,10 @@ export default function page() {
     return (
         <div className="flex justify-center h-full items-center text-white font-bold">
             {isShopLoading ? <ShopLoading /> :
-                <div className="grid grid-cols-2">
-                    <iframe src={`https://earthpol.com/map/#world:${shopData?.location.x}:0:${shopData?.location.z}:50:0:0:0:1:flat`} className="w-full h-[25vh] sm:h-[50vh]" sandbox="allow-same-origin allow-scripts">
+                <div className="grid grid-cols-2 h-3/4 w-3/4">
+                    <iframe src={`https://earthpol.com/map/#world:${shopData?.location.x}:0:${shopData?.location.z}:50:0:0:0:1:flat`} className="w-full h-full" sandbox="allow-same-origin allow-scripts">
                     </iframe>
-                    <div className="flex relative flex-col gap-4 pt-16 items-center bg-charcoal">
+                    <div className="flex relative flex-col justify-around gap-4 p-16 items-center bg-charcoal">
                         {shopData && playerData && skinURL ?
                             <div className="flex justify-between items-center w-full absolute top-0 left-0 p-4">
                                 <h1>Owner </h1>
@@ -109,24 +109,27 @@ export default function page() {
                               )}
                           </div>
                         </div>
-                        <div className="flex items-evenly">
-                          {playerData && playerData.town ?
-                            <LocationItem
-                              name={playerData?.town?.name}
-                              uuid={playerData?.town?.uuid}
-                              type="town"
-                            ></LocationItem>
-                            : null
-                          }
+                        <div className="flex gap-16">
+                          {playerData && playerData.town ? (
+                            <div className="flex flex-col gap-2 text-center text-aqua1">
+                              <h1>Town</h1>
+                              <LocationItem
+                                name={playerData?.town?.name}
+                                uuid={playerData?.town?.uuid}
+                                type="town"
+                              ></LocationItem>
+                            </div>
+                          ) : null}
                           {playerData && playerData.nation?.uuid ? (
-                            <LocationItem
-                              name={playerData?.nation?.name}
-                              uuid={playerData?.nation?.uuid}
-                              type="nation"
-                            ></LocationItem>
-                          )
-                            : null
-                          }
+                            <div className="flex flex-col gap-2 text-center text-aqua1">
+                              <h1>Nation</h1>
+                              <LocationItem
+                                name={playerData?.nation?.name}
+                                uuid={playerData?.nation?.uuid}
+                                type="nation"
+                              ></LocationItem>
+                            </div>
+                          ) : null}
                         </div>
                     </div>
                 </div>

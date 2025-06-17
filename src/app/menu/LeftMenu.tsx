@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import useScreenSize from "../hooks/useScreenSize";
 import NationItem from "./NationItem";
-import { FAKENATIONS, USINGFAKE } from "../lib/types";
 import TownItem from "./TownItem";
 
 export default function LeftMenu() {
@@ -51,60 +50,49 @@ export default function LeftMenu() {
     }, [isMobile, setIsOpen]);
 
     useEffect(() => {
-        if(USINGFAKE){
-            setNations(FAKENATIONS.map((nation, index) => ({
-                ...nation,
-                index
-            })));
-            setLoading(false);
-        }
-        else {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('/api/nations');
-                    
-                    if (!response.ok) {
-                        throw new Error(`Error! Status: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    result.sort((a:NationItem, b:NationItem) => a.name.localeCompare(b.name));
-                    setNations(result);
-                    setLoading(false);
-                } catch (e: unknown) {
-                    const error = e instanceof Error ? e : new Error(String(e));
-                    console.error('Error fetching data:', error);
-                    if(!nations){
-                        setError(error.message);
-                        setLoading(false);
-                    }
-                    
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/api/nations');
+                
+                if (!response.ok) {
+                    throw new Error(`Error! Status: ${response.status}`);
                 }
-                try {
-                    const response = await fetch('/api/towns');
-                    
-                    if (!response.ok) {
-                        throw new Error(`Error! Status: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    result.sort((a:TownItem, b:TownItem) => a.name.localeCompare(b.name));
-                    setTowns(result);
+                
+                const result = await response.json();
+                result.sort((a:NationItem, b:NationItem) => a.name.localeCompare(b.name));
+                setNations(result);
+                setLoading(false);
+            } catch (e: unknown) {
+                const error = e instanceof Error ? e : new Error(String(e));
+                console.error('Error fetching data:', error);
+                if(!nations){
+                    setError(error.message);
                     setLoading(false);
-                } catch (e: unknown) {
-                    const error = e instanceof Error ? e : new Error(String(e));
-                    console.error('Error fetching data:', error);
-                    if(!nations){
-                        setError(error.message);
-                        setLoading(false);
-                    }
-                    
                 }
-
-            };
-
-            fetchData();
+                
+            }
+            try {
+                const response = await fetch('/api/towns');
+                
+                if (!response.ok) {
+                    throw new Error(`Error! Status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                result.sort((a:TownItem, b:TownItem) => a.name.localeCompare(b.name));
+                setTowns(result);
+                setLoading(false);
+            } catch (e: unknown) {
+                const error = e instanceof Error ? e : new Error(String(e));
+                console.error('Error fetching data:', error);
+                if(!nations){
+                    setError(error.message);
+                    setLoading(false);
+                }
+            }
         }
+        
+        fetchData();
     },[])
 
     return (

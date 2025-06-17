@@ -1,4 +1,4 @@
-import {FAKECUBA, FAKECASCADIA, FAKEJAPAN, FAKETOWN, Invite, Nation, Player, Town, USINGFAKE, FAKETOWNS, FAKEPLAYERS, Shop } from "./types";
+import {Invite, Nation, Player, Town, Shop } from "./types";
 
 export const renderLocation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
     try {
@@ -193,7 +193,6 @@ export const getDiscordSrc = async (invite: string): Promise<Invite | null> => {
       inviteCode = inviteSplit[inviteSplit.length-1];
     }
 
-    // Use your own API endpoint as a proxy instead of calling Discord directly
     const response = await fetch(`/api/discord-invite?invite=${inviteCode}`, {
       method: 'GET',
       headers: {
@@ -202,23 +201,17 @@ export const getDiscordSrc = async (invite: string): Promise<Invite | null> => {
     });
 
     if (!response.ok) {
-      console.error(`Error fetching invite data. Status: ${response.status}`);
       return null;
     }
     
-    const data = await response.json();
-    return data;
-  } catch (error: any) {
-    console.error('Error fetching discord data:', error);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching discord invite:', error);
     return null;
   }
 };
 
 export const verifyUser = async(uuid: string, code:number, time:string) : Promise<boolean> => {
-    if(USINGFAKE){
-        return false;
-    }  
-
     let query = 
     {
         "query": {
