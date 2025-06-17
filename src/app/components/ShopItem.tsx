@@ -5,6 +5,7 @@ import { type Shop } from "../lib/types";
 export default function ShopItem({data}: {data: Shop}){
     const { raw, item, count, enchants } = parseItemStack(data.item || '');
     const proportion = data.stock / count;
+    const spaceProportion = data.space / count;
 
     if(data.price >= 999)
         return null;
@@ -30,9 +31,15 @@ export default function ShopItem({data}: {data: Shop}){
                 <span>Price: {data.price || '?'}</span>
                 </div>
             </div>
-            <div className={`absolute top-4 right-4 ${data.stock > 0 ? (proportion < .5 ? `text-orange-500` : (proportion >= 1 ? `text-green-500` : `text-yellow-500`)) : `text-red-500`}`}>
-                Stock: {data.stock}
-            </div>
+            { data.stock < 0 ?
+                <div className={`absolute top-4 right-4 ${data.space > 0 ? (spaceProportion < .5 ? `text-orange-500` : (spaceProportion >= 1 ? `text-green-500` : `text-yellow-500`)) : `text-red-500`}`}>
+                    Space: {data.space}
+                </div>
+                :
+                <div className={`absolute top-4 right-4 ${data.stock > 0 ? (proportion < .5 ? `text-orange-500` : (proportion >= 1 ? `text-green-500` : `text-yellow-500`)) : `text-red-500`}`}>
+                    Stock: {data.stock}
+                </div>
+            }
             </div>
         </Link>
     );

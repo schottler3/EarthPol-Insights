@@ -8,8 +8,6 @@ export function parseItemStack(itemString: string): { raw: string, item: string,
     let item = "Unknown Item";
     let count = 0;
     let enchants: EnchantmentInfo[] = [];
-
-    console.log(itemString);
     
     // Match pattern: ItemStack{ITEM_NAME x NUMBER}
     const regex = /ItemStack\{([A-Z0-9_]+) x (\d+)(?:,.*?)?\}/;

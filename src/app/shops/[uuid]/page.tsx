@@ -89,16 +89,24 @@ export default function page() {
                             </div>
                             <h1>${shopData?.price}</h1>
                             <div className="flex gap-2">
-                              Stock:
-                              {shopData && shopData.stock > 0 ?
-                                  <h1 className="text-green-500">
+                              { shopData && shopData.stock >= 0 ? (
+                                <div>
+                                  Stock:
+                                  {shopData.stock > 0 ? (
+                                    <h1 className="text-green-500">
                                       {shopData.stock}
-                                  </h1>
-                              :
-                                  <h1 className="text-red-500">
+                                    </h1>
+                                  ) : (
+                                    <h1 className="text-red-500">
                                       Out
-                                  </h1>
-                              }
+                                    </h1>
+                                  )}
+                                </div>
+                              ) : (
+                                <div>
+                                  Space: {shopData ? shopData.space : `error`}
+                                </div>
+                              )}
                           </div>
                         </div>
                         <div className="flex items-evenly">

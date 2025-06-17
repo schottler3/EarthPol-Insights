@@ -16,7 +16,7 @@ export default function Header(){
             try {
                 const data = await getPlayerData(search);
                 if(data != null)
-                    router.push(`/player/${data.uuid}`)
+                    router.push(`/players/${data.uuid}`)
             } catch (e) {
                 console.log(e);
             }
@@ -47,7 +47,7 @@ export default function Header(){
                     <Link className="px-4 py-1 bg-blue1 text-white font-bold hover:text-aqua1 hover:bg-gray-600 rounded-md" href="/shops">
                         Shops
                     </Link>
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-2 text-charcoal">
                         <input 
                             onChange={(e) => setSearch(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSearch()} 
