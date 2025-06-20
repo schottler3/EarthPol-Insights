@@ -11,20 +11,68 @@ export default function Shops({data}: {data: Shop[] | null}){
     const query = urlParams.get('query');
 
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [renderedShops, setRenderedShop] = useState<Shop[] | null>(data);
+    const [noOutShops, setNoOutShops] = useState<Shop[] | null>(null);
+    const [renderedShops, setRenderedShop] = useState<Shop[] | null>(null);
+    const [middlewareShops, setMiddlewareShops] = useState<Shop[] | null>(null);
     const [isSelling, setIsSelling] = useState<boolean>(true);
+    const [showOuts, setShowOuts] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     useEffect(() => {
         if(query)
             setSearchQuery(query);
-    },[])
+    },[query])
+
+    useEffect(() => {
+        if(data){
+            setNoOutShops(data.filter(shop => {
+                return shop.type === "BUYING" && shop.space <= 0 ? false :
+                shop.type === "SELLING" && shop.stock <= 0 ? false : true;
+            }));
+        } else {
+            setNoOutShops([]);
+        }
+    },[data])
+
+    useEffect(() => {
+        const sortItems = () => {
+            if (middlewareShops) {
+                const sortedShops = [...middlewareShops].sort((a:Shop, b:Shop) => {
+                    const { item: itemA, count: countA } = parseItemStack(a.item || '');
+                    const { item: itemB, count: countB } = parseItemStack(b.item || '');
+                    
+                    // Primary sort by item name
+                    if (itemA !== itemB) {
+                        return itemA.localeCompare(itemB);
+                    }
+                    
+                    // Secondary sort by price
+                    return a.price/countA - b.price/countB;
+                });
+                
+                if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
+                    setRenderedShop(sortedShops);
+                }
+            }
+        };
+
+        sortItems();
+    }, [middlewareShops])
 
     useEffect(() => {
         const updateItems = () => {
 
+            var currentData : Shop[] | null = null;
+
+            if(showOuts){
+                currentData = data;
+            }
+            else{
+                currentData = noOutShops;
+            }
+
             // Apply filter based on the updated list of selected categories
-            setRenderedShop(data ? data.filter(shop => {
+            setMiddlewareShops(currentData ? currentData.filter(shop => {
                 const { raw, item } = parseItemStack(shop.item || '');
 
                 if (isSelling && shop.type === "BUYING"){
@@ -59,7 +107,8 @@ export default function Shops({data}: {data: Shop[] | null}){
         }
 
         updateItems();
-    }, [selectedCategories, searchQuery, data, isSelling])
+
+    }, [selectedCategories, searchQuery, noOutShops, showOuts, isSelling])
 
     const handleCategoryClick = (category: string) => {
         // Update selected categories list
@@ -71,20 +120,31 @@ export default function Shops({data}: {data: Shop[] | null}){
     }
 
     return (
-        <div className="h-full sm:pt-4 p-4 flex flex-col gap-2">
-            <div className="flex gap-4">
+        <div className="h-full pt-10 sm:pt-4 p-4 flex flex-col gap-2">
+            <div className="flex flex-col sm:flex-wrap gap-8">
                 <input onChange={(e) => {setSearchQuery(e.target.value);}} className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
-                <div className="flex relative gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full px-4 py-1 hover:cursor-pointer">
-                    <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? '-translate-x-4' : 'translate-x-3/4'}`}></span>
-                    <h1 onClick={() => {setIsSelling(true);}} className="z-50">
-                        Selling
-                    </h1>
-                    <h1 onClick={() => {setIsSelling(false);}} className="z-50">
-                        Buying
-                    </h1>
+                <div>
+                    <div className="flex relative h-min gap-6 text-blue1 font-bold justify-between items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                        <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                        <h1 onClick={() => {setIsSelling(true);}} className="z-50 pl-16 sm:pl-2">
+                            Selling
+                        </h1>
+                        <h1 onClick={() => {setIsSelling(false);}} className="z-50 pr-16 sm:pr-2">
+                            Buying
+                        </h1>
+                    </div>
+                    <div className="flex relative h-min gap-6 text-blue1 font-bold justify-between items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                        <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                        <h1 onClick={() => {setShowOuts(true);}} className="z-50 pl-12 sm:pl-2">
+                            Show Outs
+                        </h1>
+                        <h1 onClick={() => {setShowOuts(false);}} className="z-50 pr-12 sm:pr-2">
+                            Hide Outs
+                        </h1>
+                    </div>
                 </div>
             </div>
-            <div className="flex text-blue1 *:bg-charcoal gap-4 flex-wrap select-none">
+            <div className="flex text-blue1 *:bg-gray1 gap-2 sm:gap-4 flex-wrap select-none bg-charcoal p-2 mt-6 rounded-md">
                 <Category
                     onClick={() => handleCategoryClick("tools")}
                     name="Tools"
