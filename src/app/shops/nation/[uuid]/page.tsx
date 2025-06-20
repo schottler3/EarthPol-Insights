@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import Shops from "../../Shops";
 import ShopLoading from "../../ShopLoading";
+import Link from "next/link";
 
 type PlayerSnip = {
     name: string
@@ -79,8 +80,11 @@ export default function Page(){
                     {nationShops && nationShops.length > 0 ? (
                         <Shops data={nationShops} />
                     ) : (
-                        <div className="p-4 text-center text-white">
-                            No shops found for this nation's residents.
+                        <div className="p-4 text-center text-white h-full w-full justify-center items-center flex flex-col">
+                            This nation doesn't have any shops :(
+                            <Link href={`/nation/${uuid}`} className="bg-charcoal text-blue1 hover:text-aqua1 font-bold px-8 py-2 rounded-full">
+                                Back to Nation
+                            </Link>
                         </div>
                     )}
                 </Suspense>

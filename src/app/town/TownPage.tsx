@@ -6,9 +6,9 @@ import Player from "../players/Player";
 export default function TownPage({townData}: {townData: Town}){
 
     return (
-        <div className="w-full p-8 h-screen flex flex-col">
+        <div className="p-8 flex flex-col">
             <div className="text-lg flex flex-col items-center">
-                <div className="text-5xl text-center font-bold">
+                <div className="text-3xl md:text-5xl text-center font-bold">
                     {townData.name}
                 </div>
                 <div className="text-gray-400">
@@ -40,61 +40,64 @@ export default function TownPage({townData}: {townData: Town}){
                         {townData.stats?.numOutlaws}
                     </div>
                     <div className="has-tooltip">
-                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh]8 rounded-t-md rounded-br-md">Balance</span>
+                        <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] rounded-t-md rounded-br-md">Balance</span>
                         ${townData.stats?.balance}
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-8 mt-8">
-                <div className="flex flex-col justify-left gap-4"> 
+            <div className="sm:grid sm:grid-cols-2 gap-8 mt-8">
+                <div className="flex flex-col text-center sm:text-left gap-4">
+                    <div className="">
+                        <div className="flex justify-center sm:justify-start text-sm italic text-gray-400 gap-4">
+                            <div className="">
+                                {`${Math.floor(townData.coordinates.spawn.x)}, ${Math.floor(townData.coordinates.spawn.y)}, ${Math.floor(townData.coordinates.spawn.z)}`}
+                            </div>
+                            <div className="has-tooltip hover:cursor-pointer">
+                                <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] ml-8 rounded-t-md rounded-br-md">Founded</span>
+                                {new Date(townData.timestamps.registered).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col">
+                        <iframe src={`https://earthpol.com/map/#world:${townData.coordinates.spawn.x}:0:${townData.coordinates.spawn.z}:500:0:0:0:1:flat`} className="w-full h-[25vh] sm:h-[50vh]" sandbox="allow-same-origin allow-scripts">
+                        </iframe>
+                        <a className="text-sm text-gray-400 text-left" target="none" href={`https://earthpol.com/map/#world:${townData.coordinates.spawn.x}:0:${townData.coordinates.spawn.z}:500:0:0:0:1:flat`}>Map Link</a>
+                    </div>
+                    
                     {townData.nation.uuid ? (
-                        <>
-                            <h1 className="text-aqua1 text-2xl font-bold">
-                                Parent Nation:
+                        <div className="flex flex-col gap-4">
+                            <h1 className="text-2xl text-left text-blue1">
+                                Nation:
                             </h1>
-                            <div className="flex items-left">
+                            <div className="flex flex-wrap gap-4">
                                 <LocationItem
                                     key={`${townData.name}-nation-${townData.nation.uuid}`}
                                     name={townData.nation.name}
                                     uuid={townData.nation.uuid}
                                     type="nation"
-                                ></LocationItem>
+                                />
                             </div>
-                        </>
-                        )
-                        : null
-                    }
-                    <div className="flex text-sm italic text-gray-400 gap-4">
-                        <div className="">
-                            {`${Math.floor(townData.coordinates.spawn.x)}, ${Math.floor(townData.coordinates.spawn.y)}, ${Math.floor(townData.coordinates.spawn.z)}`}
                         </div>
-                        <div className="has-tooltip hover:cursor-pointer">
-                            <span className="tooltip w-max text-navy italic font-bold p-2 bg-white -mt-[5vh] ml-8 rounded-t-md rounded-br-md">Founded</span>
-                            {new Date(townData.timestamps.registered).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            })}
-                        </div>
-                    </div>
-                    <div className="flex flex-col">
-                        <iframe src={`https://earthpol.com/map/#world:${townData.coordinates.spawn.x}:0:${townData.coordinates.spawn.z}:500:0:0:0:1:flat`} className="w-full h-[50vh]" sandbox="allow-same-origin allow-scripts">
-                        </iframe>
-                        <a className="text-sm text-gray-400" target="none" href={`https://earthpol.com/map/#world:${townData.coordinates.spawn.x}:0:${townData.coordinates.spawn.z}:500:0:0:0:1:flat`}>Map Link</a>
-                    </div>
+                    ) : null}
+                    
+                    <hr className="relative sm:hidden p-4"></hr>
                 </div>
-                <div className="flex flex-col items-left text-md ml-8 pt-8">
-
-                    <div className="flex flex-row items-center gap-4 bg-charcoal rounded-md p-4">
+                <div className="flex flex-col items-left text-md sm:ml-8 md:mt-8 gap-4">
+                    <div className="flex flex-row items-center gap-4 bg-charcoal p-4 rounded-md">
                         <h1 className="text-2xl text-blue1">Leader</h1>
                         <Player
                             name={townData.mayor.name}
                             uuid={townData.mayor.uuid}
                         ></Player>
                     </div>
-                    <div className="flex flex-col py-4">
+                    
+                    <div className="flex flex-col">
                         <h1 className="text-2xl text-blue1">Residents: {townData.residents.length}</h1>
                         <div className="flex flex-wrap gap-4 bg-charcoal p-4 rounded-md">
                             {townData.residents?.map((resident: {name: string, uuid: string}) => (
@@ -107,6 +110,7 @@ export default function TownPage({townData}: {townData: Town}){
                             ))}
                         </div>
                     </div>
+                    
                     <div className="flex gap-4">
                         <div className="flex gap-2">
                             <h1>
@@ -133,6 +137,7 @@ export default function TownPage({townData}: {townData: Town}){
                             </h1>
                         </div>
                     </div>
+                    
                     <Link href={`../shops/town/${townData.uuid}`} className="bg-charcoal rounded-full p-8 h-16 w-16 text-center flex justify-center items-center font-bold hover:cursor-pointer hover:bg-gray1 hover:text-aqua1">
                         Shops
                     </Link>
