@@ -64,7 +64,7 @@ export default function Player({name, uuid, index = 0}: {name:string, uuid:strin
             />
             <div className="flex items-center">
                 <Link className={
-                    `max-w-[10vw] px-2 flex items-center h-8 overflow-x-auto bg-charcoal border-y-4 border-blue1 
+                    `px-2 flex items-center h-8 overflow-x-auto bg-charcoal border-y-4 border-blue1 
                     hover:cursor-pointer hover:text-blue1 
                     ${highestRank ? `` : `border-r-4 rounded-r-full`}`
                     }

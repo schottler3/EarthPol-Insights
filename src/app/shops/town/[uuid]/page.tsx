@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import Shops from "../../Shops";
 import ShopLoading from "../../ShopLoading";
+import Link from "next/link";
 
 type PlayerSnip = {
     name: string
@@ -77,8 +78,11 @@ export default function Page(){
                     {townShops && townShops.length > 0 ? (
                         <Shops data={townShops} />
                     ) : (
-                        <div className="p-4 text-center text-white">
-                            No shops found for this towns's residents.
+                        <div className="p-4 text-center text-white h-full w-full justify-center items-center flex flex-col">
+                            This town doesn't have any shops :(
+                            <Link href={`/town/${uuid}`} className="bg-charcoal text-blue1 hover:text-aqua1 font-bold px-8 py-2 rounded-full">
+                                Back to Town
+                            </Link>
                         </div>
                     )}
                 </Suspense>

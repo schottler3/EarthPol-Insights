@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function page() {
     return (
         <div className="h-full flex justify-center items-center" style={{backgroundImage: "url('/images/map.jpg')"}}>
-            <div className="flex flex-col max-w-[40vw] mx-auto bg-charcoal bg-opacity-80 p-8 rounded-md">
+            <div className="flex flex-col h-full md:max-w-[40vw] mx-auto bg-charcoal bg-opacity-80 pt-16 p-8 md:rounded-md">
                 <h1 className="text-3xl font-bold text-blue1 mb-6">
                     Welcome to EarthPol Insights
                 </h1>

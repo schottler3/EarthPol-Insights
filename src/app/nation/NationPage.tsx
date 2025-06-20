@@ -7,7 +7,7 @@ export default function Page({nationData}: {nationData: Nation}){
     return (
         <div className="p-8 flex flex-col">
             <div className="text-lg flex flex-col items-center">
-                <div className="text-5xl text-center font-bold">
+                <div className="text-3xl md:text-5xl text-center font-bold">
                     {nationData.name}
                 </div>
                 <div className="text-gray-400">
@@ -90,7 +90,7 @@ export default function Page({nationData}: {nationData: Nation}){
                     </div>
                     <hr className="relative sm:hidden p-4"></hr>
                 </div>
-                <div className="flex flex-col items-left text-md sm:ml-8 mt-8 gap-4">
+                <div className="flex flex-col items-left text-md sm:ml-8 md:mt-8 gap-4">
                     <div className="flex flex-row items-center gap-4 bg-charcoal p-4 rounded-md">
                         <h1 className="text-2xl text-blue1">Leader</h1>
                         <Player

@@ -2,7 +2,6 @@
 import { useEffect, useState, Suspense } from "react"
 import { Shop } from "../lib/types";
 import { renderShops } from "../lib/queries";
-import ShopItem from "../components/ShopItem";
 import ShopLoading from "./ShopLoading";
 import Shops from "./Shops";
 
@@ -32,7 +31,7 @@ function ShopsContent() {
     <div className="pt-6">
       {isLoading ? 
         <div className="flex flex-col h-full items-center justify-center gap-16 pt-32">
-            <h1 className="text-white text-5xl">Shops are Loading...</h1>
+            <h1 className="text-white text-center text-5xl">Shops are Loading...</h1>
             <ShopLoading/>
         </div> 
       :

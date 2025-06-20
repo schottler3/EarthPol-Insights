@@ -65,8 +65,8 @@ function PlayerContent() {
   if (!playerData) return <div className="p-4 text-white">Player not found</div>;
 
   return (
-    <div className="grid grid-cols-[35%_65%] pt-16 h-full">
-      <div className="flex flex-col gap-8 ml-8">
+    <div className="pt-16 h-full">
+      <div className="flex flex-col items-center md:w-1/2 gap-8 p-8">
         <div className="flex flex-row items-center rounded-md">
           <h1 className="text-white text-4xl">
             {playerData.name}
@@ -78,11 +78,11 @@ function PlayerContent() {
             </div>
           )}
         </div>
-        <div className="flex bg-gray1 w-full rounded-md bg-opacity-80 gap-8">
+        <div className="flex flex-col items-center p-8 md:flex-row bg-gray1 w-full rounded-md bg-opacity-80 gap-8">
           <img 
             src={skinURL} 
             alt="Player avatar"
-            className="w-32 h-32 p-2 bg-blue1"
+            className="w-32 aspect-square p-2 bg-blue1"
             onError={(e) => {
               console.log("Image failed to load, using fallback");
               e.currentTarget.src = `https://mc-heads.net/avatar/steve`;
