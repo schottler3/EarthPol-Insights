@@ -4,8 +4,8 @@ import Link from 'next/link';
 export default function page() {
     return (
         <div className="h-full flex justify-center items-center" style={{backgroundImage: "url('/images/map.jpg')"}}>
-            <div className="flex flex-col h-full md:max-w-[40vw] mx-auto bg-charcoal bg-opacity-80 pt-16 p-8 md:rounded-md">
-                <h1 className="text-3xl font-bold text-blue1 mb-6">
+            <div className="flex flex-col h-full md:h-min md:max-w-[40vw] mx-auto bg-charcoal bg-opacity-80 py-16 px-8 md:rounded-md gap-8">
+                <h1 className="text-3xl font-bold text-blue1">
                     Welcome to EarthPol Insights
                 </h1>
                 <div className="text-lg text-white space-y-4">
@@ -18,7 +18,7 @@ export default function page() {
                         and their affiliations. Whether you're planning diplomatic strategies or just curious about the server's 
                         geopolitical landscape, EarthPol Insights has you covered.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
                         <Link href="https://earthpol.com" 
                             className="px-4 py-2 bg-blue1 font-bold text-white rounded hover:bg-aqua1 hover:text-navy transition text-center">
                             Visit Official EarthPol Website
