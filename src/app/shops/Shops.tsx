@@ -163,7 +163,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                     </h1>
                 </div>
             </div>
-            <div className="flex text-blue1 *:bg-gray1 bg-charcoal p-2 rounded-md gap-4 flex-wrap select-none hover:*:text-aqua1">
+            <div className="flex md:max-w-[75vw] lg:max-w-[50vw] text-blue1 *:bg-gray1 bg-charcoal p-2 rounded-md gap-4 flex-wrap select-none hover:*:text-aqua1">
                 <Category
             onClick={() => handleCategoryClick("tools")}
             name="Tools"
@@ -209,7 +209,7 @@ export default function Shops({data}: {data: Shop[] | null}){
             name="Combat"
             isSelected={selectedCategories.includes("combat")}
         />
-                <div onClick={clearFilters} className="hover:cursor-pointer px-2 rounded-full font-bold ml-auto">
+                <div onClick={clearFilters} className="hover:cursor-pointer px-2 text-white hover:!text-aqua1 rounded-full font-bold ml-auto">
                     Clear Filters
                 </div>
             </div>

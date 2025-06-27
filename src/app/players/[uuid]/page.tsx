@@ -65,69 +65,70 @@ function PlayerContent() {
   if (!playerData) return <div className="p-4 text-white">Player not found</div>;
 
   return (
-    <div className="pt-16 h-full">
-      <div className="flex flex-col items-center md:w-1/2 gap-8 p-8">
-        <div className="flex flex-row items-center rounded-md">
-          <h1 className="text-white text-4xl">
-            {playerData.name}
-          </h1>
-          {highestRank && (
-            <div className="has-tooltip hover:cursor-pointer">
-              <span className="tooltip text-white -mt-6">{highestRank.name}</span>
-              <img className="w-12 h-12 -mt-1" src={highestRank.url} alt={highestRank.name} />
+    <div className="pt-16 flex flex-col w-full items-center">
+      <div className="w-full sm:w-3/4 md:w-2/3">
+        <div className="flex flex-col w-full gap-8 py-8">
+          <div className="flex flex-row rounded-md">
+            <h1 className="text-white text-4xl">
+              {playerData.name}
+            </h1>
+            {highestRank && (
+              <div className="has-tooltip hover:cursor-pointer">
+                <span className="tooltip text-white -mt-6">{highestRank.name}</span>
+                <img className="w-12 h-12 -mt-1" src={highestRank.url} alt={highestRank.name} />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col items-center p-8 md:flex-row bg-gray1 w-full rounded-md bg-opacity-80 gap-8">
+            <img 
+              src={skinURL} 
+              alt="Player avatar"
+              className="w-32 aspect-square p-2 bg-blue1"
+              onError={(e) => {
+                console.log("Image failed to load, using fallback");
+                e.currentTarget.src = `https://mc-heads.net/avatar/steve`;
+              }}
+            />
+            <div className="flex flex-wrap items-center w-full">
+              {playerData.nation?.uuid ? (
+                <div className="flex flex-col items-center gap-2 px-8">
+                  <h1 className="text-2xl font-bold text-blue1">
+                    Nation
+                  </h1>
+                  <LocationItem
+                    name={playerData.nation.name}
+                    uuid={playerData.nation.uuid}
+                    type="nation"
+                  />
+                </div>
+              ) : null}
+              {playerData.town ? (
+                <div className="flex flex-col items-center gap-2">
+                  <h1 className="text-2xl font-bold text-blue1">
+                    Town
+                  </h1>
+                  <LocationItem
+                    name={playerData.town.name}
+                    uuid={playerData.town.uuid}
+                    type="town"
+                  />
+                </div>
+              ) : null}
             </div>
-          )}
-        </div>
-        <div className="flex flex-col items-center p-8 md:flex-row bg-gray1 w-full rounded-md bg-opacity-80 gap-8">
-          <img 
-            src={skinURL} 
-            alt="Player avatar"
-            className="w-32 aspect-square p-2 bg-blue1"
-            onError={(e) => {
-              console.log("Image failed to load, using fallback");
-              e.currentTarget.src = `https://mc-heads.net/avatar/steve`;
-            }}
-          />
-          <div className="flex flex-row items-center justify-evenly w-full">
-            {playerData.nation?.uuid ? (
-              <div className="flex flex-col items-center gap-2">
-                <h1 className="text-2xl font-bold text-blue1">
-                  Nation
-                </h1>
-                <LocationItem
-                  name={playerData.nation.name}
-                  uuid={playerData.nation.uuid}
-                  type="nation"
-                />
-              </div>
-            ) : null}
-            {playerData.town ? (
-              <div className="flex flex-col items-center gap-2">
-                <h1 className="text-2xl font-bold text-blue1">
-                  Town
-                </h1>
-                <LocationItem
-                  name={playerData.town.name}
-                  uuid={playerData.town.uuid}
-                  type="town"
-                />
-              </div>
-            ) : null}
           </div>
         </div>
+        {playerShops && playerShops?.length > 0 ? 
+          <div className="">
+              {isShopLoading ? (
+                <ShopLoading/>
+              ) : (
+                <Shops
+                  data={playerShops}
+                ></Shops>
+              )}
+          </div>
+        : null}
       </div>
-      {playerShops && playerShops?.length > 0 ? 
-        <div>
-          <h1 className="text-3xl text-white font-bold">Shops:</h1>
-            {isShopLoading ? (
-              <ShopLoading/>
-            ) : (
-              <Shops
-                data={playerShops}
-              ></Shops>
-            )}
-        </div>
-      : null}
     </div>
   );
 }

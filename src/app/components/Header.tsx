@@ -43,7 +43,10 @@ export default function Header(){
                         Insights
                     </h2>
                 </div>
-                <div className="flex absolute right-4 flex-wrap sm:flex-nowrap items-center gap-2 w-min">
+                <div className="flex absolute *:text-center justify-end right-4 flex-wrap sm:flex-nowrap gap-2">
+                    <Link className="px-4 py-1 bg-blue1 flex-shrink text-white font-bold hover:text-aqua1 hover:bg-gray-600 rounded-md" target="none" href="https://www.patreon.com/c/schottler3">
+                        Buy Me a Latte
+                    </Link>
                     <Link className="px-4 py-1 bg-blue1 text-white font-bold hover:text-aqua1 hover:bg-gray-600 rounded-md" href="/shops">
                         Shops
                     </Link>
