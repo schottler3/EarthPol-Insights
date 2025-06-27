@@ -127,6 +127,13 @@ export default function Shops({data}: {data: Shop[] | null}){
     
     const clearSelectedShop = () => {setSelectedShop(null);};  
 
+    const clearFilters = () => {
+        setSearchQuery("");
+        setSelectedCategories([]);
+        setShowOuts(false);
+        setIsSelling(true);
+    }
+
     return (
         selectedShop ? 
             <ShopComponent
@@ -156,43 +163,55 @@ export default function Shops({data}: {data: Shop[] | null}){
                     </h1>
                 </div>
             </div>
-            <div className="flex text-blue1 *:bg-gray1 bg-charcoal p-2  rounded-md gap-4 flex-wrap select-none">
+            <div className="flex text-blue1 *:bg-gray1 bg-charcoal p-2 rounded-md gap-4 flex-wrap select-none hover:*:text-aqua1">
                 <Category
-                    onClick={() => handleCategoryClick("tools")}
-                    name="Tools"
-                />
-                <Category
-                    onClick={() => handleCategoryClick("materials")}
-                    name="Materials"
-                />
-                <Category
-                    onClick={() => handleCategoryClick("food")}
-                    name="Food"
-                />
-                <Category
-                    onClick={() => handleCategoryClick("building")}
-                    name="Building"
-                />
-                <Category
-                    onClick={() => handleCategoryClick("colored")}
-                    name="Colored"
-                />
-                <Category
-                    onClick={() => handleCategoryClick("natural")}
-                    name="Natural"
-                />
-                <Category
-                    onClick={() => handleCategoryClick("functional")}
-                    name="Functional"
-                />
-                <Category
-                    onClick={() => handleCategoryClick("redstone")}
-                    name="Redstone"
-                />
-                <Category
-                    onClick={() => handleCategoryClick("combat")}
-                    name="Combat"
-                />
+            onClick={() => handleCategoryClick("tools")}
+            name="Tools"
+            isSelected={selectedCategories.includes("tools")}
+        />
+        <Category
+            onClick={() => handleCategoryClick("materials")}
+            name="Materials"
+            isSelected={selectedCategories.includes("materials")}
+        />
+        <Category
+            onClick={() => handleCategoryClick("food")}
+            name="Food"
+            isSelected={selectedCategories.includes("food")}
+        />
+        <Category
+            onClick={() => handleCategoryClick("building")}
+            name="Building"
+            isSelected={selectedCategories.includes("building")}
+        />
+        <Category
+            onClick={() => handleCategoryClick("colored")}
+            name="Colored"
+            isSelected={selectedCategories.includes("colored")}
+        />
+        <Category
+            onClick={() => handleCategoryClick("natural")}
+            name="Natural"
+            isSelected={selectedCategories.includes("natural")}
+        />
+        <Category
+            onClick={() => handleCategoryClick("functional")}
+            name="Functional"
+            isSelected={selectedCategories.includes("functional")}
+        />
+        <Category
+            onClick={() => handleCategoryClick("redstone")}
+            name="Redstone"
+            isSelected={selectedCategories.includes("redstone")}
+        />
+        <Category
+            onClick={() => handleCategoryClick("combat")}
+            name="Combat"
+            isSelected={selectedCategories.includes("combat")}
+        />
+                <div onClick={clearFilters} className="hover:cursor-pointer px-2 rounded-full font-bold ml-auto">
+                    Clear Filters
+                </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
                 {renderedShops && renderedShops.length > 0 ?

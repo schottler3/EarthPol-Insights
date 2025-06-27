@@ -1,16 +1,10 @@
 "use client"
-import { useState } from "react";
 
-export default function Category({onClick, name}: {onClick: () => void, name: string}) {
-
-    const [isSelected, setIsSelected] = useState<boolean>(false);
+export default function Category({onClick, name, isSelected}: {onClick: () => void, name: string, isSelected?: boolean}) {
 
     return(
         <div 
-            onClick={() => {
-                setIsSelected(!isSelected);
-                onClick();
-            }}
+            onClick={onClick}
             className={`px-2 rounded-full hover:cursor-pointer font-bold ${isSelected ? `text-aqua1` : ``}`}
         >
             {name}
