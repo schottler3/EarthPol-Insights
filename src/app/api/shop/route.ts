@@ -31,6 +31,8 @@ export async function GET() : Promise<Response>{
 export async function POST(request: Request) : Promise<Response>{
   try {
     const body = await request.json();
+
+    console.log(body)
     
     const response = await fetch('https://api.earthpol.com/astra/shops', {
       method: 'POST',
@@ -44,7 +46,9 @@ export async function POST(request: Request) : Promise<Response>{
     });
     
     if (!response.ok) {
-      throw new Error(`Error! Status: ${response.status}`);
+      console.log(body)
+      console.log(response)
+      //throw new Error(`Error! Status: ${response.status}`);
     }
     
     const data = await response.json();
