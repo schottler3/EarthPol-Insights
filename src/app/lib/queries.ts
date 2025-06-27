@@ -95,6 +95,9 @@ export const renderShops = async (): Promise<Shop[] | null> => {
 };
 
 export const renderPlayerShop = async (query: string): Promise<Shop | null> => {
+
+    console.log("Query : " + query)
+
     try {
         const response = await fetch('/api/shop', {
             method: 'POST',
@@ -105,7 +108,11 @@ export const renderPlayerShop = async (query: string): Promise<Shop | null> => {
                 query: [query]
             }),
         });
-        
+
+        if(response.status === 500){
+            console.log(response);
+            return null;
+        }
         if (!response.ok) {
             throw new Error(`Error fetching shop data. Status: ${response.status}`);
         }
@@ -114,7 +121,8 @@ export const renderPlayerShop = async (query: string): Promise<Shop | null> => {
 
         return shopData[0];
     } catch (error: any) {
-        return error;
+        console.error('Error fetching player shop data:', error);
+        return null;
     }
 };
 

@@ -1,17 +1,14 @@
-import Link from "next/link";
 import { EnchantmentInfo, parseItemStack } from "../lib/itemUtils";
 import { type Shop } from "../lib/types";
+import { Dispatch, SetStateAction } from 'react';
 
-export default function ShopItem({data}: {data: Shop}){
+export default function ShopItem({data, setSelectedShop}: {data: Shop, setSelectedShop: Dispatch<SetStateAction<string | null>>}){
     const { raw, item, count, enchants } = parseItemStack(data.item || '');
     const proportion = data.stock / count;
     const spaceProportion = data.space / count;
 
-    if(data.price >= 999)
-        return null;
-
     return (
-        <Link className="relative" href={`/shops/${data.id}`}>
+        <div className="relative hover:cursor-pointer" onClick={() => setSelectedShop(data.id)}>
             <div key={data.id} className="p-4 h-full bg-gray1 hover:text-aqua1 hover:bg-gray-600 rounded-md text-white">
             <img className="w-8 h-8" src={`https://mc.nerothe.com/img/1.21.4/minecraft_${raw}.png`}></img>
             <div className="flex flex-col">
@@ -41,6 +38,6 @@ export default function ShopItem({data}: {data: Shop}){
                 </div>
             }
             </div>
-        </Link>
+        </div>
     );
 }

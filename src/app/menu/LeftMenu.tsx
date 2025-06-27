@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import useScreenSize from "../hooks/useScreenSize";
 import NationItem from "./NationItem";
 import TownItem from "./TownItem";
+import { useAppContext } from '../context/AppContext';
 
 export default function LeftMenu() {
     const [expanded, setExpanded] = useState<boolean>(false);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const { isSidebarOpen, setIsSidebarOpen } = useAppContext();
     const { isMobile } = useScreenSize();
     const prevIsMobileRef = useRef(isMobile);
     const isFirstMount = useRef(true);
@@ -30,7 +31,7 @@ export default function LeftMenu() {
     useEffect(() => {
         // Initial state setup on first mount
         if (isFirstMount.current) {
-            setIsOpen(!isMobile); // Open on desktop, closed on mobile
+            setIsSidebarOpen(!isMobile); // Open on desktop, closed on mobile
             isFirstMount.current = false;
             prevIsMobileRef.current = isMobile;
             return;
@@ -40,14 +41,14 @@ export default function LeftMenu() {
         if (prevIsMobileRef.current !== isMobile) {
             if (!isMobile) {
                 // Changed to desktop - open the menu
-                setIsOpen(true);
+                setIsSidebarOpen(true);
             } else {
                 // Changed to mobile - close the menu
-                setIsOpen(false);
+                setIsSidebarOpen(false);
             }
             prevIsMobileRef.current = isMobile;
         }
-    }, [isMobile, setIsOpen]);
+    }, [isMobile, setIsSidebarOpen]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -99,7 +100,7 @@ export default function LeftMenu() {
         <div className="relative">
             <svg
                 onClick={() => {
-                    setIsOpen(!isOpen);
+                    setIsSidebarOpen(!isSidebarOpen);
                     setExpanded(false);
                 }}
                 className="sm:hidden z-50 absolute left-4 top-6"
@@ -117,7 +118,7 @@ export default function LeftMenu() {
                     strokeWidth="2"
                     className="transition-all duration-300 origin-center"
                     style={{
-                        transform: isOpen ? 'rotate(45deg) translateY(7px)' : 'none'
+                        transform: isSidebarOpen ? 'rotate(45deg) translateY(7px)' : 'none'
                     }}
                 />
                 <line
@@ -126,7 +127,7 @@ export default function LeftMenu() {
                     y2="7.5"
                     stroke="white"
                     strokeWidth="2"
-                    className={`transition-all duration-300 ${isOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`}
+                    className={`transition-all duration-300 ${isSidebarOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`}
                 />
                 <line
                     y1="14.5"
@@ -136,15 +137,15 @@ export default function LeftMenu() {
                     strokeWidth="2"
                     className="transition-all duration-300 origin-center"
                     style={{
-                        transform: isOpen ? 'rotate(-45deg) translateY(-7px)' : 'none'
+                        transform: isSidebarOpen ? 'rotate(-45deg) translateY(-7px)' : 'none'
                     }}
                 />
             </svg>
-            <div className={`flex flex-col w-min relative max-h-screen z-40 justify-left pl-8 pr-8 pt-10 overflow-y-auto no-scrollbar ${isOpen ? `bg-charcoal` : `hidden`}`}>
+            <div className={`flex flex-col w-min relative max-h-screen z-40 justify-left pl-8 pr-8 pt-10 overflow-y-auto no-scrollbar ${isSidebarOpen ? `bg-charcoal` : `hidden`}`}>
                 <div 
                     className={
                         `duration-300 transition-opacity
-                        ${isOpen ? 
+                        ${isSidebarOpen ? 
                             `flex flex-col opacity-100 relative` 
                             : 
                             ` opacity-0 invisible hidden`
@@ -177,9 +178,9 @@ export default function LeftMenu() {
 
                  <div 
                     className={`hidden sm:block absolute right-4 top-4 z-50 text-white font-bold hover:cursor-pointer`}
-                    onClick={() => {setIsOpen(!isOpen)}}
+                    onClick={() => {setIsSidebarOpen(!isSidebarOpen)}}
                 >
-                    {isOpen ?
+                    {isSidebarOpen ?
                         <h1>&lt; Close</h1>
                         :
                         null
@@ -189,9 +190,9 @@ export default function LeftMenu() {
             </div>
             <div 
                 className={`hidden sm:block fixed left-2 translate-y-[40vh] z-50 text-white font-bold hover:cursor-pointer`}
-                onClick={() => {setIsOpen(!isOpen)}}
+                onClick={() => {setIsSidebarOpen(!isSidebarOpen)}}
             >
-                {!isOpen ?
+                {!isSidebarOpen ?
                     <h1>&gt;</h1>
                     :
                     null

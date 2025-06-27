@@ -4,6 +4,7 @@ import ShopItem from "../components/ShopItem";
 import { Shop } from "../lib/types";
 import Category from "../components/Category";
 import { BuildingBlocks, ColoredBlocks, Combats, Food, Functionals, Materials, NaturalBlocks, parseItemStack, RedstoneItems, Tools } from "../lib/itemUtils";
+import ShopComponent from "./ShopComponent";
 
 export default function Shops({data}: {data: Shop[] | null}){
 
@@ -11,6 +12,8 @@ export default function Shops({data}: {data: Shop[] | null}){
     const query = urlParams.get('query');
 
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [selectedShop, setSelectedShop] = useState<string | null>(null);
+    
     const [noOutShops, setNoOutShops] = useState<Shop[] | null>(null);
     const [renderedShops, setRenderedShop] = useState<Shop[] | null>(null);
     const [middlewareShops, setMiddlewareShops] = useState<Shop[] | null>(null);
@@ -82,6 +85,9 @@ export default function Shops({data}: {data: Shop[] | null}){
                     return false;
                 }
 
+                if(shop.price >= 999)
+                    return false;
+
                 if (searchQuery && searchQuery.length > 0 && 
                     !shop.item.toLowerCase().includes(searchQuery.toLowerCase()) && 
                     !item.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -118,9 +124,17 @@ export default function Shops({data}: {data: Shop[] | null}){
         
         setSelectedCategories(newSelectedCategories);
     }
+    
+    const clearSelectedShop = () => {setSelectedShop(null);};  
 
     return (
-        <div className="h-full sm:pt-4 p-4 flex flex-col gap-2">
+        selectedShop ? 
+            <ShopComponent
+                uuid={selectedShop}
+                onBack={clearSelectedShop}
+            />
+        :
+        <div className="h-full sm:pt-4 p-4 pt-8 flex flex-col gap-2">
             <div className="flex flex-wrap gap-4 items-center">
                 <input onChange={(e) => {setSearchQuery(e.target.value);}} className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
                 <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
@@ -182,14 +196,14 @@ export default function Shops({data}: {data: Shop[] | null}){
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
                 {renderedShops && renderedShops.length > 0 ?
-                renderedShops.map((shop: Shop, index: number) => (
-
-                    <ShopItem
-                    key={`Shop-${shop.owner}-${shop.id}`}
-                    data={shop}
-                    />
-                ))
-                : <div className="text-center text-white p-8">No shops found</div>
+                    renderedShops.map((shop: Shop, index: number) => (
+                        <ShopItem
+                            key={`Shop-${shop.owner}-${shop.id}`}
+                            data={shop}
+                            setSelectedShop={setSelectedShop}
+                        />
+                    ))
+                    : <div className="text-center text-white p-8">No shops found</div>
                 }
             </div>
         </div>
