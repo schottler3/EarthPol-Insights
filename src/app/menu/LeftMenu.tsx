@@ -4,6 +4,7 @@ import useScreenSize from "../hooks/useScreenSize";
 import NationItem from "./NationItem";
 import TownItem from "./TownItem";
 import { useAppContext } from '../context/AppContext';
+import LoadingLocation from "../components/LoadingLocation";
 
 export default function LeftMenu() {
     const [expanded, setExpanded] = useState<boolean>(false);
@@ -13,8 +14,9 @@ export default function LeftMenu() {
     const isFirstMount = useRef(true);
     const [nations, setNations] = useState<NationItem[] | null>(null);
     const [towns, setTowns] = useState<TownItem[] | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [isLoadingNations, setIsLoadingNations] = useState(true);
+    const [isLoadingTowns, setIsLoadingTowns] = useState(true);
+
 
     interface NationItem {
         index: number;
@@ -62,15 +64,12 @@ export default function LeftMenu() {
                 const result = await response.json();
                 result.sort((a:NationItem, b:NationItem) => a.name.localeCompare(b.name));
                 setNations(result);
-                setLoading(false);
-            } catch (e: unknown) {
-                const error = e instanceof Error ? e : new Error(String(e));
-                console.error('Error fetching data:', error);
-                if(!nations){
-                    setError(error.message);
-                    setLoading(false);
-                }
-                
+                setIsLoadingNations(false);
+            } catch (e) {
+                console.log("Failed to get nation data in LeftMenu -- /api/nations")
+                setNations([]);
+            } finally {
+                setIsLoadingNations(false);
             }
             try {
                 const response = await fetch('/api/towns');
@@ -82,14 +81,12 @@ export default function LeftMenu() {
                 const result = await response.json();
                 result.sort((a:TownItem, b:TownItem) => a.name.localeCompare(b.name));
                 setTowns(result);
-                setLoading(false);
-            } catch (e: unknown) {
-                const error = e instanceof Error ? e : new Error(String(e));
-                console.error('Error fetching data:', error);
-                if(!nations){
-                    setError(error.message);
-                    setLoading(false);
-                }
+                setIsLoadingTowns(false);
+            } catch (e) {
+                console.log("Failed to get town data in LeftMenu -- /api/towns")
+                setTowns([]);
+            } finally {
+                setIsLoadingTowns(false);
             }
         }
         
@@ -154,24 +151,30 @@ export default function LeftMenu() {
                     >
                     <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Nations: {nations?.length}</h1>
                     {
-                        nations?.map((item: NationItem, index: number) => (
+                        nations && nations.length >= 1 && !isLoadingNations ?
+                        nations.map((item: NationItem, index: number) => (
                             <NationItem
                                 key={index}
                                 name={item.name}
                                 uuid={item.uuid}
                             />
                         ))
+                        :
+                        <LoadingLocation />
                     }
                     <h1 className="text-aqua1 text-xl font-bold mt-4 mb-2">Towns: {towns?.length}</h1>
                     <div className="h-max">
                         {
-                            towns?.map((item: NationItem, index: number) => (
+                            towns && towns.length >= 1 && !isLoadingTowns ?
+                            towns.map((item: NationItem, index: number) => (
                                 <TownItem
                                     key={index}
                                     name={item.name}
                                     uuid={item.uuid}
                                 />
                             ))
+                            :
+                            <LoadingLocation />
                         }
                     </div>
                 </div>

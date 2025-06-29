@@ -1,4 +1,26 @@
-import {Invite, Nation, Player, Town, Shop } from "./types";
+import {Invite, Nation, Player, Town, Shop, EndpointData } from "./types";
+
+export const getEndpoints = async (): Promise<EndpointData | null> => {
+    try {
+        const response = await fetch(`/api/endpoints`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            console.error(`Error fetching endpoints data -- query. Status: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error: any) {
+        console.error('Error fetching shops data:', error);
+        return null;
+    }
+};
 
 export const renderLocation = async (query: string, town: boolean | null): Promise<Town | Nation | null> => {
     try {

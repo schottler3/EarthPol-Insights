@@ -1,15 +1,17 @@
 "use client"
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getPlayerData } from '../lib/queries';
+import { getEndpoints, getPlayerData } from '../lib/queries';
+import { EndpointData } from '../lib/types';
 
 export default function Header(){
     const headerHeight = "h-24";
     const router = useRouter();
 
     const [search, setSearch] = useState<string | null>(null);
+    const [endpointData, setEndpointData] = useState<EndpointData | null>(null);
 
     const handleSearch = async () => {
         if (search) {
@@ -23,12 +25,25 @@ export default function Header(){
         }
     }
 
+    useEffect(() => {
+        async function loadEndpointData() {
+            try {
+                const data = await getEndpoints();
+                setEndpointData(data);
+            } catch (err) {
+                console.log("Failed to get endpoint data in Header")
+            }
+        }
+
+        loadEndpointData()
+    }, [])
+
     return (
         <>
             <div className={`w-screen max-${headerHeight}`}>
             </div>
 
-            <div className={`${headerHeight} bg-white z-50 w-screen flex items-center`}>
+            <div className={`${headerHeight} z-50 w-screen gap-2 flex items-center`} style={endpointData?.status.hasStorm ? {backgroundImage: "url('https://media.tenor.com/NdQJBfH-r04AAAAi/rain-minecraft.gif')"} : {background: 'white'}}>
                 <Link href="/">
                     <Image 
                         className={`h-20 w-auto sm:h-24 ml-4`}
@@ -38,12 +53,22 @@ export default function Header(){
                         height={96}
                     />
                 </Link>
-                <div className="hidden sm:block text-blue1 text-2xl font-bold">
-                    <h2>
-                        Insights
-                    </h2>
+                <div className="flex-col hidden sm:flex">
+                    <div className="text-blue1 text-2xl font-bold">
+                        <h2>
+                            Insights
+                        </h2>
+                    </div>
+                    <h1 className="items-center text-blue1 font-bold">
+                        {`Online: ${endpointData?.stats.numOnlinePlayers || 0}`}
+                    </h1>
                 </div>
-                <div className="flex absolute *:text-center justify-end right-4 flex-wrap sm:flex-nowrap gap-2">
+                <div className="flex absolute w-3/4 *:text-center justify-end right-4 flex-wrap sm:flex-nowrap gap-2">
+                    <div className="has-tooltip hover:cursor-pointer">
+                        <span className="tooltip">{`Mob Spawning: ${endpointData?.status.mobSpawning}`}</span>
+                        <img src="https://mc.nerothe.com/img/1.21.6/minecraft_spawner.png" className="w-8 h-8">
+                        </img>
+                    </div>
                     <Link className="px-4 py-1 bg-blue1 flex-shrink text-white font-bold hover:text-aqua1 hover:bg-gray-600 rounded-md" target="none" href="https://www.patreon.com/c/schottler3">
                         Buy Me a Latte
                     </Link>
