@@ -39,7 +39,7 @@ export default function NationItem({ name, uuid}: { name: string, uuid:string}) 
             <div className="flex gap-2 items-center">
                 <div  className={`
                     relative flex items-center gap-2
-                    text-2xl font-bold hover:cursor-pointer
+                    text-md font-bold hover:cursor-pointer
                     ${isExpanded ? 'text-aqua1' : 'text-white hover:text-blue1'}
                 `}>
                     <svg 
