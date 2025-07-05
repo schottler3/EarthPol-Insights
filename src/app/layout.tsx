@@ -1,5 +1,4 @@
 import "./globals.css";
-import LeftMenu from "./menu/LeftMenu";
 import Header from "./components/Header";
 import Script from "next/script";
 import { ClientProviders } from "./providers";
@@ -43,9 +42,6 @@ export default function RootLayout({
           <Header />
           
           <div className="flex overflow-hidden h-full">
-            <div className="w-min bg-charcoal">
-              <LeftMenu />
-            </div>
             <main className="bg-navy h-full w-full overflow-y-auto no-scrollbar">
               {children}
             </main>

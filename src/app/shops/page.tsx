@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState, Suspense } from "react"
+import React, { useEffect, useState, Suspense } from "react"
 import { Shop } from "../lib/types";
 import { renderShops } from "../lib/queries";
 import ShopLoading from "./ShopLoading";
@@ -28,12 +28,9 @@ function ShopsContent() {
   }, [])
 
   return (
-    <div className="pt-6 h-full">
+    <div className="h-full flex justify-center">
       {isLoading ? 
-        <div className="flex flex-col h-full items-center justify-center gap-16 pt-32">
-            <h1 className="text-white text-center text-5xl">Shops are Loading...</h1>
-            <ShopLoading/>
-        </div> 
+          <ShopLoading/>
       :
         <Shops
           data={shops}
