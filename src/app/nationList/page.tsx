@@ -44,7 +44,7 @@ export default function page() {
                 nations && nations.length >= 1 && !isLoadingNations ?
                 <>
                     <h1 className="text-center text-aqua1 text-4xl font-bold w-full">Nations: {nations?.length}</h1>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4"> {
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"> {
                         nations.map((item: NationItem, index: number) => (
                             <NationItem
                                 key={index}

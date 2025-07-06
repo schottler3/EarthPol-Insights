@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getEndpoints, getPlayerData } from '../lib/queries';
 import { EndpointData } from '../lib/types';
+import WeatherWidget from './WeatherWidget';
 
 export default function Header(){
     const headerHeight = "h-32";
@@ -65,13 +66,13 @@ export default function Header(){
                             {`Online: ${endpointData?.stats.numOnlinePlayers || 0}`}
                         </h1>
                     </div>
-                    <div className="flex absolute w-3/4 *:text-center justify-end right-4 flex-wrap sm:flex-nowrap gap-2">
+                    <div className="flex absolute w-3/4 *:text-center justify-end items-center right-4 flex-wrap sm:flex-nowrap gap-2">
                         <div className="has-tooltip hover:cursor-pointer">
                             <span className="tooltip">{`Mob Spawning: ${endpointData?.status.mobSpawning}`}</span>
                             <img src="https://mc.nerothe.com/img/1.21.6/minecraft_spawner.png" className="w-8 h-8">
                             </img>
                         </div>
-                        <Link className="px-4 py-1 bg-blue1 flex-shrink text-white font-bold hover:text-aqua1 hover:bg-gray-600 rounded-md" target="none" href="https://www.patreon.com/c/schottler3">
+                        <Link className="px-4 py-1 bg-blue1 flex-shrink h-min text-white font-bold hover:text-aqua1 hover:bg-gray-600 rounded-md" target="none" href="https://www.patreon.com/c/schottler3">
                             Buy Me a Latte
                         </Link>
                         <div className="flex items-center justify-center gap-2 text-charcoal">
@@ -85,6 +86,10 @@ export default function Header(){
                                 <circle cx="54" cy="54" r="30" fill="white"/>
                             </svg>
                         </div>
+                        <WeatherWidget 
+                            key="WeatherWidgetHeader"
+                            data={endpointData}
+                        />
                     </div>
                 </div>
                 <div className="w-full flex justify-evenly *:w-full bg-blue1 *:py-1 hover:cursor-pointer text-white *:font-bold z-50">
