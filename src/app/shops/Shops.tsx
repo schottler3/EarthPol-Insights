@@ -129,6 +129,8 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     const clearFilters = () => {
         setSearchQuery("");
+        const searchInput = document.getElementById("itemSearch") as HTMLInputElement;
+        if (searchInput) searchInput.value = "";
         setSelectedCategories([]);
         setShowOuts(false);
         setIsSelling(true);
@@ -141,9 +143,9 @@ export default function Shops({data}: {data: Shop[] | null}){
                 onBack={clearSelectedShop}
             />
         :
-        <div className="h-full sm:pt-4 p-4 pt-8 flex flex-col gap-2">
+        <div className="h-full w-full sm:pt-4 p-4 pt-8 flex flex-col gap-2">
             <div className="flex flex-wrap gap-4 items-center">
-                <input onChange={(e) => {setSearchQuery(e.target.value);}} className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
+                <input onChange={(e) => {setSearchQuery(e.target.value);}} id="itemSearch" className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
                 <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
                     <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
                     <h1 onClick={() => {setIsSelling(true);}} className="z-50 pl-2">
@@ -163,7 +165,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                     </h1>
                 </div>
             </div>
-            <div className="flex text-blue1 *:bg-gray1 bg-charcoal p-2 rounded-md gap-4 flex-wrap select-none hover:*:text-aqua1">
+            <div className="flex md:max-w-[75vw] lg:max-w-[50vw] text-blue1 *:bg-gray1 bg-charcoal p-2 rounded-md gap-4 flex-wrap select-none hover:*:text-aqua1">
                 <Category
             onClick={() => handleCategoryClick("tools")}
             name="Tools"
@@ -209,7 +211,7 @@ export default function Shops({data}: {data: Shop[] | null}){
             name="Combat"
             isSelected={selectedCategories.includes("combat")}
         />
-                <div onClick={clearFilters} className="hover:cursor-pointer px-2 rounded-full font-bold ml-auto">
+                <div onClick={clearFilters} className="hover:cursor-pointer px-2 text-white hover:!text-aqua1 rounded-full font-bold ml-auto">
                     Clear Filters
                 </div>
             </div>

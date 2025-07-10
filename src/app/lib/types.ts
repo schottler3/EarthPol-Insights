@@ -1,6 +1,52 @@
 // @ts-check
 import { Dispatch, SetStateAction } from "react"
 
+export interface EndpointData {
+  version: string;
+  moonPhase: string;
+  time: {
+    newDayTime: number;
+    serverTimeOfDay: number;
+    stormDuration: number;
+    thunderDuration: number;
+    time: number;
+    fullTime: number;
+    eraDate: string;
+    eraDay: number;
+  };
+  status: {
+    hasStorm: boolean;
+    isThundering: boolean;
+    daylightCycle: boolean;
+    mobSpawning: boolean;
+    keepInventory: boolean;
+    randomTickSpeed: number;
+    viewDistance: number;
+    simulationDistance: number;
+  };
+  stats: {
+    maxPlayers: number;
+    numOnlinePlayers: number;
+    numOnlineNomads: number;
+    numResidents: number;
+    numNomads: number;
+    numTowns: number;
+    numTownBlocks: number;
+    numNations: number;
+    numQuarters: number;
+  };
+  endpoints: {
+    towns: string;
+    nations: string;
+    players: string;
+    shops: string;
+    location: string;
+    discord: string;
+    quarters: string;
+    chat: string;
+  };
+}
+
 export type Shop = {
   id: string
   owner: string

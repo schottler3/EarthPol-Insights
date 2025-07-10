@@ -10,11 +10,11 @@ export async function GET() : Promise<Response>{
     });
     
     if (!response.ok) {
-      throw new Error(`Error! Status: ${response.status}`);
+      console.log(`Error! Status: ${response.status}`);
     }
     const data = await response.json();
     if (!data) {
-        throw new Error('No data found');
+        console.log('No data found -- /towns/route');
     }
     return NextResponse.json(data);
   } catch (error) {
@@ -42,12 +42,12 @@ export async function POST(request: Request) : Promise<Response>{
     });
     
     if (!response.ok) {
-      throw new Error(`Error! Status: ${response.status}`);
+      console.log(`Error! Status: ${response.status}`);
     }
     
     const data = await response.json();
     if (!data) {
-      throw new Error('No data found');
+      console.log('No data found');
     }
     
     return NextResponse.json(data);

@@ -1,8 +1,7 @@
 import { useState, useEffect} from "react";
 import { type Nation } from "../lib/types";
 import { renderNation } from "../lib/queries";
-import TownItem from "./TownItem";
-import { useRouter } from "next/navigation";
+import TownItem from "../townList/TownItem";
 import Link from "next/link";
 
 export default function NationItem({ name, uuid}: { name: string, uuid:string}) {
@@ -11,7 +10,6 @@ export default function NationItem({ name, uuid}: { name: string, uuid:string}) 
     const [nationData, setNationData] = useState<Nation | null>(null);
     const [isRendered, setIsRendered] = useState<boolean>(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
         if(isRendered)
@@ -41,7 +39,7 @@ export default function NationItem({ name, uuid}: { name: string, uuid:string}) 
             <div className="flex gap-2 items-center">
                 <div  className={`
                     relative flex items-center gap-2
-                    text-2xl font-bold hover:cursor-pointer
+                    text-md font-bold hover:cursor-pointer
                     ${isExpanded ? 'text-aqua1' : 'text-white hover:text-blue1'}
                 `}>
                     <svg 

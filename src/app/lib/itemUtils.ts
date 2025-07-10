@@ -13,17 +13,55 @@ export function parseItemStack(itemString: string): { raw: string, item: string,
     const regex = /ItemStack\{([A-Z0-9_]+) x (\d+)(?:,.*?)?\}/;
     const match = itemString.match(regex);
 
-    const enchantRegex = /Minecraft:\{([A-Z_]+) x (\d+)(?:,.*?)?\}/;
-    
+    const spawnerRegex = /"text":"([A-Z_]+) Spawner"/;
+    const potionRegex = /potion-type=minecraft:([a-z_]+)/;   
+
     if (match && match.length >= 3) {
       const toSplit = match[1].split('_');
       
       raw = toSplit.join('_').toLowerCase();
-      
-      item = toSplit
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ');
-      
+
+      let spawnerMatch;
+      let potionMatch;
+      if(itemString.includes("POTION")){
+        potionMatch = potionRegex.exec(itemString);
+        
+        if(potionMatch != null){
+          const potionType = potionMatch[1];
+          let potionName = potionType.split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+
+          if(potionName.includes("Strong"))
+            potionName = potionName.replace("Strong","") + " 2";
+          
+          // Check if it's a splash potion
+          if(match[1] === "SPLASH_POTION") {
+            item = `Splash Potion of ${potionName}`;
+          } else {
+            item = `Potion of ${potionName}`;
+          }
+        } else {
+          // Fallback if potion type not found
+          item = match[1] === "SPLASH_POTION" ? "Splash Potion" : "Potion";
+        }
+      }
+      else if(itemString.includes("Spawner")){
+        spawnerMatch = spawnerRegex.exec(itemString);
+        
+        if(spawnerMatch != null){
+          const spawnerType = spawnerMatch[1];
+          item = spawnerType.split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ') + " Spawner";
+        }
+      }
+      else{
+        item = toSplit
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+      }
+
       count = parseInt(match[2], 10);
     }
 
