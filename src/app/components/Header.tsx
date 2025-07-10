@@ -31,6 +31,7 @@ export default function Header(){
             try {
                 const data = await getEndpoints();
                 setEndpointData(data);
+                console.log(data);
             } catch (err) {
                 console.log("Failed to get endpoint data in Header")
             }

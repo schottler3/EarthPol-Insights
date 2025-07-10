@@ -8,16 +8,24 @@ export default function WeatherWidget({data}: {data: EndpointData | null}){
 
     // Function to update time display based on current time
     const updateTimeDisplay = (minecraftTime: number) => {
-        let hours = (minecraftTime / 1000) % 24;
-        let adjustedHours = (hours + 6) % 24;
-        let displayHours = adjustedHours > 12 ? adjustedHours - 12 : adjustedHours;
+        //Noon = 6000 Ticks
+        //MidNight = 18000 Ticks
 
-        let wholeHours = Math.floor(adjustedHours);
-        let decimalPart = adjustedHours % 1;
-        let minutes = Math.floor(decimalPart * 60);
-        setTimeTwelve(`${wholeHours}:${minutes.toString().padStart(2, '0')}`);
+        let time: number = minecraftTime / 1000 + 6;
 
-        let rotation = wholeHours*30;
+        let hours = Math.floor(time);
+        let mins = (Math.floor(((time-hours) * 60))).toString();
+
+        if(mins.length <= 1)
+            mins = `0${mins}`
+
+        console.log("Time " + time);
+        console.log("Hours " + hours);
+        console.log("mins " + mins);
+
+        setTimeTwelve(`${hours}:${mins}`)
+        
+        let rotation = time * 15 - 90;
                     
         setDayRotation(`${rotation}`);
     };
@@ -44,12 +52,12 @@ export default function WeatherWidget({data}: {data: EndpointData | null}){
     return (
         <div className="w-16 h-16 border-2 border-aqua1 rounded-full flex justify-center items-center overflow-hidden relative">
             {/* Sun/Moon rotating background */}
-            <div className="flex flex-col h-32 w-full items-center justify-center" 
+            <div className="flex flex-row h-32 w-full items-center justify-center" 
                 style={{ transform: `rotate(${dayRotation}deg)` }}>
-                <div className="bg-blue-200 w-full p-2 flex items-center justify-center">
+                <div className="bg-blue-200 w-full h-full p-2 flex items-center justify-center">
                     <img className="w-4 h-auto" src="/images/Sun.png" alt="Sun"></img>
                 </div>
-                <div className="bg-gray-700 w-full p-2 flex items-center justify-center">
+                <div className="bg-gray-700 w-full h-full p-2 flex items-center justify-center">
                     <img className="w-4 h-auto" src="/images/Moon.png" alt="Moon"></img>
                 </div>
             </div>
