@@ -6,6 +6,29 @@ import { useEffect, useState } from "react"
 import ShopLoading from "./ShopLoading";
 import PlayerItem from "@/app/players/Player";
 import LocationItem from "@/app/location/LocationItem";
+import { getShopHistory } from "../lib/databasing";
+import LineChart from "../components/LineChart";
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBack?: () => void}) {
 
@@ -14,6 +37,22 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
     const [skinURL, setSkinURL] = useState<string | null>(null);
     const [playerData, setPlayerData] = useState<Player | null>(null);
     const [isLoadingPlayer, setIsLoadingPlayer] = useState<boolean>(true);
+    const [historicalData, setHistoricalData] = useState<Shop[] | null>(null);
+
+    const [chartData, setChartData] = useState<{
+      labels: string[];
+      datasets: {
+        label: string;
+        data: number[];
+        borderColor: string;
+        backgroundColor: string;
+        tension: number;
+        color: string;
+      }[];
+    }>({
+      labels: [],
+      datasets: []
+    });
 
     useEffect(() => {
     const getShop = async () => {
@@ -22,10 +61,15 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
         if (uuid) {
           console.log("The uuid is: " + uuid)
           const data: Shop | null = await renderPlayerShop(`${uuid}`);
+          const history: Shop[] | null = await getShopHistory(uuid);
           if (data) {
             setShopData(data);
           } else {
             console.log("Shop not found");
+          }
+          if (history){
+            setHistoricalData(history);
+            console.log(history)
           }
         }
       } catch (err) {
@@ -38,6 +82,30 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
 
     getShop();
   }, [uuid]);
+
+  useEffect(() => {
+    if (historicalData && historicalData.length > 0) {
+
+      // Sort by timestamp
+      const sortedData = historicalData.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+      
+      const data = {
+        labels: sortedData.map(shop => new Date(shop.timestamp || 0).toLocaleDateString()),
+        datasets: [
+            {
+              label: 'Price History',
+              data: sortedData.map(shop => shop.price),
+              borderColor: 'white',
+              backgroundColor: 'transparent',
+              color: 'rgb(255,255,255)',
+              tension: 0.1
+            }
+          ]
+      };
+      
+      setChartData(data);
+    }
+  }, [historicalData]);
 
   useEffect(() => {
     const loadPlayerData = async () => {
@@ -83,6 +151,7 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                     <h1 className="bg-charcoal p-2 rounded-md text-aqua1 hover:cursor-text">
                       {`https://earthpol-insights.cc/shops/${shopData?.id}`}
                     </h1>
+                    <>{historicalData && historicalData.length > 0 ? historicalData[0].price : null}</>
                   </div>
                   <svg onClick={() => navigator.clipboard.writeText(`https://earthpol-insights.cc/shops/${shopData?.id}`)} 
                     className="hover:cursor-pointer fill-aqua1 stroke-aqua1 hover:fill-white hover:stroke-white w-6" 
@@ -158,8 +227,20 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                         ) : null}
                       </div>
                   </div>
-                  <iframe src={`https://earthpol.com/map/#world:${shopData?.location.x}:0:${shopData?.location.z}:50:0:0:0:1:flat`} className="w-full h-full sm:mt-0 md:rounded-r-md" sandbox="allow-same-origin allow-scripts">
+                  <iframe src={`https://earthpol.com/map/#world:${shopData?.location.x}:0:${shopData?.location.z}:50:0:0:0:1:flat`} className="w-full sm:mt-0 md:rounded-r-md" sandbox="allow-same-origin allow-scripts">
                   </iframe>
+                </div>
+                <div className="w-full h-full">
+                  {historicalData && historicalData.length > 0 ?
+                    <div className="w-full h-full">
+                      <LineChart
+                        title={`Price of ${item} vs Time`}
+                        chartData={chartData}
+                        ></LineChart>
+                    </div>
+                    :
+                    null
+                  }
                 </div>
               </div>
             }

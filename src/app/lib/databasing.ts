@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import { Shop } from "./types";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://support.google.com/firebase/answer/7015592
@@ -20,45 +21,30 @@ const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
-export const setDiscord = async function(uuid: string, locationUUID: string, code: number, timestamp: string, discordLink: string) {
-  try {
-    const response = await fetch('/api/discord-verification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        uuid,
-        locationUUID,
-        code,
-        timestamp,
-        discordLink
-      })
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to set Discord link');
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error setting Discord link:', error);
-    throw error;
-  }
-}
+export const getShopHistory = async function(uuid: string): Promise<Shop[] | null> {
+    try {
+        const collectionRef = collection(db, `shops/${uuid}/history`);
+        
+        const querySnapshot = await getDocs(collectionRef);
+        
+        const shops: Shop[] = [];
+        
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
 
-export const removeDiscord = async function(uuid:string){
-    const locationRef = doc(db, 'discord', uuid);
-    await setDoc(locationRef, {discord: null});
-    return true;
-}
-
-export const getDiscord = async function(uuid:string): Promise<string | null>{
-    const locationRef = doc(db, 'discord', uuid);
-    const docSnap = await getDoc(locationRef);
-    if (docSnap.exists()) {
-        const data = docSnap.data();
-        return data.discord || null;
-    } else {
+            if (data.data) {
+                shops.push({
+                    id: doc.id,
+                    ...data.data,
+                    timestamp: data.timestamp
+                } as Shop);
+            }
+        });
+        
+        return shops.length > 0 ? shops : null;
+        
+    } catch (error) {
+        console.error("Error fetching shop history:", error);
         return null;
     }
 }
