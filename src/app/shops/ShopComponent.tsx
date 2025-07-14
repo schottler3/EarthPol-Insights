@@ -151,7 +151,6 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                     <h1 className="bg-charcoal p-2 rounded-md text-aqua1 hover:cursor-text">
                       {`https://earthpol-insights.cc/shops/${shopData?.id}`}
                     </h1>
-                    <>{historicalData && historicalData.length > 0 ? historicalData[0].price : null}</>
                   </div>
                   <svg onClick={() => navigator.clipboard.writeText(`https://earthpol-insights.cc/shops/${shopData?.id}`)} 
                     className="hover:cursor-pointer fill-aqua1 stroke-aqua1 hover:fill-white hover:stroke-white w-6" 
