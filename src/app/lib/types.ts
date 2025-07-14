@@ -61,6 +61,7 @@ export type Shop = {
       y: number
       z: number
   }
+  timestamp?:number
 }
 
 export type Nation = {

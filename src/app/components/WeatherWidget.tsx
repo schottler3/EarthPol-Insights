@@ -19,10 +19,6 @@ export default function WeatherWidget({data}: {data: EndpointData | null}){
         if(mins.length <= 1)
             mins = `0${mins}`
 
-        console.log("Time " + time);
-        console.log("Hours " + hours);
-        console.log("mins " + mins);
-
         setTimeTwelve(`${hours}:${mins}`)
         
         let rotation = time * 15 - 90;

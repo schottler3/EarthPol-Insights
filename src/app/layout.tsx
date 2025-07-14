@@ -36,6 +36,7 @@ export default function RootLayout({
             gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
           `}
         </Script>
+        <Script src="path/to/chartjs/dist/chart.umd.min.js"></Script>
       </head>
       <body className="antialiased flex flex-col h-screen">
         <ClientProviders>
