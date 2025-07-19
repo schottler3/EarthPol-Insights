@@ -64,7 +64,6 @@ exports.itemupdates = onSchedule({
           const shopId = shop.id.toString().trim();
           if (shopId) {
             const lastPrice = recentPrices.get(shopId);
-            
             // Only write if price is different or no history exists
             if (lastPrice === null || lastPrice !== shop.price) {
               const docRef = db.collection("shops")
@@ -104,7 +103,7 @@ const getMostRecentPrice = async (shopId: string): Promise<number | null> => {
     }
 
     const mostRecentDoc = querySnapshot.docs[0];
-    const shopData = mostRecentDoc.data().data; 
+    const shopData = mostRecentDoc.data().data;
     return shopData?.price || null;
   } catch (error) {
     console.error(`Error getting most recent price for shop ${shopId}:`, error);

@@ -153,6 +153,8 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
 
     const { raw, item, count } = parseItemStack(shopData?.item || '');
 
+    const proportion = shopData?.stock !== undefined ? shopData.stock / count : 0;
+
     return (
         <div className="flex relative justify-center h-full items-center text-white font-bold">
           {onBack && (
@@ -201,7 +203,7 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                       <div className="flex flex-col gap-2 relative items-center border-2 border-aqua1 p-8 rounded-md bg-gray1">
                           <img src={`https://mc.nerothe.com/img/1.21.4/minecraft_${raw}.png`}></img>
                           <div className="flex gap-2">
-                              <h1 className="text-blue1">{count}</h1>
+                              <h1 className="text-aqua1">{count}</h1>
                               <h1>{item}</h1>
                           </div>
                           <h1>${shopData?.price}</h1>
@@ -210,9 +212,10 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                               <div>
                                 Stock:
                                 {shopData.stock > 0 ? (
-                                  <h1 className="text-green-500">
-                                    {shopData.stock}
-                                  </h1>
+                                  <div className="flex flex-col">
+                                    <h1 className={`${shopData.stock > 0 ? (proportion < .5 ? `text-orange-500` : (proportion >= 1 ? `text-green-500` : `text-yellow-500`)) : `text-red-500`}`}>{`${count} Stacks`}</h1>
+                                    <h1 className={`${shopData.stock > 0 ? (proportion < .5 ? `text-orange-500` : (proportion >= 1 ? `text-green-500` : `text-yellow-500`)) : `text-red-500`}`}>{`${shopData.stock*count} Items`}</h1>
+                                  </div>
                                 ) : (
                                   <h1 className="text-red-500">
                                     Out

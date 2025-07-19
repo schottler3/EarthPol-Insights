@@ -5,11 +5,16 @@ import { Shop } from "../lib/types";
 import Category from "../components/Category";
 import { BuildingBlocks, ColoredBlocks, Combats, Food, Functionals, Materials, NaturalBlocks, parseItemStack, RedstoneItems, Tools } from "../lib/itemUtils";
 import ShopComponent from "./ShopComponent";
+import useScreenSize from "../hooks/useScreenSize";
+import ShopBlank from "../components/ShopBlank";
+
 
 export default function Shops({data}: {data: Shop[] | null}){
 
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('query');
+
+    const screenSize = useScreenSize();
 
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [selectedShop, setSelectedShop] = useState<string | null>(null);
@@ -20,11 +25,39 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [isSelling, setIsSelling] = useState<boolean>(true);
     const [showOuts, setShowOuts] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [numBlanks, setNumBlanks] = useState<number>(0);
 
     useEffect(() => {
         if(query)
             setSearchQuery(query);
     },[query])
+
+    useEffect(() => { 
+        if (screenSize.width >= 1536) {
+            // XL screens
+            setNumBlanks(20);
+        } 
+        else if (screenSize.width >= 1280) {
+            // Large screens
+            setNumBlanks(20);
+        }
+        else if (screenSize.width >= 1024) {
+            // Medium screens
+            setNumBlanks(16);
+        }
+        else if (screenSize.width >= 768) {
+            // Small screens
+            setNumBlanks(12);
+        }
+        else if (screenSize.width >= 640) {
+            // Extra small screens
+            setNumBlanks(8);
+        }
+        else {
+            // Smaller than extra small screens
+            setNumBlanks(5);
+        }
+    }, [screenSize])
 
     useEffect(() => {
         if(data){
@@ -215,16 +248,23 @@ export default function Shops({data}: {data: Shop[] | null}){
                     Clear Filters
                 </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
-                {renderedShops && renderedShops.length > 0 ?
-                    renderedShops.map((shop: Shop, index: number) => (
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
+                {(renderedShops && renderedShops.length >= 0) || searchQuery.length > 0 ?
+                    renderedShops?.map((shop: Shop, index: number) => (
                         <ShopItem
                             key={`Shop-${shop.owner}-${shop.id}`}
                             data={shop}
                             setSelectedShop={setSelectedShop}
                         />
                     ))
-                    : <div className="text-center text-white p-8">No shops found</div>
+                    : (
+                        // Remove the nested grid, just map the blanks directly
+                        Array.from({ length: numBlanks }).map((_, index) => (
+                            <ShopBlank 
+                                key={`blankShop-${index}`}
+                            />
+                        ))
+                    )
                 }
             </div>
         </div>
