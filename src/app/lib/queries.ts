@@ -217,6 +217,28 @@ export const renderSkin = async(uuid: string): Promise<string> => {
     }
 };
 
+export const getAllPlayerData = async() : Promise<Player[] | null> => {
+    try {
+        const response = await fetch(`/api/players`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            console.error(`Error fetching players data. Status: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error: any) {
+        console.error('Error fetching players data:', error);
+        return null;
+    }
+}
+
 export const getPlayerData = async(query: string) : Promise<Player | null> => {
     try {
         const response = await fetch('/api/players', {

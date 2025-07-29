@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request): Promise<Response> {
+export async function GET(request: Request): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);
     const invite = searchParams.get('invite');
@@ -8,7 +8,7 @@ export async function GET(request: Request): Promise<Response> {
     // No invite parameter provided
     if (!invite || invite.trim() === '') {
       console.log("No invite parameter provided");
-      return new Response(JSON.stringify(null), {
+      return new NextResponse(JSON.stringify(null), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -27,7 +27,7 @@ export async function GET(request: Request): Promise<Response> {
         // Check if guild data exists
         if (!apiData.guild) {
           console.log(`Invalid invite: ${invite} - No guild data`);
-          return new Response(JSON.stringify(null), {
+          return new NextResponse(JSON.stringify(null), {
             status: 404,
             headers: { 'Content-Type': 'application/json' }
           });
@@ -46,21 +46,21 @@ export async function GET(request: Request): Promise<Response> {
       } 
       else {
         console.log(`Discord API returned error for invite: ${invite} - Status: ${apiResponse.status}`);
-        return new Response(JSON.stringify(null), {
+        return new NextResponse(JSON.stringify(null), {
           status: 404,
           headers: { 'Content-Type': 'application/json' }
         });
       }
     } catch (apiError) {
       console.error('Discord API error:', apiError);
-      return new Response(JSON.stringify(null), {
+      return new NextResponse(JSON.stringify(null), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
     }
   } catch (error) {
     console.error('Error processing request:', error);
-    return new Response(JSON.stringify(null), {
+    return new NextResponse(JSON.stringify(null), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

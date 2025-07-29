@@ -28,6 +28,7 @@ function PlayerContent() {
           const data: Player | null = await getPlayerData(uuid);
           if (data) {
             setPlayerData(data);
+            console.log(data);
             setHighestRank(getRank(data));
           }
           setSkinURL(await renderSkin(uuid));
@@ -73,11 +74,19 @@ function PlayerContent() {
               {playerData.name}
             </h1>
             {highestRank && (
-              <div className="has-tooltip hover:cursor-pointer">
-                <span className="tooltip text-white -mt-6">{highestRank.name}</span>
-                <img className="w-12 h-12 -mt-1" src={highestRank.url} alt={highestRank.name} />
-              </div>
+                <div className="has-tooltip pr-2 hover:cursor-pointer">
+                  <span className="tooltip text-white -mt-6">{highestRank.name}</span>
+                  <img className="w-12 h-12 -mt-1" src={highestRank.url} alt={highestRank.name} />
+                </div>
             )}
+            { playerData.status.isOnline ?
+              <div className="has-tooltip hover:cursor-pointer">
+                <span className="tooltip text-white -mt-6">{`${playerData.name} is online`}</span>
+                <span className="absolute right-0 top-0 bg-green-500 rounded-full w-3 h-3"></span>
+              </div>
+              :
+              null
+            }
           </div>
           <div className="flex flex-col items-center p-8 md:flex-row bg-gray1 w-full rounded-md bg-opacity-80 gap-8">
             <img 
