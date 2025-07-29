@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function GET() : Promise<Response>{
+export async function GET() : Promise<NextResponse>{
   try {
     const response = await fetch('https://api.earthpol.com/astra/shops', {
       headers: {
@@ -28,7 +28,7 @@ export async function GET() : Promise<Response>{
   }
 }
 
-export async function POST(request: Request) : Promise<Response>{
+export async function POST(request: Request) : Promise<NextResponse>{
   try {
     const body = await request.json();
 
