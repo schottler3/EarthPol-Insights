@@ -203,6 +203,22 @@ export type Town = {
   };
 }
 
+export type Wilderness = {
+    location: {
+        x: number,
+        z: number
+    },
+    isWilderness: boolean,
+    town: {
+        name: string,
+        uuid: string
+    },
+    nation: {
+        name: string,
+        uuid: string
+    },
+}
+
 export type Player = {
   name: string;
   uuid: string;

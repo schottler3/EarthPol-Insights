@@ -1,4 +1,4 @@
-import {Invite, Nation, Player, Town, Shop, EndpointData } from "./types";
+import {Invite, Nation, Player, Town, Shop, EndpointData, Wilderness } from "./types";
 
 export const getEndpoints = async (): Promise<EndpointData | null> => {
     try {
@@ -45,6 +45,35 @@ export const renderLocation = async (query: string, town: boolean | null): Promi
         return error;
     }
 };
+
+export const getWildernessInfo = async(x: number, y:number) : Promise<Wilderness | null> => {
+    try {
+        console.log(`Fetching wilderness info for coordinates: ${x}, ${y}`);
+        
+        const response = await fetch('/api/wilderness', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: [[x, y]] 
+            })
+        });
+        
+        if (!response.ok) {
+            console.error(`Wilderness API error - Status: ${response.status}, Coordinates: ${x}, ${y}`);
+            return null;
+        }
+        
+        const wildernessData = await response.json();
+        console.log('Wilderness data received:', wildernessData);
+
+        return wildernessData[0] || null;
+    } catch (error: any) {
+        console.error('Error in getWildernessInfo:', error);
+        return null;
+    }
+}
 
 export const renderNation = async (query: string): Promise<Nation | null> => {
     try {

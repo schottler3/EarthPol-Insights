@@ -36,7 +36,7 @@ export default function RootLayout({
             gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
           `}
         </Script>
-        <Script src="path/to/chartjs/dist/chart.umd.min.js"></Script>
+        <Script src="https://cdn.jsdelivr.net/npm/chart.js" strategy="beforeInteractive" />
       </head>
       <body className="antialiased flex flex-col h-screen">
         <ClientProviders>

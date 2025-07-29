@@ -57,7 +57,9 @@
 }
 
 .has-tooltip:hover .tooltip {
-  @apply visible opacity-100 z-50;
+  visibility: visible;
+  opacity: 1;
+  z-index: 50;
 }
 
 /* Add a small arrow pointing down */
@@ -70,6 +72,16 @@
   border-width: 5px;
   border-style: solid;
   border-color: #1A1A1A transparent transparent transparent;
+}
+
+@keyframes loadingBackground {
+  0% { background-color: rgb(50,61,60); }
+  50% { background-color: rgb(10,10,10); }
+  100% { background-color: rgb(50,61,60); }
+}
+
+.loadingBackground {
+  animation: loadingBackground 6s infinite linear;
 }
 
 
