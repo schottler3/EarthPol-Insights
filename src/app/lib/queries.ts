@@ -263,6 +263,30 @@ export const getPlayerData = async(query: string) : Promise<Player | null> => {
     }
 }
 
+export const getOnlinePlayers = async() : Promise<Player[] | null> => {
+    try {
+        const response = await fetch('/api/players', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: ['online']
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error fetching online player data. Status: ${response.status}`);
+        }
+        
+        const playerData = await response.json();
+
+        return playerData;
+    } catch (error: any) {
+        return error;
+    }
+}
+
 export const getDiscordSrc = async (invite: string): Promise<Invite | null> => {
   try {
     if (!invite) return null;
