@@ -230,7 +230,7 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                         </div>
                       </div>
                       <div className="flex gap-16">
-                        {wildernessData && wildernessData.town ? (
+                        {wildernessData && wildernessData.town.name ? (
                           <div className="flex flex-col gap-2 text-center text-aqua1">
                             <h1>Town</h1>
                             <LocationItem
@@ -240,7 +240,7 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                             ></LocationItem>
                           </div>
                         ) : null}
-                        {wildernessData && wildernessData.nation ? (
+                        {wildernessData && wildernessData.nation.name ? (
                           <div className="flex flex-col gap-2 text-center text-aqua1">
                             <h1>Nation</h1>
                             <LocationItem
