@@ -88,7 +88,7 @@ function PlayerContent() {
               null
             }
           </div>
-          <div className="flex flex-col items-center p-8 md:flex-row bg-gray1 w-full rounded-md bg-opacity-80 gap-8">
+          <div className="flex flex-col items-center md:flex-row bg-gray1 w-full rounded-md bg-opacity-80 gap-8 py-4">
             <img 
               src={skinURL} 
               alt="Player avatar"
@@ -98,9 +98,9 @@ function PlayerContent() {
                 e.currentTarget.src = `https://mc-heads.net/avatar/steve`;
               }}
             />
-            <div className="flex flex-wrap items-center w-full">
+            <div className="flex flex-wrap items-center w-full justify-center md:justify-start gap-8">
               {playerData.nation?.uuid ? (
-                <div className="flex flex-col items-center gap-2 px-8">
+                <div className="flex flex-col items-center gap-2">
                   <h1 className="text-2xl font-bold text-blue1">
                     Nation
                   </h1>
