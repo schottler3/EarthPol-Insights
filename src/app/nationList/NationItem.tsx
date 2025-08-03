@@ -60,12 +60,12 @@ export default function NationItem({ name, uuid}: { name: string, uuid:string}) 
             </div>
             <div 
             className={`
-                overflow-hidden transition-all duration-300 ease-in-out
-                ${isExpanded 
-                    ? 'max-h-[500px] opacity-100 translate-y-0' 
-                    : 'max-h-0 opacity-0 -translate-y-2'
-                }
-            `}
+    overflow-auto transition-all duration-300 ease-in-out
+    ${isExpanded 
+        ? 'max-h-[800px] opacity-100 translate-y-0' 
+        : 'max-h-0 opacity-0 -translate-y-2'
+    }
+`}
             >
                 {loading && <div className="pl-2">Loading...</div>}
                 {error && <div className="pl-2 text-red-500">{error}</div>}
