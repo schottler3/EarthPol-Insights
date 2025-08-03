@@ -74,9 +74,7 @@ export default function NationItem({ name, uuid}: { name: string, uuid:string}) 
                     <div className="text-lg italic">Member Towns:</div>
                     {nationData?.towns.map((item: any, index: number) => (
                         <div key={`town-${index}`} className="flex flex-col">
-                            <div 
-                                className="cursor-pointer hover:text-blue1"
-                                >
+                            <div className="cursor-pointer hover:text-blue1">
                                 <TownItem
                                     name={item.name}
                                     uuid={item.uuid}

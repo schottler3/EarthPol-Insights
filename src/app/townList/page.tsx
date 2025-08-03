@@ -26,12 +26,12 @@ export default function page() {
                 }
                 
                 const result = await response.json();
-                result.sort((a:TownItem, b:TownItem) => a.name.localeCompare(b.name));
+                result.sort((a:TownItem, b:TownItem) => (a.name.toLowerCase()).localeCompare(b.name.toLowerCase()));
                 setTowns(result);
                 setRenderedTowns(result);
                 setIsLoadingTowns(false);
             } catch (e) {
-                console.log("Failed to get town data in townList -- /api/towns") // Updated error message
+                console.log("Failed to get town data in townList -- /api/towns")
                 setTowns([]);
             } finally {
                 setIsLoadingTowns(false);
@@ -44,7 +44,7 @@ export default function page() {
     useEffect(() => {
         if(query.length > 0){
             setRenderedTowns(towns?.filter((town) => {
-                return town.name.includes(query)
+                return town.name.toLowerCase().includes(query.toLowerCase())
             }) || null)
         } else {
             setRenderedTowns(towns)
