@@ -250,15 +250,20 @@ export default function Shops({data}: {data: Shop[] | null}){
             </div>
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
                 {(renderedShops && renderedShops.length >= 0) || searchQuery.length > 0 ?
-                    renderedShops?.map((shop: Shop, index: number) => (
-                        <ShopItem
-                            key={`Shop-${shop.owner}-${shop.id}`}
-                            data={shop}
-                            setSelectedShop={setSelectedShop}
-                        />
-                    ))
+                    ( renderedShops && renderedShops.length > 0 ?
+                        renderedShops?.map((shop: Shop, index: number) => (
+                            <ShopItem
+                                key={`Shop-${shop.owner}-${shop.id}`}
+                                data={shop}
+                                setSelectedShop={setSelectedShop}
+                            />
+                        ))
+                        :
+                        <div className="text-white font-bold">
+                            No Matching Shops
+                        </div>
+                    )
                     : (
-                        // Remove the nested grid, just map the blanks directly
                         Array.from({ length: numBlanks }).map((_, index) => (
                             <ShopBlank 
                                 key={`blankShop-${index}`}

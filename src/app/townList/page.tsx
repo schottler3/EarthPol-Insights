@@ -17,29 +17,34 @@ export default function page() {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('/api/towns'); // Changed from /api/nations
-                
-                if (!response.ok) {
-                    throw new Error(`Error! Status: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                result.sort((a:TownItem, b:TownItem) => (a.name.toLowerCase()).localeCompare(b.name.toLowerCase()));
-                setTowns(result);
-                setRenderedTowns(result);
-                setIsLoadingTowns(false);
-            } catch (e) {
-                console.log("Failed to get town data in townList -- /api/towns")
-                setTowns([]);
-            } finally {
-                setIsLoadingTowns(false);
+    const fetchData = async (retries = 3) => {
+        try {
+            const response = await fetch('/api/towns');
+            
+            if (!response.ok) {
+                throw new Error(`Error! Status: ${response.status}`);
             }
+            
+            const result = await response.json();
+            result.sort((a:TownItem, b:TownItem) => (a.name.toLowerCase()).localeCompare(b.name.toLowerCase()));
+            setTowns(result);
+            setRenderedTowns(result);
+        } catch (e) {
+            if (retries > 0) {
+                console.log(`Retrying... ${retries} attempts left`);
+                setTimeout(() => fetchData(retries - 1), 2000);
+                return;
+            }
+            console.log("Failed to get town data in townList -- /api/towns", e);
+            setTowns([]);
+            setRenderedTowns([]);
+        } finally {
+            setIsLoadingTowns(false);
         }
-        
-        fetchData();
-    },[])
+    }
+    
+    fetchData();
+},[])
 
     useEffect(() => {
         if(query.length > 0){

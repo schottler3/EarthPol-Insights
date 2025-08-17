@@ -79,10 +79,10 @@ function PlayerContent() {
                   <img className="w-12 h-12 -mt-1" src={highestRank.url} alt={highestRank.name} />
                 </div>
             )}
-            { playerData.status.isOnline ?
-              <div className="has-tooltip hover:cursor-pointer">
+            { playerData && playerData.status && playerData.status.isOnline ?
+              <div className="has-tooltip hover:cursor-pointer right-0">
                 <span className="tooltip text-white -mt-6">{`${playerData.name} is online`}</span>
-                <span className="absolute right-0 top-0 bg-green-500 rounded-full w-3 h-3"></span>
+                <span className="absolute bg-green-500 rounded-full w-3 h-3"></span>
               </div>
               :
               null
@@ -111,7 +111,7 @@ function PlayerContent() {
                   />
                 </div>
               ) : null}
-              {playerData.town ? (
+              {playerData.town && playerData.town.name ? (
                 <div className="flex flex-col items-center gap-2">
                   <h1 className="text-2xl font-bold text-blue1">
                     Town
@@ -122,7 +122,9 @@ function PlayerContent() {
                     type="town"
                   />
                 </div>
-              ) : null}
+              ) : 
+                null
+              }
             </div>
           </div>
         </div>

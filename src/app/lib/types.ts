@@ -1,4 +1,5 @@
 // @ts-check
+import { User } from "firebase/auth";
 import { Dispatch, SetStateAction } from "react"
 
 export interface EndpointData {
@@ -287,3 +288,10 @@ export type Invite = {
     imageURL: string | null;
     inviteURL: string;
 };
+
+export type InUser = {
+    authUser: User | null;
+    userName: string | null;
+    nation: Nation | null;
+    town: Town | null;
+}

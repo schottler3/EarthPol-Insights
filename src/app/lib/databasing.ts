@@ -1,6 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
-import { Shop } from "./types";
+import { InUser, Shop } from "./types";
+import { useAppContext } from "../context/AppContext";
+import { User } from "firebase/auth";
+import { auth } from "../auth";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://support.google.com/firebase/answer/7015592
@@ -20,6 +23,8 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+
+const { user, setUser } = useAppContext(); 
 
 export const getShopHistory = async function(uuid: string): Promise<Shop[] | null> {
     try {
@@ -48,4 +53,21 @@ export const getShopHistory = async function(uuid: string): Promise<Shop[] | nul
         return null;
     }
 }
+
+export const signInUser = async (signedInUser:User) {
+    let tempUser:InUser;
+    tempUser.authUser = signedInUser;
+    tempUser
+    const users = collection(db, 'Users');
+    let user = doc(users, auth.user.uid);
+    const userinfo = await getDoc(user);
+    if (!userinfo.exists()) {
+      await setDoc(user, {
+        uid: uid,
+        visits: 0,
+      });
+    }
+    console.log(userinfo);
+    this.achievementCount = this.getVisits();
+  }
 

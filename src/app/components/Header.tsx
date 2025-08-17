@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getEndpoints, getPlayerData } from '../lib/queries';
 import { EndpointData } from '../lib/types';
 import WeatherWidget from './WeatherWidget';
+import Login from './Login';
 
 export default function Header(){
     const headerHeight = "h-32";
@@ -53,8 +54,8 @@ export default function Header(){
                             className={`h-20 w-auto sm:h-24 ml-4`}
                             src="/images/EPMC-Insights-Logo.svg"
                             alt="EPMC Logo"
-                            width={96}
-                            height={96}
+                            width={0}
+                            height={0}
                         />
                     </Link>
                     <div className="flex-col hidden sm:flex">
@@ -93,9 +94,13 @@ export default function Header(){
                                 data={endpointData}
                             />
                         </div>
+                        <div>
+                            <Login
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className="w-full flex justify-evenly *:w-full bg-blue1 *:py-1 hover:cursor-pointer text-white *:font-bold z-50">
+                <div className="w-full flex justify-evenly *:w-full bg-blue1 *:py-1 hover:cursor-pointer text-white *:font-bold z-60">
                     <Link href="/nationList" className="text-center hover hover:bg-charcoal rounded-r-full hover:text-aqua1 bg-opacity-75 transition-all ease-in-out">
                         Nations
                     </Link>
