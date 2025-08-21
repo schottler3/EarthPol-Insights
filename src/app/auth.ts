@@ -1,42 +1,42 @@
-import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDgsO-AlUIsBrbKd8GDBygCMiOzqmSFv60",
-  authDomain: "earthpol-insights.firebaseapp.com",
-  projectId: "earthpol-insights",
-  storageBucket: "earthpol-insights.firebasestorage.app",
-  messagingSenderId: "550138244897",
-  appId: "1:550138244897:web:43fe595ea9bf57f7f29860",
-  measurementId: "G-28X0Q0LFBF"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+import app from "./lib/databasing";
 
 // Get the Auth instance
 export const auth = getAuth(app);
-
-export default app;
 
 const provider = new GoogleAuthProvider();
 
 export const signInWithGooglePopup = async () => {
     try {
         const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        console.log("Signed in with Google:", user.displayName);
+        return result.user;
     } catch (error) {
         console.error("Google sign-in error:", error);
+        throw error;
     }
 };
 
-export const handleSignOut = async () => {
+export const signOutUser = async () => {
     try {
         await signOut(auth);
         console.log("Signed out successfully");
     } catch (error) {
         console.error("Sign out error:", error);
+        throw error;
     }
+};
+
+export const ensureInitialized = async (): Promise<void> => {
+    await auth.authStateReady();
+};
+
+export const ensureLoggedIn = async (): Promise<void> => {
+    await ensureInitialized();
+    if (!auth.currentUser) {
+      throw new Error('NOT LOGGED IN');
+    }
+};
+
+export const initAuth = async (): Promise<void> => {
+    await ensureInitialized();
 };

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getEndpoints, getPlayerData } from '../lib/queries';
 import { EndpointData } from '../lib/types';
 import WeatherWidget from './WeatherWidget';
-import Login from './Login';
+import Profile from './Profile';
 
 export default function Header(){
     const headerHeight = "h-32";
@@ -95,7 +95,7 @@ export default function Header(){
                             />
                         </div>
                         <div>
-                            <Login
+                            <Profile
                             />
                         </div>
                     </div>

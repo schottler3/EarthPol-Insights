@@ -289,8 +289,16 @@ export type Invite = {
     inviteURL: string;
 };
 
+export type serializableAuthUser = {
+    uid: string;
+    email: string;
+    emailVerified: boolean;
+    creationTime: string;
+    lastSignInTime: string;
+};
+
 export type InUser = {
-    authUser: User | null;
+    authUser: serializableAuthUser;
     userName: string | null;
     nation: Nation | null;
     town: Town | null;

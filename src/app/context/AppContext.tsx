@@ -1,15 +1,16 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Shop } from '../lib/types';
-import { User, onAuthStateChanged } from 'firebase/auth';
+import { InUser, Shop } from '../lib/types';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../auth';
+import { signInUser } from '../lib/databasing';
 
 type AppState = {
   shops: Shop[];
   setShops: (value: Shop[]) => void;
-  user: User | null;
-  setUser: (value: User | null) => void;
+  user: InUser | null;
+  setUser: (value: InUser | null) => void;
   loading: boolean;
 };
 
@@ -25,14 +26,18 @@ export const useAppContext = () => useContext(AppContext);
 
 export function AppContextProvider({ children }: { children: ReactNode }) {
   const [shops, setShops] = useState<Shop[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<InUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("Signed In:", user.displayName);
-        setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          const userData = await signInUser(firebaseUser);
+          setUser(userData);
+        } catch (error) {
+          console.error("Error signing in user:", error);
+        }
       } else {
         console.log("Signed Out");
         setUser(null);
