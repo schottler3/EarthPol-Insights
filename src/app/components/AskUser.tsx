@@ -68,7 +68,9 @@ export default function AskUser({account}: {account:string}) {
         setIsTheirAccount(false);
         if(user){
             user.userName = "";
+            reloadAccount(user);
         }
+        setIsPrompting(false);
     }
 
     return (

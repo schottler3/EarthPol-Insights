@@ -125,7 +125,11 @@ export const reloadAccount = async (user:InUser) : Promise<boolean> => {
             return true;
         }
         else{
-            return false;
+            userData.nation = null;
+            userData.town = null;
+            userData.userName = "";
+            await setDoc(userDoc, userData);
+            return true;
         }
     } catch(e) {
         return false;
