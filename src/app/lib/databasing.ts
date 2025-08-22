@@ -1,7 +1,8 @@
 import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
-import { InUser, Shop } from "./types";
+import { InUser, Player, Shop } from "./types";
 import { User } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import { getPlayerData } from "./queries";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDgsO-AlUIsBrbKd8GDBygCMiOzqmSFv60",
@@ -60,25 +61,73 @@ export const signInUser = async (signedInUser: User): Promise<InUser> => {
         lastSignInTime: signedInUser.metadata.lastSignInTime || "",
     };
 
+    const cachedAccount = localStorage.getItem("userName");
+
     const tempUser: InUser = {
         authUser: serializableAuthUser,
         userName: "",
         nation: null,
         town: null,
     };
+
+    if(cachedAccount){
+        tempUser.userName = cachedAccount;
+    }
     
     const users = collection(db, 'Users');
     const userDoc = doc(users, signedInUser.uid);
     const userinfo = await getDoc(userDoc);
     
     if (!userinfo.exists()) {
+        if(tempUser.userName) {
+            const playerData:Player | null = await getPlayerData(tempUser.userName);
+            console.log(`PlayerData: ${playerData}`)
+            if(playerData) {
+                tempUser.nation = playerData.nation;
+                tempUser.town = playerData.town;
+            }
+        }
         await setDoc(userDoc, tempUser);
-    } else {
-        const userData = userinfo.data();
-        tempUser.nation = userData?.nation || null;
-        tempUser.town = userData?.town || null;
-        tempUser.userName = userData?.userName || "";
+        return tempUser;
+    } 
+    else {
+        const userData = userinfo.data() as InUser;
+        if(tempUser.userName) {
+            const playerData:Player | null = await getPlayerData(tempUser.userName);
+            if(playerData) {
+                userData.nation = playerData.nation;
+                userData.town = playerData.town;
+            }
+            userData.userName = tempUser.userName;
+            await setDoc(userDoc, userData);
+        }
+        return userData;
     }
-    
-    return tempUser;
 };
+
+export const reloadAccount = async (user:InUser) : Promise<boolean> => {
+    try{
+        const users = collection(db, 'Users');
+        const userDoc = doc(users, user.authUser.uid);
+        const userinfo = await getDoc(userDoc);
+        
+        const userData = userinfo.data() as InUser;
+        const username = user.userName;
+        if(username){
+            const playerData:Player | null = await getPlayerData(username);
+
+            if(playerData) {
+                userData.nation = playerData.nation;
+                userData.town = playerData.town;
+            }
+            userData.userName = user.userName;
+            await setDoc(userDoc, userData);
+            return true;
+        }
+        else{
+            return false;
+        }
+    } catch(e) {
+        return false;
+    }
+}

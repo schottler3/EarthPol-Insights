@@ -10,6 +10,7 @@ import ShopItem from '@/app/components/ShopItem';
 import ShopLoading from '@/app/shops/ShopLoading';
 import Shops from '@/app/shops/Shops';
 import AskUser from '@/app/components/AskUser';
+import { user } from 'firebase-functions/v1/auth';
 
 function PlayerContent() {
   const params = useParams();
@@ -68,7 +69,9 @@ function PlayerContent() {
 
   return (
     <div className="pt-16 flex flex-col w-full items-center">
-      <AskUser />
+      <AskUser 
+        account={playerData.name}
+      />
       <div className="w-full sm:w-3/4 md:w-2/3">
         <div className="flex flex-col w-full gap-8 py-8">
           <div className="flex flex-row rounded-md">

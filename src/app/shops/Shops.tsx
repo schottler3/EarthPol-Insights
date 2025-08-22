@@ -180,20 +180,20 @@ export default function Shops({data}: {data: Shop[] | null}){
             <div className="flex flex-wrap gap-4 items-center">
                 <input onChange={(e) => {setSearchQuery(e.target.value);}} id="itemSearch" className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
                 <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                    <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                    <h1 onClick={() => {setIsSelling(true);}} className="z-50 pl-2">
+                    <span className={`absolute first-letter:top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                    <h1 onClick={() => {setIsSelling(true);}} className="z-0 pl-2">
                         Selling
                     </h1>
-                    <h1 onClick={() => {setIsSelling(false);}} className="z-50 pr-2">
+                    <h1 onClick={() => {setIsSelling(false);}} className="z-0 pr-2">
                         Buying
                     </h1>
                 </div>
                 <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
                     <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                    <h1 onClick={() => {setShowOuts(true);}} className="z-50 pl-2">
+                    <h1 onClick={() => {setShowOuts(true);}} className="z-0 pl-2">
                         Show Outs
                     </h1>
-                    <h1 onClick={() => {setShowOuts(false);}} className="z-50 pr-2">
+                    <h1 onClick={() => {setShowOuts(false);}} className="z-0 pr-2">
                         Hide Outs
                     </h1>
                 </div>

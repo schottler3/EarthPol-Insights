@@ -34,6 +34,10 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
       if (firebaseUser) {
         try {
           const userData = await signInUser(firebaseUser);
+          const cachedAccount = localStorage.getItem("userName");
+          if(cachedAccount && userData.userName == ""){
+            userData.userName = cachedAccount;
+          }
           setUser(userData);
         } catch (error) {
           console.error("Error signing in user:", error);

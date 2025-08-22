@@ -300,6 +300,12 @@ export type serializableAuthUser = {
 export type InUser = {
     authUser: serializableAuthUser;
     userName: string | null;
-    nation: Nation | null;
-    town: Town | null;
+    nation: {
+        name: string;
+        uuid: string;
+    } | null;
+    town: {
+        name: string;
+        uuid: string;
+    } | null;
 }
