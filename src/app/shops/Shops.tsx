@@ -96,17 +96,17 @@ export default function Shops({data}: {data: Shop[] | null}){
                     setAllyShops(gotAllyShops);
                 }
             }
-            if(onlyAllies){
-                setRenderedShops(allyShops)
+            if(onlyAllies && allyShops){
+                setRenderedShops(allyShops);
             }
-            else{
+            else if(!onlyAllies){
                 sortItems()
             }
         }
 
         fetchAllyShops();
 
-    },[onlyAllies])
+    },[onlyAllies, user, allyShops])
 
     useEffect(() => {
         if(data){
@@ -125,13 +125,13 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     useEffect(() => {
         const updateItems = () => {
+            var currentData: Shop[] | null = null;
 
-            var currentData : Shop[] | null = null;
-
-            if(showOuts){
+            if(onlyAllies && allyShops) {
+                currentData = allyShops;
+            } else if(showOuts) {
                 currentData = data;
-            }
-            else{
+            } else {
                 currentData = noOutShops;
             }
 
@@ -175,7 +175,7 @@ export default function Shops({data}: {data: Shop[] | null}){
 
         updateItems();
 
-    }, [selectedCategories, searchQuery, noOutShops, showOuts, isSelling])
+    }, [selectedCategories, searchQuery, noOutShops, showOuts, isSelling, onlyAllies, allyShops])
 
     const handleCategoryClick = (category: string) => {
         // Update selected categories list
@@ -227,7 +227,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                 </div>
                 { user && user.nation && user.nation.uuid ?
                     <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                        <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                        <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${onlyAllies ? 'translate-x-0' : 'translate-x-full'}`}></span>
                         <h1 onClick={() => {setOnlyAllies(true);}} className="z-0 pl-2">
                             Only Allies
                         </h1>

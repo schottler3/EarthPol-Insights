@@ -153,7 +153,7 @@ export const renderAllyShops = async (uuid: string): Promise<Shop[] | null> => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                uuid: uuid,
+                nation: uuid,
                 filter: 'allies'
             })
         });
