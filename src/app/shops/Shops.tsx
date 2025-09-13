@@ -1,13 +1,12 @@
 "use client"
 import { useEffect, useState } from "react";
 import ShopItem from "../components/ShopItem";
-import { Shop } from "../lib/types";
+import { Nation, Shop } from "../lib/types";
 import Category from "../components/Category";
 import { BuildingBlocks, ColoredBlocks, Combats, Food, Functionals, Materials, NaturalBlocks, parseItemStack, RedstoneItems, Tools } from "../lib/itemUtils";
 import ShopComponent from "./ShopComponent";
 import useScreenSize from "../hooks/useScreenSize";
 import ShopBlank from "../components/ShopBlank";
-
 
 export default function Shops({data}: {data: Shop[] | null}){
 
@@ -22,9 +21,11 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [noOutShops, setNoOutShops] = useState<Shop[] | null>(null);
     const [renderedShops, setRenderedShop] = useState<Shop[] | null>(null);
     const [middlewareShops, setMiddlewareShops] = useState<Shop[] | null>(null);
+
     const [isSelling, setIsSelling] = useState<boolean>(true);
     const [showOuts, setShowOuts] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>("");
+
     const [numBlanks, setNumBlanks] = useState<number>(0);
 
     useEffect(() => {
