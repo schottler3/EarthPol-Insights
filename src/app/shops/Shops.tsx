@@ -21,7 +21,7 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [selectedShop, setSelectedShop] = useState<string | null>(null);
     
     const [noOutShops, setNoOutShops] = useState<Shop[] | null>(null);
-    const [renderedShops, setRenderedShop] = useState<Shop[] | null>(null);
+    const [renderedShops, setRenderedShops] = useState<Shop[] | null>(null);
     const [middlewareShops, setMiddlewareShops] = useState<Shop[] | null>(null);
 
     const [isSelling, setIsSelling] = useState<boolean>(true);
@@ -34,6 +34,27 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [allyShops, setAllyShops] = useState<Shop[] | null>(null);
 
     const { user } = useAppContext(); 
+
+    const sortItems = () => {
+        if (middlewareShops) {
+            const sortedShops = [...middlewareShops].sort((a:Shop, b:Shop) => {
+                const { item: itemA, count: countA } = parseItemStack(a.item || '');
+                const { item: itemB, count: countB } = parseItemStack(b.item || '');
+                
+                // Primary sort by item name
+                if (itemA !== itemB) {
+                    return itemA.localeCompare(itemB);
+                }
+                
+                // Secondary sort by price
+                return a.price/countA - b.price/countB;
+            });
+            
+            if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
+                setRenderedShops(sortedShops);
+            }
+        }
+    };
 
     useEffect(() => {
         if(query)
@@ -70,8 +91,16 @@ export default function Shops({data}: {data: Shop[] | null}){
     useEffect(() => {
         const fetchAllyShops = async () => {
             if(!allyShops && user && user.nation){
-                const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation);
-                setAllyShops(gotAllyShops);
+                const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation.uuid);
+                if(gotAllyShops){
+                    setAllyShops(gotAllyShops);
+                }
+            }
+            if(onlyAllies){
+                setRenderedShops(allyShops)
+            }
+            else{
+                sortItems()
             }
         }
 
@@ -91,27 +120,6 @@ export default function Shops({data}: {data: Shop[] | null}){
     },[data])
 
     useEffect(() => {
-        const sortItems = () => {
-            if (middlewareShops) {
-                const sortedShops = [...middlewareShops].sort((a:Shop, b:Shop) => {
-                    const { item: itemA, count: countA } = parseItemStack(a.item || '');
-                    const { item: itemB, count: countB } = parseItemStack(b.item || '');
-                    
-                    // Primary sort by item name
-                    if (itemA !== itemB) {
-                        return itemA.localeCompare(itemB);
-                    }
-                    
-                    // Secondary sort by price
-                    return a.price/countA - b.price/countB;
-                });
-                
-                if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
-                    setRenderedShop(sortedShops);
-                }
-            }
-        };
-
         sortItems();
     }, [middlewareShops])
 

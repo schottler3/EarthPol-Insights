@@ -57,7 +57,8 @@ exports.itemupdates = onSchedule({
         const shopId = shop.id.toString().trim();
         if (shopId) {
           const shopData = await getShopData(shopId)
-          recentPrices.set(shopId, shopData.price);
+          if(shopData)
+            recentPrices.set(shopId, shopData.price);
         }
       }
 
@@ -70,10 +71,8 @@ exports.itemupdates = onSchedule({
           if (shopId) {
             const lastPrice = recentPrices.get(shopId);
 
-            const nation = await getNation(shop.owner);
-
             // Only write if price is different or no history exists
-            if (lastPrice === null || lastPrice !== shop.price || ) {
+            if (lastPrice === null || lastPrice !== shop.price) {
               const docRef = db.collection("shops")
                 .doc(shopId)
                 .collection("history")
@@ -152,34 +151,3 @@ const renderShops = async () => {
     return null;
   }
 };
-
-const getNation = async (user: string) => {
-  try {
-    
-    const response = await fetch('https://api.earthpol.com/astra/players', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: user || []
-      }),
-      cache: 'no-store',
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Error! Status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    if (!data) {
-      throw new Error('No data found');
-    }
-    
-    return data.nation;
-
-  } catch (error) {
-    console.error('Error querying EarthPol players:', error);
-    return null;
-  }
-}

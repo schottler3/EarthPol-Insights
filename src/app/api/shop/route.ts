@@ -33,7 +33,7 @@ export async function POST(request: Request) : Promise<NextResponse>{
       const allies = await alliesResponse.json();
       
       const allyShops = shops.filter((shop: Shop) => {
-        return allies.includes(shop.nation) || shop.nation === body.nation.name;
+        return allies.includes(shop.owner);
       });
 
       return NextResponse.json(allyShops);
@@ -120,6 +120,47 @@ const getAllies = async (uuid: string) => {
     }
     
     return NextResponse.json(data[0].allies || []);
+  } catch (error) {
+    console.error('Error querying EarthPol nations:', error);
+    return NextResponse.json([]);
+  }
+}
+
+const getAllAlliesPlayers = async (uuid: string) => {
+  let players: string[] = [];
+  try {
+    const alliesResponse = await getAllies(uuid);
+    const allies = await alliesResponse.json();
+
+    for (let ally of allies) {
+      const response = await fetch('https://api.earthpol.com/astra/nations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: [ally]
+        }),
+        cache: 'no-store',
+      });
+      
+      if (!response.ok) {
+        console.log(`Error! Status: ${response.status}`);
+        continue;
+      }
+      
+      const data = await response.json();
+      if (!data || !data[0]) {
+        console.log('No nation data found');
+        continue;
+      }
+      
+      for (let player of data[0].residents || []) {
+        players.push(player.uuid);
+      }
+    }
+    
+    return NextResponse.json(players);
   } catch (error) {
     console.error('Error querying EarthPol nations:', error);
     return NextResponse.json([]);
