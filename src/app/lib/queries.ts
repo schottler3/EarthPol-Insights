@@ -145,6 +145,32 @@ export const renderShops = async (): Promise<Shop[] | null> => {
     }
 };
 
+export const renderAllyShops = async (uuid: string): Promise<Shop[] | null> => {
+    try {
+        const response = await fetch(`/api/shop`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                uuid: uuid,
+                filter: 'allies'
+            })
+        });
+
+        if (!response.ok) {
+            console.error(`Error fetching ally shops data. Status: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error: any) {
+        console.error('Error fetching ally shops data:', error);
+        return null;
+    }
+};
+
 export const renderPlayerShop = async (query: string): Promise<Shop | null> => {
 
     console.log("Query : " + query)

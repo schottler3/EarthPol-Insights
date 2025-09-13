@@ -1,13 +1,14 @@
 "use client"
 import { useEffect, useState } from "react";
 import ShopItem from "../components/ShopItem";
-import { Shop } from "../lib/types";
+import { Nation, Shop } from "../lib/types";
 import Category from "../components/Category";
 import { BuildingBlocks, ColoredBlocks, Combats, Food, Functionals, Materials, NaturalBlocks, parseItemStack, RedstoneItems, Tools } from "../lib/itemUtils";
 import ShopComponent from "./ShopComponent";
 import useScreenSize from "../hooks/useScreenSize";
 import ShopBlank from "../components/ShopBlank";
-
+import { useAppContext } from "../context/AppContext";
+import { renderAllyShops } from "../lib/queries";
 
 export default function Shops({data}: {data: Shop[] | null}){
 
@@ -22,10 +23,17 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [noOutShops, setNoOutShops] = useState<Shop[] | null>(null);
     const [renderedShops, setRenderedShop] = useState<Shop[] | null>(null);
     const [middlewareShops, setMiddlewareShops] = useState<Shop[] | null>(null);
+
     const [isSelling, setIsSelling] = useState<boolean>(true);
     const [showOuts, setShowOuts] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>("");
+
     const [numBlanks, setNumBlanks] = useState<number>(0);
+
+    const [onlyAllies, setOnlyAllies] = useState<boolean>(false);
+    const [allyShops, setAllyShops] = useState<Shop[] | null>(null);
+
+    const { user } = useAppContext(); 
 
     useEffect(() => {
         if(query)
@@ -58,6 +66,18 @@ export default function Shops({data}: {data: Shop[] | null}){
             setNumBlanks(5);
         }
     }, [screenSize])
+
+    useEffect(() => {
+        const fetchAllyShops = async () => {
+            if(!allyShops && user && user.nation){
+                const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation);
+                setAllyShops(gotAllyShops);
+            }
+        }
+
+        fetchAllyShops();
+
+    },[onlyAllies])
 
     useEffect(() => {
         if(data){
@@ -197,6 +217,19 @@ export default function Shops({data}: {data: Shop[] | null}){
                         Hide Outs
                     </h1>
                 </div>
+                { user && user.nation && user.nation.uuid ?
+                    <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                        <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                        <h1 onClick={() => {setOnlyAllies(true);}} className="z-0 pl-2">
+                            Only Allies
+                        </h1>
+                        <h1 onClick={() => {setOnlyAllies(false);}} className="z-0 pr-2">
+                            All Nations
+                        </h1>
+                    </div>
+                    :
+                    null
+                }
             </div>
             <div className="flex md:max-w-[75vw] lg:max-w-[50vw] text-blue1 *:bg-gray1 bg-charcoal p-2 rounded-md gap-4 flex-wrap select-none hover:*:text-aqua1">
                 <Category
