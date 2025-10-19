@@ -29,6 +29,7 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     const [numBlanks, setNumBlanks] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const [onlyAllies, setOnlyAllies] = useState<boolean>(false);
     const [allyShops, setAllyShops] = useState<Shop[] | null>(null);
@@ -37,6 +38,7 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     const sortItems = () => {
         if (middlewareShops) {
+            setLoading(true);
             const sortedShops = [...middlewareShops].sort((a:Shop, b:Shop) => {
                 const { item: itemA, count: countA } = parseItemStack(a.item || '');
                 const { item: itemB, count: countB } = parseItemStack(b.item || '');
@@ -53,6 +55,7 @@ export default function Shops({data}: {data: Shop[] | null}){
             if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
                 setRenderedShops(sortedShops);
             }
+            setLoading(false);
         }
     };
 
@@ -90,6 +93,8 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     useEffect(() => {
         const fetchAllyShops = async () => {
+            setLoading(true);
+            setRenderedShops(null);
             if(!allyShops && user && user.nation){
                 const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation.uuid);
                 if(gotAllyShops){
@@ -102,6 +107,7 @@ export default function Shops({data}: {data: Shop[] | null}){
             else if(!onlyAllies){
                 sortItems()
             }
+            setLoading(false);
         }
 
         fetchAllyShops();
@@ -109,6 +115,7 @@ export default function Shops({data}: {data: Shop[] | null}){
     },[onlyAllies, user, allyShops])
 
     useEffect(() => {
+        setLoading(true);
         if(data){
             setNoOutShops(data.filter(shop => {
                 return shop.type === "BUYING" && shop.space <= 0 ? false :
@@ -117,6 +124,7 @@ export default function Shops({data}: {data: Shop[] | null}){
         } else {
             setNoOutShops([]);
         }
+        setLoading(false);
     },[data])
 
     useEffect(() => {
@@ -125,6 +133,7 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     useEffect(() => {
         const updateItems = () => {
+            setLoading(true);
             var currentData: Shop[] | null = null;
 
             if(onlyAllies && allyShops) {
@@ -171,6 +180,8 @@ export default function Shops({data}: {data: Shop[] | null}){
                 
                 return true;
             }) : null);
+
+            setLoading(false);
         }
 
         updateItems();
@@ -291,7 +302,7 @@ export default function Shops({data}: {data: Shop[] | null}){
             </div>
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
                 {(renderedShops && renderedShops.length >= 0) || searchQuery.length > 0 ?
-                    ( renderedShops && renderedShops.length > 0 ?
+                    ( renderedShops && renderedShops.length > 0 && !loading ?
                         renderedShops?.map((shop: Shop, index: number) => (
                             <ShopItem
                                 key={`Shop-${shop.owner}-${shop.id}`}

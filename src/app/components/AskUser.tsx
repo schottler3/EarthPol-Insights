@@ -27,14 +27,17 @@ export default function AskUser({account}: {account:string}) {
             setIsPrompting(true);
             setFirstPrompt(true);
         }
-    }, []);
+    }, [user]);
 
     const handleExit = () => {
         if(isTheirAccount){
             setIsPrompting(false);
         }
-        else if(firstPrompt)
+        else if(firstPrompt){
             setFirstPrompt(false);
+            if(localStorage.getItem('isIgnored'))
+                setIsPrompting(false)
+        }
         else
             setIsPrompting(false);
     }
