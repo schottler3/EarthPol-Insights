@@ -46,6 +46,7 @@ export default function AskUser({account}: {account:string}) {
 
     const continueAsking = () => {
         setIsPrompting(false);
+        localStorage.setItem('isIgnored', `false`);
     }
 
     const dontAsk = () => {
