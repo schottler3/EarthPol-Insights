@@ -22,8 +22,11 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [noOutShops, setNoOutShops] = useState<Shop[] | null>(null);
     const [renderedShops, setRenderedShop] = useState<Shop[] | null>(null);
     const [middlewareShops, setMiddlewareShops] = useState<Shop[] | null>(null);
+
     const [isSelling, setIsSelling] = useState<boolean>(true);
     const [showOuts, setShowOuts] = useState<boolean>(false);
+    const [bestDeals, setBestDeals] = useState<boolean>(true);
+
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [numBlanks, setNumBlanks] = useState<number>(0);
 
@@ -83,7 +86,10 @@ export default function Shops({data}: {data: Shop[] | null}){
                     }
                     
                     // Secondary sort by price
-                    return a.price/countA - b.price/countB;
+                    if(bestDeals)
+                        return a.price/countA - b.price/countB;
+                    else
+                        return b.price/countB - a.price/countA;
                 });
                 
                 if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
@@ -93,7 +99,7 @@ export default function Shops({data}: {data: Shop[] | null}){
         };
 
         sortItems();
-    }, [middlewareShops])
+    }, [middlewareShops, bestDeals])
 
     useEffect(() => {
         const updateItems = () => {
@@ -195,6 +201,15 @@ export default function Shops({data}: {data: Shop[] | null}){
                     </h1>
                     <h1 onClick={() => {setShowOuts(false);}} className="z-10 pr-2">
                         Hide Outs
+                    </h1>
+                </div>
+                <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                    <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${bestDeals ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                    <h1 onClick={() => {setBestDeals(true);}} className="z-50 pl-2">
+                        Best Deals
+                    </h1>
+                    <h1 onClick={() => {setBestDeals(false);}} className="z-50 pr-2">
+                        Worst Deals
                     </h1>
                 </div>
             </div>
