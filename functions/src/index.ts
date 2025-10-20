@@ -25,6 +25,10 @@ type Shop = {
       y: number
       z: number
   }
+  nation: {
+    name: string
+    uuid: string
+  }
 }
 
 exports.itemupdates = onSchedule({
@@ -52,7 +56,9 @@ exports.itemupdates = onSchedule({
       for (const shop of validShops) {
         const shopId = shop.id.toString().trim();
         if (shopId) {
-          recentPrices.set(shopId, await getMostRecentPrice(shopId));
+          const shopData = await getShopData(shopId)
+          if(shopData)
+            recentPrices.set(shopId, shopData.price);
         }
       }
 
@@ -64,6 +70,7 @@ exports.itemupdates = onSchedule({
           const shopId = shop.id.toString().trim();
           if (shopId) {
             const lastPrice = recentPrices.get(shopId);
+
             // Only write if price is different or no history exists
             if (lastPrice === null || lastPrice !== shop.price) {
               const docRef = db.collection("shops")
@@ -89,7 +96,7 @@ exports.itemupdates = onSchedule({
   }
 });
 
-const getMostRecentPrice = async (shopId: string): Promise<number | null> => {
+const getShopData = async (shopId: string): Promise<Shop | null> => {
   try {
     const querySnapshot = await db.collection("shops")
       .doc(shopId)
@@ -104,7 +111,7 @@ const getMostRecentPrice = async (shopId: string): Promise<number | null> => {
 
     const mostRecentDoc = querySnapshot.docs[0];
     const shopData = mostRecentDoc.data().data;
-    return shopData?.price || null;
+    return shopData || null;
   } catch (error) {
     console.error(`Error getting most recent price for shop ${shopId}:`, error);
     return null;
