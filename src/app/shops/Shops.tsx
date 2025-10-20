@@ -34,8 +34,8 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [onlyAllies, setOnlyAllies] = useState<boolean>(false);
     const [allyShops, setAllyShops] = useState<Shop[] | null>(null);
 
-    //const [buyingShops, setBuyingShops] = useState<Shop[] | null>(null);]
-    //const [sellingShops, setSellingShops] = useState<Shop[] | null>(null);
+    const [buyingShops, setBuyingShops] = useState<Shop[] | null>(null);
+    const [sellingShops, setSellingShops] = useState<Shop[] | null>(null);
 
     const { user } = useAppContext(); 
 
@@ -53,6 +53,13 @@ export default function Shops({data}: {data: Shop[] | null}){
                 // Secondary sort by price
                 return a.price/countA - b.price/countB;
             });
+
+            if(isSelling){
+                setSellingShops(sortedShops)
+            }
+            else{
+                setBuyingShops(sortedShops)
+            }
             
             if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
                 setRenderedShops(sortedShops);
@@ -108,7 +115,7 @@ export default function Shops({data}: {data: Shop[] | null}){
 
         fetchAllyShops();
 
-    },[allyShops])
+    },[])
 
     useEffect(() => {
         setRenderedShops(null);
@@ -134,13 +141,24 @@ export default function Shops({data}: {data: Shop[] | null}){
         setLoading(false);
     }, [renderedShops])
 
+     useEffect(() => {
+        if(!user?.authUser){
+            setAllyShops(null)
+            setOnlyAllies(false);
+        }
+    }, [user])
+
     useEffect(() => {
         const updateItems = () => {
 
             var currentData: Shop[] | null = null;
 
             if(onlyAllies && allyShops) {
-                currentData = allyShops;
+                // Filter out of stock items from allyShops
+                currentData = allyShops.filter(shop => {
+                    return shop.type === "BUYING" && shop.space <= 0 ? false :
+                    shop.type === "SELLING" && shop.stock <= 0 ? false : true;
+                });
             } else if(showOuts) {
                 currentData = data;
             } else {
