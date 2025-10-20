@@ -34,11 +34,13 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [onlyAllies, setOnlyAllies] = useState<boolean>(false);
     const [allyShops, setAllyShops] = useState<Shop[] | null>(null);
 
+    //const [buyingShops, setBuyingShops] = useState<Shop[] | null>(null);]
+    //const [sellingShops, setSellingShops] = useState<Shop[] | null>(null);
+
     const { user } = useAppContext(); 
 
     const sortItems = () => {
         if (middlewareShops) {
-            setLoading(true);
             const sortedShops = [...middlewareShops].sort((a:Shop, b:Shop) => {
                 const { item: itemA, count: countA } = parseItemStack(a.item || '');
                 const { item: itemB, count: countB } = parseItemStack(b.item || '');
@@ -55,7 +57,6 @@ export default function Shops({data}: {data: Shop[] | null}){
             if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
                 setRenderedShops(sortedShops);
             }
-            setLoading(false);
         }
     };
 
@@ -93,7 +94,6 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     useEffect(() => {
         const fetchAllyShops = async () => {
-            setLoading(true);
             setRenderedShops(null);
             if(!allyShops && user && user.nation){
                 const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation.uuid);
@@ -104,18 +104,18 @@ export default function Shops({data}: {data: Shop[] | null}){
             if(onlyAllies && allyShops){
                 setRenderedShops(allyShops);
             }
-            else if(!onlyAllies){
-                sortItems()
-            }
-            setLoading(false);
         }
 
         fetchAllyShops();
 
-    },[onlyAllies, user, allyShops])
+    },[allyShops])
 
     useEffect(() => {
+        setRenderedShops(null);
         setLoading(true);
+    }, [onlyAllies, showOuts, isSelling])
+
+    useEffect(() => {
         if(data){
             setNoOutShops(data.filter(shop => {
                 return shop.type === "BUYING" && shop.space <= 0 ? false :
@@ -124,7 +124,6 @@ export default function Shops({data}: {data: Shop[] | null}){
         } else {
             setNoOutShops([]);
         }
-        setLoading(false);
     },[data])
 
     useEffect(() => {
@@ -132,8 +131,12 @@ export default function Shops({data}: {data: Shop[] | null}){
     }, [middlewareShops])
 
     useEffect(() => {
+        setLoading(false);
+    }, [renderedShops])
+
+    useEffect(() => {
         const updateItems = () => {
-            setLoading(true);
+
             var currentData: Shop[] | null = null;
 
             if(onlyAllies && allyShops) {
@@ -180,8 +183,6 @@ export default function Shops({data}: {data: Shop[] | null}){
                 
                 return true;
             }) : null);
-
-            setLoading(false);
         }
 
         updateItems();
@@ -301,28 +302,25 @@ export default function Shops({data}: {data: Shop[] | null}){
                 </div>
             </div>
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
-                {(renderedShops && renderedShops.length >= 0) || searchQuery.length > 0 ?
-                    ( renderedShops && renderedShops.length > 0 && !loading ?
-                        renderedShops?.map((shop: Shop, index: number) => (
+                    {renderedShops && renderedShops.length > 0 && !loading ? (
+                        renderedShops?.map((shop: Shop) => (
                             <ShopItem
                                 key={`Shop-${shop.owner}-${shop.id}`}
                                 data={shop}
                                 setSelectedShop={setSelectedShop}
                             />
                         ))
-                        :
+                    ) : renderedShops && renderedShops.length === 0 && !loading ? (
                         <div className="text-white font-bold">
                             No Matching Shops
                         </div>
-                    )
-                    : (
+                    ) : (
                         Array.from({ length: numBlanks }).map((_, index) => (
                             <ShopBlank 
                                 key={`blankShop-${index}`}
                             />
                         ))
-                    )
-                }
+                    )}
             </div>
         </div>
     )
