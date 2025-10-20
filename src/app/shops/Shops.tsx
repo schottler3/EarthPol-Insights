@@ -34,9 +34,6 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [onlyAllies, setOnlyAllies] = useState<boolean>(false);
     const [allyShops, setAllyShops] = useState<Shop[] | null>(null);
 
-    const [buyingShops, setBuyingShops] = useState<Shop[] | null>(null);
-    const [sellingShops, setSellingShops] = useState<Shop[] | null>(null);
-
     const { user } = useAppContext(); 
 
     const sortItems = () => {
@@ -53,13 +50,6 @@ export default function Shops({data}: {data: Shop[] | null}){
                 // Secondary sort by price
                 return a.price/countA - b.price/countB;
             });
-
-            if(isSelling){
-                setSellingShops(sortedShops)
-            }
-            else{
-                setBuyingShops(sortedShops)
-            }
             
             if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
                 setRenderedShops(sortedShops);
@@ -102,15 +92,16 @@ export default function Shops({data}: {data: Shop[] | null}){
     useEffect(() => {
         const fetchAllyShops = async () => {
             setRenderedShops(null);
-            if(!allyShops && user && user.nation){
+            if(onlyAllies && allyShops){
+                setRenderedShops(allyShops);
+            }
+            else if(!allyShops && user && user.nation){
                 const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation.uuid);
                 if(gotAllyShops){
                     setAllyShops(gotAllyShops);
                 }
             }
-            if(onlyAllies && allyShops){
-                setRenderedShops(allyShops);
-            }
+            
         }
 
         fetchAllyShops();
