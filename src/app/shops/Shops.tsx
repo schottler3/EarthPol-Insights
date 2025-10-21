@@ -73,37 +73,22 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     useEffect(() => {
         const fetchAllyShops = async () => {
-
-            setRenderedShops(null);
-            
-            if(onlyAllies && allyShops){
-                setRenderedShops(allyShops);
-            }
-            else{
-
-                let gotAllyShops: Shop[] | null = null;
-
-                if(!allyShops && user && user.nation){
-                    const username = user.nation.uuid;
-                    gotAllyShops = await renderAllyShops(username);
-                }
-                else if(!allyShops && localUser && localUser.nation){
-                    const username = localUser.nation.uuid
-                    console.log(`Username 92: ${username}`)
-                    gotAllyShops = await renderAllyShops(username);
-                }
-                
+            if(!allyShops && user && user.nation){
+                const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation.uuid);
                 if(gotAllyShops){
                     setAllyShops(gotAllyShops);
                 }
             }
-            
-            
+            else if(!allyShops && localUser && localUser.nation){
+                const gotAllyShops: Shop[] | null = await renderAllyShops(localUser.nation.uuid);
+                if(gotAllyShops){
+                    setAllyShops(gotAllyShops);
+                }
+            }
         }
 
         fetchAllyShops();
-
-    },[onlyAllies])
+    },[user, localUser])
 
     useEffect(() => {
         setRenderedShops(null);
@@ -187,63 +172,67 @@ export default function Shops({data}: {data: Shop[] | null}){
     }, [user])
 
     useEffect(() => {
-        const updateItems = () => {
+    const updateItems = () => {
 
-            var currentData: Shop[] | null = null;
+        var currentData: Shop[] | null = null;
 
-            if(onlyAllies && allyShops) {
-                // Filter out of stock items from allyShops
+        if(onlyAllies && allyShops) {
+            // Respect showOuts toggle for ally shops
+            if(showOuts) {
+                currentData = allyShops;
+            } else {
                 currentData = allyShops.filter(shop => {
                     return shop.type === "BUYING" && shop.space <= 0 ? false :
                     shop.type === "SELLING" && shop.stock <= 0 ? false : true;
                 });
-            } else if(showOuts) {
-                currentData = data;
-            } else {
-                currentData = noOutShops;
             }
-
-            // Apply filter based on the updated list of selected categories
-            setMiddlewareShops(currentData ? currentData.filter(shop => {
-                const { raw, item } = parseItemStack(shop.item || '');
-
-                if (isSelling && shop.type === "BUYING"){
-                    return false;
-                }
-                if(!isSelling && shop.type === "SELLING"){
-                    return false;
-                }
-
-                if(shop.price >= 999)
-                    return false;
-
-                if (searchQuery && searchQuery.length > 0 && 
-                    !shop.item.toLowerCase().includes(searchQuery.toLowerCase()) && 
-                    !item.toLowerCase().includes(searchQuery.toLowerCase()))
-                    return false;
-
-                // Check if item belongs to any selected category
-                if(selectedCategories.length > 0){
-                    if (selectedCategories.includes("tools") && Tools.includes(raw)) return true;
-                    if (selectedCategories.includes("materials") && Materials.includes(raw)) return true;
-                    if (selectedCategories.includes("food") && Food.includes(raw)) return true;
-                    if (selectedCategories.includes("building") && BuildingBlocks.includes(raw)) return true;
-                    if (selectedCategories.includes("colored") && ColoredBlocks.includes(raw)) return true;
-                    if (selectedCategories.includes("natural") && NaturalBlocks.includes(raw)) return true;
-                    if (selectedCategories.includes("functional") && Functionals.includes(raw)) return true;
-                    if (selectedCategories.includes("redstone") && RedstoneItems.includes(raw)) return true;
-                    if (selectedCategories.includes("combat") && Combats.includes(raw)) return true;
-
-                    return false;
-                }
-                
-                return true;
-            }) : null);
+        } else if(showOuts) {
+            currentData = data;
+        } else {
+            currentData = noOutShops;
         }
 
-        updateItems();
+        // Apply filter based on the updated list of selected categories
+        setMiddlewareShops(currentData ? currentData.filter(shop => {
+            const { raw, item } = parseItemStack(shop.item || '');
 
-    }, [selectedCategories, searchQuery, noOutShops, showOuts, isSelling, onlyAllies, allyShops])
+            if (isSelling && shop.type === "BUYING"){
+                return false;
+            }
+            if(!isSelling && shop.type === "SELLING"){
+                return false;
+            }
+
+            if(shop.price >= 999)
+                return false;
+
+            if (searchQuery && searchQuery.length > 0 && 
+                !shop.item.toLowerCase().includes(searchQuery.toLowerCase()) && 
+                !item.toLowerCase().includes(searchQuery.toLowerCase()))
+                return false;
+
+            // Check if item belongs to any selected category
+            if(selectedCategories.length > 0){
+                if (selectedCategories.includes("tools") && Tools.includes(raw)) return true;
+                if (selectedCategories.includes("materials") && Materials.includes(raw)) return true;
+                if (selectedCategories.includes("food") && Food.includes(raw)) return true;
+                if (selectedCategories.includes("building") && BuildingBlocks.includes(raw)) return true;
+                if (selectedCategories.includes("colored") && ColoredBlocks.includes(raw)) return true;
+                if (selectedCategories.includes("natural") && NaturalBlocks.includes(raw)) return true;
+                if (selectedCategories.includes("functional") && Functionals.includes(raw)) return true;
+                if (selectedCategories.includes("redstone") && RedstoneItems.includes(raw)) return true;
+                if (selectedCategories.includes("combat") && Combats.includes(raw)) return true;
+
+                return false;
+            }
+            
+            return true;
+        }) : null);
+    }
+
+    updateItems();
+
+}, [selectedCategories, searchQuery, noOutShops, showOuts, isSelling, onlyAllies, allyShops])
 
     const handleCategoryClick = (category: string) => {
         // Update selected categories list
