@@ -1,14 +1,14 @@
 "use client"
 import { useEffect, useState } from "react";
 import ShopItem from "../components/ShopItem";
-import { Nation, Shop } from "../lib/types";
+import { Nation, Player, Shop } from "../lib/types";
 import Category from "../components/Category";
 import { BuildingBlocks, ColoredBlocks, Combats, Food, Functionals, Materials, NaturalBlocks, parseItemStack, RedstoneItems, Tools } from "../lib/itemUtils";
 import ShopComponent from "./ShopComponent";
 import useScreenSize from "../hooks/useScreenSize";
 import ShopBlank from "../components/ShopBlank";
 import { useAppContext } from "../context/AppContext";
-import { renderAllyShops } from "../lib/queries";
+import { getPlayerData, renderAllyShops } from "../lib/queries";
 
 export default function Shops({data}: {data: Shop[] | null}){
 
@@ -37,27 +37,7 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [allyShops, setAllyShops] = useState<Shop[] | null>(null);
 
     const { user } = useAppContext(); 
-
-    const sortItems = () => {
-        if (middlewareShops) {
-            const sortedShops = [...middlewareShops].sort((a:Shop, b:Shop) => {
-                const { item: itemA, count: countA } = parseItemStack(a.item || '');
-                const { item: itemB, count: countB } = parseItemStack(b.item || '');
-                
-                // Primary sort by item name
-                if (itemA !== itemB) {
-                    return itemA.localeCompare(itemB);
-                }
-                
-                // Secondary sort by price
-                return a.price/countA - b.price/countB;
-            });
-            
-            if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
-                setRenderedShops(sortedShops);
-            }
-        }
-    };
+    const [localUser, setLocalUser] = useState<Player | null>(null);
 
     useEffect(() => {
         if(query)
@@ -93,27 +73,57 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     useEffect(() => {
         const fetchAllyShops = async () => {
+
             setRenderedShops(null);
+            
             if(onlyAllies && allyShops){
                 setRenderedShops(allyShops);
             }
-            else if(!allyShops && user && user.nation){
-                const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation.uuid);
+            else{
+
+                let gotAllyShops: Shop[] | null = null;
+
+                if(!allyShops && user && user.nation){
+                    const username = user.nation.uuid;
+                    gotAllyShops = await renderAllyShops(username);
+                }
+                else if(!allyShops && localUser && localUser.nation){
+                    const username = localUser.nation.uuid
+                    console.log(`Username 92: ${username}`)
+                    gotAllyShops = await renderAllyShops(username);
+                }
+                
                 if(gotAllyShops){
                     setAllyShops(gotAllyShops);
                 }
             }
             
+            
         }
 
         fetchAllyShops();
 
-    },[])
+    },[onlyAllies])
 
     useEffect(() => {
         setRenderedShops(null);
         setLoading(true);
     }, [onlyAllies, showOuts, isSelling])
+
+    useEffect(() => {
+        const getData = async () => {
+            if (user?.userName) {
+                setLocalUser(await getPlayerData(user.userName) || null)
+            }
+            else {
+                const localUserName: string | null = localStorage.getItem(`userName`);
+
+                if(localUserName)
+                    setLocalUser(await getPlayerData(localUserName));
+            }
+        }
+        getData();
+    }, [user])
 
     useEffect(() => {
         if(data){
@@ -125,6 +135,17 @@ export default function Shops({data}: {data: Shop[] | null}){
             setNoOutShops([]);
         }
     },[data])
+
+    useEffect(() => {
+        const getDetails = async () => {
+            var localUsername: string | null = localStorage.getItem('userName');
+            if(localUsername){
+                setLocalUser(await getPlayerData(localUsername))
+            }
+        }
+
+        getDetails();
+    }, [])
 
     useEffect(() => {
         const sortItems = () => {
@@ -146,7 +167,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                 });
                 
                 if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
-                    setRenderedShop(sortedShops);
+                    setRenderedShops(sortedShops);
                 }
             }
         };
@@ -272,7 +293,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                         Hide Outs
                     </h1>
                 </div>
-                { user && user.nation && user.nation.uuid ?
+                { localUser || (user && user.nation && user.nation.uuid) ?
                     <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
                         <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${onlyAllies ? 'translate-x-0' : 'translate-x-full'}`}></span>
                         <h1 onClick={() => {setOnlyAllies(true);}} className="z-0 pl-2">
