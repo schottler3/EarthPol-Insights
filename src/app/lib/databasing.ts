@@ -1,9 +1,9 @@
-import { initializeApp } from "firebase/app";
 import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
-import { Shop } from "./types";
+import { InUser, Player, Shop } from "./types";
+import { User } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getPlayerData } from "./queries";
 
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://support.google.com/firebase/answer/7015592
 const firebaseConfig = {
   apiKey: "AIzaSyDgsO-AlUIsBrbKd8GDBygCMiOzqmSFv60",
   authDomain: "earthpol-insights.firebaseapp.com",
@@ -17,9 +17,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-
-// Initialize Cloud Firestore and get a reference to the service
+// Get the Firestore instance
 const db = getFirestore(app);
+
+export default app;
+
+// REMOVED: const { user, setUser } = useAppContext(); 
 
 export const getShopHistory = async function(uuid: string): Promise<Shop[] | null> {
     try {
@@ -49,3 +52,86 @@ export const getShopHistory = async function(uuid: string): Promise<Shop[] | nul
     }
 }
 
+export const signInUser = async (signedInUser: User): Promise<InUser> => {
+    const serializableAuthUser = {
+        uid: signedInUser.uid,
+        email: signedInUser.email || "",
+        emailVerified: signedInUser.emailVerified,
+        creationTime: signedInUser.metadata.creationTime || "",
+        lastSignInTime: signedInUser.metadata.lastSignInTime || "",
+    };
+
+    const cachedAccount = localStorage.getItem("userName");
+
+    const tempUser: InUser = {
+        authUser: serializableAuthUser,
+        userName: "",
+        nation: null,
+        town: null,
+    };
+
+    if(cachedAccount){
+        tempUser.userName = cachedAccount;
+    }
+    
+    const users = collection(db, 'Users');
+    const userDoc = doc(users, signedInUser.uid);
+    const userinfo = await getDoc(userDoc);
+    
+    if (!userinfo.exists()) {
+        if(tempUser.userName) {
+            const playerData:Player | null = await getPlayerData(tempUser.userName);
+            console.log(`PlayerData: ${playerData}`)
+            if(playerData) {
+                tempUser.nation = playerData.nation;
+                tempUser.town = playerData.town;
+            }
+        }
+        await setDoc(userDoc, tempUser);
+        return tempUser;
+    } 
+    else {
+        const userData = userinfo.data() as InUser;
+        if(tempUser.userName) {
+            const playerData:Player | null = await getPlayerData(tempUser.userName);
+            if(playerData) {
+                userData.nation = playerData.nation;
+                userData.town = playerData.town;
+            }
+            userData.userName = tempUser.userName;
+            await setDoc(userDoc, userData);
+        }
+        return userData;
+    }
+};
+
+export const reloadAccount = async (user:InUser) : Promise<boolean> => {
+    try{
+        const users = collection(db, 'Users');
+        const userDoc = doc(users, user.authUser.uid);
+        const userinfo = await getDoc(userDoc);
+        
+        const userData = userinfo.data() as InUser;
+        const username = user.userName;
+        if(username){
+            const playerData:Player | null = await getPlayerData(username);
+
+            if(playerData) {
+                userData.nation = playerData.nation;
+                userData.town = playerData.town;
+            }
+            userData.userName = user.userName;
+            await setDoc(userDoc, userData);
+            return true;
+        }
+        else{
+            userData.nation = null;
+            userData.town = null;
+            userData.userName = "";
+            await setDoc(userDoc, userData);
+            return true;
+        }
+    } catch(e) {
+        return false;
+    }
+}

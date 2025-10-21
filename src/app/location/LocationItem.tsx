@@ -3,11 +3,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getDiscordSrc, renderNation } from "../lib/queries";
 import { Invite } from "../lib/types";
+import DiscordConfirmation from "../components/DiscordConfirm";
 
 export default function LocationItem({name, uuid, type, discord}: {name: string, uuid: string, type?: string, discord?: string}) {
 
     const [discordLink, setDiscordLink] = useState<string>(discord || "");
     const [discordImg, setDiscordImg] = useState<string>("");
+    const [discordPrompt, setDiscordPrompt] = useState<boolean>(false);
 
     useEffect(() => {
         const getLocationData = async () => {
@@ -53,15 +55,22 @@ export default function LocationItem({name, uuid, type, discord}: {name: string,
 
     return (
         <div className="relative">
+            { discordPrompt && 
+                <DiscordConfirmation
+                    discordLink = {discordLink}
+                    discordImg = {discordImg ? discordImg : `/images/Earth.svg`}
+                    setDiscordPrompt={setDiscordPrompt}
+                />
+            }
             <div className="flex flex-col items-center hover:cursor-pointer">
                 <div className="hover:text-blue1 flex flex-col items-center font-bold text-white">
-                    <Link href={discordLink}>
+                    <div onClick={() => {discordLink ? setDiscordPrompt(!discordPrompt) : null}}>
                         <img
                             className="w-10 h-10 rounded-full" 
                             src={discordImg ? discordImg : `/images/Earth.svg`}
                             alt={`${name}`}
                         />
-                    </Link>
+                    </div>
                     <Link href={getHref()}>{name}</Link>
                 </div>
             </div>

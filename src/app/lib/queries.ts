@@ -145,6 +145,32 @@ export const renderShops = async (): Promise<Shop[] | null> => {
     }
 };
 
+export const renderAllyShops = async (uuid: string): Promise<Shop[] | null> => {
+    try {
+        const response = await fetch(`/api/shop`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nation: uuid,
+                filter: 'allies'
+            })
+        });
+
+        if (!response.ok) {
+            console.error(`Error fetching ally shops data. Status: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error: any) {
+        console.error('Error fetching ally shops data:', error);
+        return null;
+    }
+};
+
 export const renderPlayerShop = async (query: string): Promise<Shop | null> => {
 
     console.log("Query : " + query)
@@ -217,6 +243,28 @@ export const renderSkin = async(uuid: string): Promise<string> => {
     }
 };
 
+export const getAllPlayerData = async() : Promise<Player[] | null> => {
+    try {
+        const response = await fetch(`/api/players`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            console.error(`Error fetching players data. Status: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error: any) {
+        console.error('Error fetching players data:', error);
+        return null;
+    }
+}
+
 export const getPlayerData = async(query: string) : Promise<Player | null> => {
     try {
         const response = await fetch('/api/players', {
@@ -236,6 +284,30 @@ export const getPlayerData = async(query: string) : Promise<Player | null> => {
         const playerData = await response.json();
 
         return playerData[0];
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export const getOnlinePlayers = async() : Promise<Player[] | null> => {
+    try {
+        const response = await fetch('/api/players', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: ['online']
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error fetching online player data. Status: ${response.status}`);
+        }
+        
+        const playerData = await response.json();
+
+        return playerData;
     } catch (error: any) {
         return error;
     }

@@ -26,7 +26,7 @@ export default function page() {
                 }
                 
                 const result = await response.json();
-                result.sort((a:NationItem, b:NationItem) => a.name.localeCompare(b.name));
+                result.sort((a:NationItem, b:NationItem) => (a.name.toLowerCase()).localeCompare(b.name.toLowerCase()));
                 setNations(result);
                 setRenderedNations(result);
                 setIsLoadingNations(false);
@@ -44,7 +44,7 @@ export default function page() {
     useEffect(() => {
         if(query.length > 0){
             setRenderedNations(nations?.filter((nation) => {
-                return nation.name.includes(query)
+                return nation.name.toLowerCase().includes(query.toLowerCase())
             }) || null)
         } else {
             setRenderedNations(nations)

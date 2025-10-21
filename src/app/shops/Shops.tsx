@@ -1,13 +1,14 @@
 "use client"
 import { useEffect, useState } from "react";
 import ShopItem from "../components/ShopItem";
-import { Shop } from "../lib/types";
+import { Nation, Player, Shop } from "../lib/types";
 import Category from "../components/Category";
 import { BuildingBlocks, ColoredBlocks, Combats, Food, Functionals, Materials, NaturalBlocks, parseItemStack, RedstoneItems, Tools } from "../lib/itemUtils";
 import ShopComponent from "./ShopComponent";
 import useScreenSize from "../hooks/useScreenSize";
 import ShopBlank from "../components/ShopBlank";
-
+import { useAppContext } from "../context/AppContext";
+import { getPlayerData, renderAllyShops } from "../lib/queries";
 
 export default function Shops({data}: {data: Shop[] | null}){
 
@@ -20,7 +21,7 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [selectedShop, setSelectedShop] = useState<string | null>(null);
     
     const [noOutShops, setNoOutShops] = useState<Shop[] | null>(null);
-    const [renderedShops, setRenderedShop] = useState<Shop[] | null>(null);
+    const [renderedShops, setRenderedShops] = useState<Shop[] | null>(null);
     const [middlewareShops, setMiddlewareShops] = useState<Shop[] | null>(null);
 
     const [isSelling, setIsSelling] = useState<boolean>(true);
@@ -28,7 +29,15 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [bestDeals, setBestDeals] = useState<boolean>(true);
 
     const [searchQuery, setSearchQuery] = useState<string>("");
+
     const [numBlanks, setNumBlanks] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    const [onlyAllies, setOnlyAllies] = useState<boolean>(false);
+    const [allyShops, setAllyShops] = useState<Shop[] | null>(null);
+
+    const { user } = useAppContext(); 
+    const [localUser, setLocalUser] = useState<Player | null>(null);
 
     useEffect(() => {
         if(query)
@@ -63,6 +72,60 @@ export default function Shops({data}: {data: Shop[] | null}){
     }, [screenSize])
 
     useEffect(() => {
+        const fetchAllyShops = async () => {
+
+            setRenderedShops(null);
+            
+            if(onlyAllies && allyShops){
+                setRenderedShops(allyShops);
+            }
+            else{
+
+                let gotAllyShops: Shop[] | null = null;
+
+                if(!allyShops && user && user.nation){
+                    const username = user.nation.uuid;
+                    gotAllyShops = await renderAllyShops(username);
+                }
+                else if(!allyShops && localUser && localUser.nation){
+                    const username = localUser.nation.uuid
+                    console.log(`Username 92: ${username}`)
+                    gotAllyShops = await renderAllyShops(username);
+                }
+                
+                if(gotAllyShops){
+                    setAllyShops(gotAllyShops);
+                }
+            }
+            
+            
+        }
+
+        fetchAllyShops();
+
+    },[onlyAllies])
+
+    useEffect(() => {
+        setRenderedShops(null);
+        setLoading(true);
+    }, [onlyAllies, showOuts, isSelling])
+
+    useEffect(() => {
+        const getData = async () => {
+            if (user?.userName) {
+                setLocalUser(await getPlayerData(user.userName) || null)
+            }
+            else {
+                const localUserName: string | null = localStorage.getItem(`userName`);
+
+                if(localUserName)
+                    setLocalUser(await getPlayerData(localUserName));
+            }
+        }
+        getData();
+    }, [user])
+
+    useEffect(() => {
         if(data){
             setNoOutShops(data.filter(shop => {
                 return shop.type === "BUYING" && shop.space <= 0 ? false :
@@ -72,6 +135,17 @@ export default function Shops({data}: {data: Shop[] | null}){
             setNoOutShops([]);
         }
     },[data])
+
+    useEffect(() => {
+        const getDetails = async () => {
+            var localUsername: string | null = localStorage.getItem('userName');
+            if(localUsername){
+                setLocalUser(await getPlayerData(localUsername))
+            }
+        }
+
+        getDetails();
+    }, [])
 
     useEffect(() => {
         const sortItems = () => {
@@ -93,7 +167,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                 });
                 
                 if (JSON.stringify(sortedShops) !== JSON.stringify(renderedShops)) {
-                    setRenderedShop(sortedShops);
+                    setRenderedShops(sortedShops);
                 }
             }
         };
@@ -102,14 +176,30 @@ export default function Shops({data}: {data: Shop[] | null}){
     }, [middlewareShops, bestDeals])
 
     useEffect(() => {
+        setLoading(false);
+    }, [renderedShops])
+
+     useEffect(() => {
+        if(!user?.authUser){
+            setAllyShops(null)
+            setOnlyAllies(false);
+        }
+    }, [user])
+
+    useEffect(() => {
         const updateItems = () => {
 
-            var currentData : Shop[] | null = null;
+            var currentData: Shop[] | null = null;
 
-            if(showOuts){
+            if(onlyAllies && allyShops) {
+                // Filter out of stock items from allyShops
+                currentData = allyShops.filter(shop => {
+                    return shop.type === "BUYING" && shop.space <= 0 ? false :
+                    shop.type === "SELLING" && shop.stock <= 0 ? false : true;
+                });
+            } else if(showOuts) {
                 currentData = data;
-            }
-            else{
+            } else {
                 currentData = noOutShops;
             }
 
@@ -153,7 +243,7 @@ export default function Shops({data}: {data: Shop[] | null}){
 
         updateItems();
 
-    }, [selectedCategories, searchQuery, noOutShops, showOuts, isSelling])
+    }, [selectedCategories, searchQuery, noOutShops, showOuts, isSelling, onlyAllies, allyShops])
 
     const handleCategoryClick = (category: string) => {
         // Update selected categories list
@@ -186,23 +276,36 @@ export default function Shops({data}: {data: Shop[] | null}){
             <div className="flex flex-wrap gap-4 items-center">
                 <input onChange={(e) => {setSearchQuery(e.target.value);}} id="itemSearch" className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
                 <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                    <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                    <h1 onClick={() => {setIsSelling(true);}} className="z-50 pl-2">
+                    <span className={`absolute first-letter:top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                    <h1 onClick={() => {setIsSelling(true);}} className="z-0 pl-2">
                         Selling
                     </h1>
-                    <h1 onClick={() => {setIsSelling(false);}} className="z-50 pr-2">
+                    <h1 onClick={() => {setIsSelling(false);}} className="z-0 pr-2">
                         Buying
                     </h1>
                 </div>
                 <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                    <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                    <h1 onClick={() => {setShowOuts(true);}} className="z-50 pl-2">
+                    <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                    <h1 onClick={() => {setShowOuts(true);}} className="z-0 pl-2">
                         Show Outs
                     </h1>
-                    <h1 onClick={() => {setShowOuts(false);}} className="z-50 pr-2">
+                    <h1 onClick={() => {setShowOuts(false);}} className="z-0 pr-2">
                         Hide Outs
                     </h1>
                 </div>
+                { localUser || (user && user.nation && user.nation.uuid) ?
+                    <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                        <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${onlyAllies ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                        <h1 onClick={() => {setOnlyAllies(true);}} className="z-0 pl-2">
+                            Only Allies
+                        </h1>
+                        <h1 onClick={() => {setOnlyAllies(false);}} className="z-0 pr-2">
+                            All Nations
+                        </h1>
+                    </div>
+                    :
+                    null
+                }
                 <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
                     <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${bestDeals ? 'translate-x-0' : 'translate-x-full'}`}></span>
                     <h1 onClick={() => {setBestDeals(true);}} className="z-50 pl-2">
@@ -264,23 +367,25 @@ export default function Shops({data}: {data: Shop[] | null}){
                 </div>
             </div>
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
-                {(renderedShops && renderedShops.length >= 0) || searchQuery.length > 0 ?
-                    renderedShops?.map((shop: Shop, index: number) => (
-                        <ShopItem
-                            key={`Shop-${shop.owner}-${shop.id}`}
-                            data={shop}
-                            setSelectedShop={setSelectedShop}
-                        />
-                    ))
-                    : (
-                        // Remove the nested grid, just map the blanks directly
+                    {renderedShops && renderedShops.length > 0 && !loading ? (
+                        renderedShops?.map((shop: Shop) => (
+                            <ShopItem
+                                key={`Shop-${shop.owner}-${shop.id}`}
+                                data={shop}
+                                setSelectedShop={setSelectedShop}
+                            />
+                        ))
+                    ) : renderedShops && renderedShops.length === 0 && !loading ? (
+                        <div className="text-white font-bold">
+                            No Matching Shops
+                        </div>
+                    ) : (
                         Array.from({ length: numBlanks }).map((_, index) => (
                             <ShopBlank 
                                 key={`blankShop-${index}`}
                             />
                         ))
-                    )
-                }
+                    )}
             </div>
         </div>
     )

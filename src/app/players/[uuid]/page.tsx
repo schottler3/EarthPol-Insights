@@ -9,6 +9,8 @@ import LocationItem from '../../location/LocationItem';
 import ShopItem from '@/app/components/ShopItem';
 import ShopLoading from '@/app/shops/ShopLoading';
 import Shops from '@/app/shops/Shops';
+import AskUser from '@/app/components/AskUser';
+import { user } from 'firebase-functions/v1/auth';
 
 function PlayerContent() {
   const params = useParams();
@@ -28,6 +30,7 @@ function PlayerContent() {
           const data: Player | null = await getPlayerData(uuid);
           if (data) {
             setPlayerData(data);
+            console.log(data);
             setHighestRank(getRank(data));
           }
           setSkinURL(await renderSkin(uuid));
@@ -66,6 +69,9 @@ function PlayerContent() {
 
   return (
     <div className="pt-16 flex flex-col w-full items-center">
+      <AskUser 
+        account={playerData.name}
+      />
       <div className="w-full sm:w-3/4 md:w-2/3">
         <div className="flex flex-col w-full gap-8 py-8">
           <div className="flex flex-row rounded-md">
@@ -73,13 +79,21 @@ function PlayerContent() {
               {playerData.name}
             </h1>
             {highestRank && (
-              <div className="has-tooltip hover:cursor-pointer">
-                <span className="tooltip text-white -mt-6">{highestRank.name}</span>
-                <img className="w-12 h-12 -mt-1" src={highestRank.url} alt={highestRank.name} />
-              </div>
+                <div className="has-tooltip pr-2 hover:cursor-pointer">
+                  <span className="tooltip text-white -mt-6">{highestRank.name}</span>
+                  <img className="w-12 h-12 -mt-1" src={highestRank.url} alt={highestRank.name} />
+                </div>
             )}
+            { playerData && playerData.status && playerData.status.isOnline ?
+              <div className="has-tooltip hover:cursor-pointer right-0">
+                <span className="tooltip text-white -mt-6">{`${playerData.name} is online`}</span>
+                <span className="absolute bg-green-500 rounded-full w-3 h-3"></span>
+              </div>
+              :
+              null
+            }
           </div>
-          <div className="flex flex-col items-center p-8 md:flex-row bg-gray1 w-full rounded-md bg-opacity-80 gap-8">
+          <div className="flex flex-col items-center md:flex-row bg-gray1 w-full rounded-md bg-opacity-80 gap-8 py-4">
             <img 
               src={skinURL} 
               alt="Player avatar"
@@ -89,9 +103,9 @@ function PlayerContent() {
                 e.currentTarget.src = `https://mc-heads.net/avatar/steve`;
               }}
             />
-            <div className="flex flex-wrap items-center w-full">
+            <div className="flex flex-wrap items-center w-full justify-center md:justify-start gap-8">
               {playerData.nation?.uuid ? (
-                <div className="flex flex-col items-center gap-2 px-8">
+                <div className="flex flex-col items-center gap-2">
                   <h1 className="text-2xl font-bold text-blue1">
                     Nation
                   </h1>
@@ -102,7 +116,7 @@ function PlayerContent() {
                   />
                 </div>
               ) : null}
-              {playerData.town ? (
+              {playerData.town && playerData.town.name ? (
                 <div className="flex flex-col items-center gap-2">
                   <h1 className="text-2xl font-bold text-blue1">
                     Town
@@ -113,7 +127,9 @@ function PlayerContent() {
                     type="town"
                   />
                 </div>
-              ) : null}
+              ) : 
+                null
+              }
             </div>
           </div>
         </div>
