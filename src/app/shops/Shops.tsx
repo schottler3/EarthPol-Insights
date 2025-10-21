@@ -262,100 +262,109 @@ export default function Shops({data}: {data: Shop[] | null}){
             />
         :
         <div className="h-full w-full sm:pt-4 p-4 pt-8 flex flex-col gap-2">
-            <div className="flex flex-wrap gap-4 items-center">
-                <input onChange={(e) => {setSearchQuery(e.target.value);}} id="itemSearch" className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
-                <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                    <span className={`absolute first-letter:top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                    <h1 onClick={() => {setIsSelling(true);}} className="z-0 pl-2">
-                        Selling
-                    </h1>
-                    <h1 onClick={() => {setIsSelling(false);}} className="z-0 pr-2">
-                        Buying
-                    </h1>
-                </div>
-                <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                    <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                    <h1 onClick={() => {setShowOuts(true);}} className="z-0 pl-2">
-                        Show Outs
-                    </h1>
-                    <h1 onClick={() => {setShowOuts(false);}} className="z-0 pr-2">
-                        Hide Outs
-                    </h1>
-                </div>
-                { localUser || (user && user.nation && user.nation.uuid) ?
-                    <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                        <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${onlyAllies ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                        <h1 onClick={() => {setOnlyAllies(true);}} className="z-0 pl-2">
-                            Only Allies
-                        </h1>
-                        <h1 onClick={() => {setOnlyAllies(false);}} className="z-0 pr-2">
-                            All Nations
-                        </h1>
+            <div className="flex">
+                <div className="flex flex-col w-full">
+                    <div className="flex flex-wrap gap-4 items-center">
+                        <input onChange={(e) => {setSearchQuery(e.target.value);}} id="itemSearch" className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
+                        <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                            <span className={`absolute first-letter:top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                            <h1 onClick={() => {setIsSelling(true);}} className="z-0 pl-2">
+                                Selling
+                            </h1>
+                            <h1 onClick={() => {setIsSelling(false);}} className="z-0 pr-2">
+                                Buying
+                            </h1>
+                        </div>
+                        <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                            <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                            <h1 onClick={() => {setShowOuts(true);}} className="z-0 pl-2">
+                                Show Outs
+                            </h1>
+                            <h1 onClick={() => {setShowOuts(false);}} className="z-0 pr-2">
+                                Hide Outs
+                            </h1>
+                        </div>
+                        { localUser || (user && user.nation && user.nation.uuid) ?
+                            <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                                <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${onlyAllies ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                                <h1 onClick={() => {setOnlyAllies(true);}} className="z-0 pl-2">
+                                    Only Allies
+                                </h1>
+                                <h1 onClick={() => {setOnlyAllies(false);}} className="z-0 pr-2">
+                                    All Nations
+                                </h1>
+                            </div>
+                            :
+                            null
+                        }
+                        <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
+                            <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${bestDeals ? 'translate-x-0' : 'translate-x-full'}`}></span>
+                            <h1 onClick={() => {setBestDeals(true);}} className="z-50 pl-2">
+                                Best Deals
+                            </h1>
+                            <h1 onClick={() => {setBestDeals(false);}} className="z-50 pr-2">
+                                Worst Deals
+                            </h1>
+                        </div>
                     </div>
-                    :
-                    null
-                }
-                <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                    <span className={`absolute z-40 top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${bestDeals ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                    <h1 onClick={() => {setBestDeals(true);}} className="z-50 pl-2">
-                        Best Deals
-                    </h1>
-                    <h1 onClick={() => {setBestDeals(false);}} className="z-50 pr-2">
-                        Worst Deals
-                    </h1>
+                    <div className="flex gap-8">
+                        <div className="flex h-min md:max-w-[75vw] lg:max-w-[50vw] text-blue1 *:bg-gray1 bg-charcoal p-2 rounded-md gap-4 flex-wrap select-none hover:*:text-aqua1">
+                            <Category
+                                onClick={() => handleCategoryClick("tools")}
+                                name="Tools"
+                                isSelected={selectedCategories.includes("tools")}
+                            />
+                            <Category
+                                onClick={() => handleCategoryClick("materials")}
+                                name="Materials"
+                                isSelected={selectedCategories.includes("materials")}
+                            />
+                            <Category
+                                onClick={() => handleCategoryClick("food")}
+                                name="Food"
+                                isSelected={selectedCategories.includes("food")}
+                            />
+                            <Category
+                                onClick={() => handleCategoryClick("building")}
+                                name="Building"
+                                isSelected={selectedCategories.includes("building")}
+                            />
+                            <Category
+                                onClick={() => handleCategoryClick("colored")}
+                                name="Colored"
+                                isSelected={selectedCategories.includes("colored")}
+                            />
+                            <Category
+                                onClick={() => handleCategoryClick("natural")}
+                                name="Natural"
+                                isSelected={selectedCategories.includes("natural")}
+                            />
+                            <Category
+                                onClick={() => handleCategoryClick("functional")}
+                                name="Functional"
+                                isSelected={selectedCategories.includes("functional")}
+                            />
+                            <Category
+                                onClick={() => handleCategoryClick("redstone")}
+                                name="Redstone"
+                                isSelected={selectedCategories.includes("redstone")}
+                            />
+                            <Category
+                                onClick={() => handleCategoryClick("combat")}
+                                name="Combat"
+                                isSelected={selectedCategories.includes("combat")}
+                            />
+                                <div onClick={clearFilters} className="hover:cursor-pointer px-2 text-white hover:!text-aqua1 rounded-full font-bold ml-auto">
+                                    Clear Filters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-white mx-4 my-4 items-center text-2xl flex w-[16vw] text-navy font-bond border-4 border-gray-400 rounded-e">
+                        {localUser?.name}
+                    </div> 
                 </div>
-            </div>
-            <div className="flex md:max-w-[75vw] lg:max-w-[50vw] text-blue1 *:bg-gray1 bg-charcoal p-2 rounded-md gap-4 flex-wrap select-none hover:*:text-aqua1">
-                <Category
-            onClick={() => handleCategoryClick("tools")}
-            name="Tools"
-            isSelected={selectedCategories.includes("tools")}
-        />
-        <Category
-            onClick={() => handleCategoryClick("materials")}
-            name="Materials"
-            isSelected={selectedCategories.includes("materials")}
-        />
-        <Category
-            onClick={() => handleCategoryClick("food")}
-            name="Food"
-            isSelected={selectedCategories.includes("food")}
-        />
-        <Category
-            onClick={() => handleCategoryClick("building")}
-            name="Building"
-            isSelected={selectedCategories.includes("building")}
-        />
-        <Category
-            onClick={() => handleCategoryClick("colored")}
-            name="Colored"
-            isSelected={selectedCategories.includes("colored")}
-        />
-        <Category
-            onClick={() => handleCategoryClick("natural")}
-            name="Natural"
-            isSelected={selectedCategories.includes("natural")}
-        />
-        <Category
-            onClick={() => handleCategoryClick("functional")}
-            name="Functional"
-            isSelected={selectedCategories.includes("functional")}
-        />
-        <Category
-            onClick={() => handleCategoryClick("redstone")}
-            name="Redstone"
-            isSelected={selectedCategories.includes("redstone")}
-        />
-        <Category
-            onClick={() => handleCategoryClick("combat")}
-            name="Combat"
-            isSelected={selectedCategories.includes("combat")}
-        />
-                <div onClick={clearFilters} className="hover:cursor-pointer px-2 text-white hover:!text-aqua1 rounded-full font-bold ml-auto">
-                    Clear Filters
-                </div>
-            </div>
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4 pt-0">
                     {renderedShops && renderedShops.length > 0 && !loading ? (
                         renderedShops?.map((shop: Shop) => (
                             <ShopItem
@@ -375,7 +384,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                             />
                         ))
                     )}
+                </div>
             </div>
-        </div>
     )
 }
