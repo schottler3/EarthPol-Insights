@@ -8,7 +8,8 @@ import ShopComponent from "./ShopComponent";
 import useScreenSize from "../hooks/useScreenSize";
 import ShopBlank from "../components/ShopBlank";
 import { useAppContext } from "../context/AppContext";
-import { getPlayerData, renderAllyShops } from "../lib/queries";
+import { getPlayerData, renderAllyShops, renderSkin } from "../lib/queries";
+import BrowsingAs from "../components/BrowsingAs";
 
 export default function Shops({data}: {data: Shop[] | null}){
 
@@ -38,6 +39,7 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     const { user } = useAppContext(); 
     const [localUser, setLocalUser] = useState<Player | null>(null);
+    const [skinURL, setSkinURL] = useState<string | null>(null);
 
     useEffect(() => {
         if(query)
@@ -86,9 +88,19 @@ export default function Shops({data}: {data: Shop[] | null}){
                 }
             }
         }
-
         fetchAllyShops();
-    },[user, localUser])
+
+    },[user])
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if(user?.userName) {
+                setLocalUser(await getPlayerData(user.userName))
+            }
+        }
+
+        fetchUserData();
+    },[user])
 
     useEffect(() => {
         setRenderedShops(null);
@@ -263,9 +275,15 @@ export default function Shops({data}: {data: Shop[] | null}){
         :
         <div className="h-full w-full sm:pt-4 p-4 pt-8 flex flex-col gap-2">
             <div className="flex">
-                <div className="flex flex-col w-full">
-                    <div className="flex flex-wrap gap-4 items-center">
-                        <input onChange={(e) => {setSearchQuery(e.target.value);}} id="itemSearch" className="rounded-md sm:w-1/4 p-2" placeholder={`Search Items`}></input>
+                <div className="flex flex-col w-full gap-4 items-center md:items-start">
+                    <div className="block md:hidden">
+                        <BrowsingAs
+                            localUser={localUser}
+                        >
+                        </BrowsingAs>
+                    </div>
+                    <div className="flex flex-wrap w-full gap-4 items-center">
+                        <input onChange={(e) => {setSearchQuery(e.target.value);}} id="itemSearch" className="rounded-md md:w-1/4 w-full p-2" placeholder={`Search Items`}></input>
                         <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
                             <span className={`absolute first-letter:top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${isSelling ? 'translate-x-0' : 'translate-x-full'}`}></span>
                             <h1 onClick={() => {setIsSelling(true);}} className="z-0 pl-2">
@@ -360,9 +378,12 @@ export default function Shops({data}: {data: Shop[] | null}){
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white mx-4 my-4 items-center text-2xl flex w-[16vw] text-navy font-bond border-4 border-gray-400 rounded-e">
-                        {localUser?.name}
-                    </div> 
+                    <div className="hidden md:block">
+                        <BrowsingAs
+                            localUser={localUser}
+                        >
+                        </BrowsingAs>
+                    </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4 pt-0">
                     {renderedShops && renderedShops.length > 0 && !loading ? (
