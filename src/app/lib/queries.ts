@@ -1,4 +1,4 @@
-import {Invite, Nation, Player, Town, Shop, EndpointData } from "./types";
+import {Invite, Nation, Player, Town, Shop, EndpointData, Wilderness } from "./types";
 
 export const getEndpoints = async (): Promise<EndpointData | null> => {
     try {
@@ -45,6 +45,35 @@ export const renderLocation = async (query: string, town: boolean | null): Promi
         return error;
     }
 };
+
+export const getWildernessInfo = async(x: number, y:number) : Promise<Wilderness | null> => {
+    try {
+        console.log(`Fetching wilderness info for coordinates: ${x}, ${y}`);
+        
+        const response = await fetch('/api/wilderness', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: [[x, y]] 
+            })
+        });
+        
+        if (!response.ok) {
+            console.error(`Wilderness API error - Status: ${response.status}, Coordinates: ${x}, ${y}`);
+            return null;
+        }
+        
+        const wildernessData = await response.json();
+        console.log('Wilderness data received:', wildernessData);
+
+        return wildernessData[0] || null;
+    } catch (error: any) {
+        console.error('Error in getWildernessInfo:', error);
+        return null;
+    }
+}
 
 export const renderNation = async (query: string): Promise<Nation | null> => {
     try {
@@ -112,6 +141,32 @@ export const renderShops = async (): Promise<Shop[] | null> => {
         return data;
     } catch (error: any) {
         console.error('Error fetching shops data:', error);
+        return null;
+    }
+};
+
+export const renderAllyShops = async (uuid: string): Promise<Shop[] | null> => {
+    try {
+        const response = await fetch(`/api/shop`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nation: uuid,
+                filter: 'allies'
+            })
+        });
+
+        if (!response.ok) {
+            console.error(`Error fetching ally shops data. Status: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error: any) {
+        console.error('Error fetching ally shops data:', error);
         return null;
     }
 };
@@ -229,6 +284,30 @@ export const getPlayerData = async(query: string) : Promise<Player | null> => {
         const playerData = await response.json();
 
         return playerData[0];
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export const getOnlinePlayers = async() : Promise<Player[] | null> => {
+    try {
+        const response = await fetch('/api/players', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: ['online']
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error fetching online player data. Status: ${response.status}`);
+        }
+        
+        const playerData = await response.json();
+
+        return playerData;
     } catch (error: any) {
         return error;
     }

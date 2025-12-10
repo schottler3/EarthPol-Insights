@@ -4,10 +4,11 @@ import { Shop } from "../lib/types";
 import { renderShops } from "../lib/queries";
 import ShopLoading from "./ShopLoading";
 import Shops from "./Shops";
+import { useAppContext } from "../context/AppContext";
 
 function ShopsContent() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [shops, setShops] = useState<Shop[] | null>(null);
+  const { shops, setShops } = useAppContext();
 
   useEffect(() => {
     const getShops = async () => {
@@ -24,7 +25,10 @@ function ShopsContent() {
       }
     };
 
-    getShops();
+    if(shops.length <= 0)
+      getShops();
+    else
+      setIsLoading(false);
   }, [])
 
   return (

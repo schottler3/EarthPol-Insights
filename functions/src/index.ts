@@ -25,6 +25,10 @@ type Shop = {
       y: number
       z: number
   }
+  nation: {
+    name: string
+    uuid: string
+  }
 }
 
 exports.itemupdates = onSchedule({
@@ -43,25 +47,42 @@ exports.itemupdates = onSchedule({
       const validShops = shops.filter((shop) =>
         shop.id &&
         shop.price <= 999
+
       );
 
       console.log(`Processing ${validShops.length} valid shops`);
+
+      const recentPrices = new Map<string, number | null>();
+      for (const shop of validShops) {
+        const shopId = shop.id.toString().trim();
+        if (shopId) {
+          const shopData = await getShopData(shopId);
+          if (shopData) {
+            recentPrices.set(shopId, shopData.price);
+          }
+        }
+      }
 
       for (let i = 0; i < validShops.length; i += batchSize) {
         const batch = db.batch();
         const batchShops = validShops.slice(i, i + batchSize);
 
-        batchShops.forEach((shop: Shop) => {
+        for (const shop of batchShops) {
           const shopId = shop.id.toString().trim();
           if (shopId) {
-            const docRef = db.collection("shops")
-              .doc(shopId)
-              .collection("history")
-              .doc(timestamp.toString());
-            const docData = {data: shop, timestamp: timestamp};
-            batch.set(docRef, docData);
+            const lastPrice = recentPrices.get(shopId);
+
+            // Only write if price is different or no history exists
+            if (lastPrice === null || lastPrice !== shop.price) {
+              const docRef = db.collection("shops")
+                .doc(shopId)
+                .collection("history")
+                .doc(timestamp.toString());
+              const docData = {data: shop, timestamp: timestamp};
+              batch.set(docRef, docData);
+            }
           }
-        });
+        }
 
         await batch.commit();
         const batchNum = Math.floor(i/batchSize) + 1;
@@ -75,6 +96,28 @@ exports.itemupdates = onSchedule({
     console.error("Test error:", errorMessage);
   }
 });
+
+const getShopData = async (shopId: string): Promise<Shop | null> => {
+  try {
+    const querySnapshot = await db.collection("shops")
+      .doc(shopId)
+      .collection("history")
+      .orderBy("timestamp", "desc")
+      .limit(1)
+      .get();
+
+    if (querySnapshot.empty) {
+      return null;
+    }
+
+    const mostRecentDoc = querySnapshot.docs[0];
+    const shopData = mostRecentDoc.data().data;
+    return shopData || null;
+  } catch (error) {
+    console.error(`Error getting most recent price for shop ${shopId}:`, error);
+    return null;
+  }
+};
 
 const renderShops = async () => {
   try {

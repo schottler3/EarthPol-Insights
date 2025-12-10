@@ -1,4 +1,5 @@
 // @ts-check
+import { User } from "firebase/auth";
 import { Dispatch, SetStateAction } from "react"
 
 export interface EndpointData {
@@ -203,6 +204,22 @@ export type Town = {
   };
 }
 
+export type Wilderness = {
+    location: {
+        x: number,
+        z: number
+    },
+    isWilderness: boolean,
+    town: {
+        name: string,
+        uuid: string
+    },
+    nation: {
+        name: string,
+        uuid: string
+    },
+}
+
 export type Player = {
   name: string;
   uuid: string;
@@ -271,3 +288,24 @@ export type Invite = {
     imageURL: string | null;
     inviteURL: string;
 };
+
+export type serializableAuthUser = {
+    uid: string;
+    email: string;
+    emailVerified: boolean;
+    creationTime: string;
+    lastSignInTime: string;
+};
+
+export type InUser = {
+    authUser: serializableAuthUser;
+    userName: string | null;
+    nation: {
+        name: string;
+        uuid: string;
+    } | null;
+    town: {
+        name: string;
+        uuid: string;
+    } | null;
+}

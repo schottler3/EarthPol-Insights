@@ -1,7 +1,7 @@
 "use client"
 import { parseItemStack } from "@/app/lib/itemUtils";
-import { getPlayerData, renderPlayerShop, renderSkin } from "@/app/lib/queries";
-import { Player, type Shop } from "@/app/lib/types";
+import { getPlayerData, getWildernessInfo, renderPlayerShop, renderSkin } from "@/app/lib/queries";
+import { Player, Wilderness, type Shop } from "@/app/lib/types";
 import { useEffect, useState } from "react"
 import ShopLoading from "./ShopLoading";
 import PlayerItem from "@/app/players/Player";
@@ -37,6 +37,8 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
     const [skinURL, setSkinURL] = useState<string | null>(null);
     const [playerData, setPlayerData] = useState<Player | null>(null);
     const [isLoadingPlayer, setIsLoadingPlayer] = useState<boolean>(true);
+    const [isWildernessLoading, setIsWildernessLoading] = useState<boolean>(true);
+    const [wildernessData, setWildernessData] = useState<Wilderness | null>(null);
     const [historicalData, setHistoricalData] = useState<Shop[] | null>(null);
 
     const [chartData, setChartData] = useState<{
@@ -59,7 +61,7 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
       setIsShopLoading(true);
       try {
         if (uuid) {
-          console.log("The uuid is: " + uuid)
+          //console.log("The uuid is: " + uuid)
           const data: Shop | null = await renderPlayerShop(`${uuid}`);
           const history: Shop[] | null = await getShopHistory(uuid);
           if (data) {
@@ -69,7 +71,7 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
           }
           if (history){
             setHistoricalData(history);
-            console.log(history)
+            //console.log(history)
           }
         }
       } catch (err) {
@@ -128,22 +130,51 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
     loadPlayerData();
   }, [shopData]);
 
+  useEffect(() => {
+    const loadWildernessData = async () => {
+      if (!shopData || !shopData.location) return;
+
+      try {
+        setIsWildernessLoading(true);
+        const data: Wilderness | null = await getWildernessInfo(shopData.location.x, shopData.location.z);
+        if (data) {
+          setWildernessData(data);
+          console.log(data);
+        }
+      } catch (err) {
+        console.error("Failed to load wilderness data:", err);
+      } finally {
+        setIsWildernessLoading(false);
+      }
+    }
+
+    loadWildernessData();
+  }, [shopData])
+
     const { raw, item, count } = parseItemStack(shopData?.item || '');
 
+    const proportion = shopData?.stock !== undefined ? shopData.stock / count : 0;
+
     return (
-        <div className="flex relative justify-center h-full items-center text-white font-bold">
+        <div className="flex relative justify-center w-full h-full items-center text-white font-bold">
           {onBack && (
             <button 
                 onClick={onBack}
-                className="absolute top-4 left-4 bg-charcoal hover:bg-gray-600 p-2 rounded-md z-10 text-aqua1"
+                className="fixed top-[16vh] left-4 bg-charcoal hover:bg-gray-600 p-2 rounded-md z-10 text-aqua1"
             >
                 ← Back to Shops
             </button>
           )}
           
+            {/*
+              Center Info
+            */}
             {isShopLoading ? <ShopLoading /> :
-              <div className="flex flex-col justify-center items-center h-full w-full p-8 md:p-32 gap-4">
-                <div className="flex justify-start gap-4 *:h-min w-full items-center">
+              <div className="flex flex-col justify-center items-center h-full w-full p-8 md:p-16 gap-4 mt-[50vh] md:mt-32">
+                {/*
+                  Share Info
+                */}
+                <div className="flex text-sm md:text-md justify-start gap-4 *:h-min w-full items-center">
                   <div className="flex flex-col">
                     <h1>
                       Share This Shop:
@@ -163,10 +194,16 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                     <path d="M142.851 160L32 96" strokeWidth="16"/>
                   </svg>
                 </div>
-                <div className="flex flex-col relative md:flex-row h-full w-full">
-                  <div className="flex relative flex-col w-full justify-around gap-4 p-16 items-center bg-charcoal md:rounded-l-md">
+                {/*
+                  Left + Right
+                */}
+                <div className="flex flex-col relative md:flex-row h-max w-full">
+                  {/*
+                    Left (Info)
+                  */}
+                  <div className="flex flex-col w-full pb-4 justify-around gap-4 items-center bg-charcoal md:rounded-l-md">
                       {shopData && playerData && skinURL ?
-                          <div className="flex justify-between items-center w-full absolute top-0 left-0 p-4">
+                          <div className="flex justify-between items-center w-full p-4 bg-gray1">
                               <h1>Owner </h1>
                               <PlayerItem
                                   name={playerData.name}
@@ -175,10 +212,13 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                           </div>
                           : null
                       }
+                      {/*
+                        Item Card
+                      */}
                       <div className="flex flex-col gap-2 relative items-center border-2 border-aqua1 p-8 rounded-md bg-gray1">
                           <img src={`https://mc.nerothe.com/img/1.21.4/minecraft_${raw}.png`}></img>
-                          <div className="flex gap-2">
-                              <h1 className="text-blue1">{count}</h1>
+                          <div className="flex gap-2 text-center">
+                              <h1 className="text-aqua1">{count}</h1>
                               <h1>{item}</h1>
                           </div>
                           <h1>${shopData?.price}</h1>
@@ -187,9 +227,10 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                               <div>
                                 Stock:
                                 {shopData.stock > 0 ? (
-                                  <h1 className="text-green-500">
-                                    {shopData.stock}
-                                  </h1>
+                                  <div className="flex flex-col">
+                                    <h1 className={`${shopData.stock > 0 ? (proportion < .5 ? `text-orange-500` : (proportion >= 1 ? `text-green-500` : `text-yellow-500`)) : `text-red-500`}`}>{`${count} Stacks`}</h1>
+                                    <h1 className={`${shopData.stock > 0 ? (proportion < .5 ? `text-orange-500` : (proportion >= 1 ? `text-green-500` : `text-yellow-500`)) : `text-red-500`}`}>{`${shopData.stock*count} Items`}</h1>
+                                  </div>
                                 ) : (
                                   <h1 className="text-red-500">
                                     Out
@@ -203,32 +244,45 @@ export default function ShopComponent({uuid, onBack}: {uuid: string | null, onBa
                             )}
                         </div>
                       </div>
-                      <div className="flex gap-16">
-                        {playerData && playerData.town ? (
+                      {/*
+                        Location Info
+                      */}
+                      <div className="flex gap-16 h-full">
+                        {wildernessData && wildernessData.town.name ? (
                           <div className="flex flex-col gap-2 text-center text-aqua1">
                             <h1>Town</h1>
                             <LocationItem
-                              name={playerData?.town?.name}
-                              uuid={playerData?.town?.uuid}
+                              name={wildernessData.town.name}
+                              uuid={wildernessData.town.uuid}
                               type="town"
                             ></LocationItem>
                           </div>
                         ) : null}
-                        {playerData && playerData.nation?.uuid ? (
+                        {wildernessData && wildernessData.nation.name ? (
                           <div className="flex flex-col gap-2 text-center text-aqua1">
                             <h1>Nation</h1>
                             <LocationItem
-                              name={playerData?.nation?.name}
-                              uuid={playerData?.nation?.uuid}
+                              name={wildernessData.nation.name}
+                              uuid={wildernessData.nation.uuid}
                               type="nation"
                             ></LocationItem>
                           </div>
                         ) : null}
                       </div>
                   </div>
-                  <iframe src={`https://earthpol.com/map/#world:${shopData?.location.x}:0:${shopData?.location.z}:50:0:0:0:1:flat`} className="w-full sm:mt-0 md:rounded-r-md" sandbox="allow-same-origin allow-scripts">
-                  </iframe>
+                  {/*
+                    Right (Map)
+                  */}
+                  {shopData && shopData.location ? 
+                    <iframe src={`https://earthpol.com/map/#world:${shopData?.location.x}:0:${shopData?.location.z}:50:0:0:0:1:flat`} className="w-full min-h-64 sm:mt-0 md:rounded-r-md" sandbox="allow-same-origin allow-scripts">
+                    </iframe>
+                    :
+                    null
+                  }
                 </div>
+                {/*
+                  Chart
+                */}
                 <div className="w-full h-full">
                   {historicalData && historicalData.length > 0 ?
                     <div className="w-full h-full">
