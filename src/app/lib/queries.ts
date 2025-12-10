@@ -230,11 +230,15 @@ export const renderPlayerShops = async (query: string): Promise<Shop[] | null> =
 
 export const renderSkin = async(uuid: string): Promise<string> => {
     try {
-        const crafatarUrl = `https://crafatar.com/avatars/${uuid}?overlay`;
+        const crafatarUrl = `https://mc-heads.net/avatar/${uuid}`;
+
+        //console.log("Getting uuid: " + uuid);
         
         if (!uuid || uuid.length < 32) {
             return `https://mc-heads.net/avatar/steve`;
         }
+
+        console.log(crafatarUrl)
         
         return crafatarUrl;
     } catch (error) {

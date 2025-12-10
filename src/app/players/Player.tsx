@@ -24,7 +24,9 @@ export default function Player({name, uuid, index = 0}: {name:string, uuid:strin
                     setIsLoaded(true);
                 }
             }
-            getSkin();
+
+            if(!isLoaded)
+                getSkin();
         }, loadDelay);
         
         return () => clearTimeout(timer);
