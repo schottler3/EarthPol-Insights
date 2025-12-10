@@ -3,8 +3,6 @@ import { useEffect, useState } from "react"
 import { Player } from "../lib/types";
 import { getAllPlayerData, getOnlinePlayers } from "../lib/queries";
 import Link from "next/link";
-import { event } from "firebase-functions/v1/analytics";
-import { on } from "events";
 import OnlineIndicator from "../components/OnlineIndicator";
 
 export default function page() {

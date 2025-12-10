@@ -138,7 +138,7 @@ const getAllAlliesPlayers = async (nation: string) => {
     
     const alliesResponse = await getAllies(nation);
     const allies = await alliesResponse.json();
-    console.log('Allies found:', allies);
+    //console.log('Allies found:', allies);
 
     // Check if allies is null or not an array
     if (!allies || !Array.isArray(allies)) {
