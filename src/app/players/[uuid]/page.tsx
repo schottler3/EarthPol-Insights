@@ -6,11 +6,10 @@ import { getPlayerData, renderPlayerShops, renderSkin } from '../../lib/queries'
 import { useParams } from 'next/navigation';
 import getRank from '../getRank';
 import LocationItem from '../../location/LocationItem';
-import ShopItem from '@/app/components/ShopItem';
 import ShopLoading from '@/app/shops/ShopLoading';
 import Shops from '@/app/shops/Shops';
 import AskUser from '@/app/components/AskUser';
-import { user } from 'firebase-functions/v1/auth';
+import PlayerComponent from '../Player';
 
 function PlayerContent() {
   const params = useParams();
@@ -132,6 +131,28 @@ function PlayerContent() {
               }
             </div>
           </div>
+          <div className="w-full bg-charcoal text-gray-400 font-bold rounded-md p-2">
+              {playerData.about != "/res set about [msg]" ? `${playerData.about}` : "This is your biography! Change it in game using /res set about <message>"}
+          </div>
+          { playerData.friends.length > 0 ?
+            <div className="w-full flex flex-col gap-2">
+              <h1 className="text-white font-bold text-2xl">
+                Friends
+              </h1>
+              <hr className="w-1/4 h-2"></hr>
+              <div className="w-full flex flex-wrap gap-4 text-white">
+                  {playerData.friends.map((friend) => (
+                    <PlayerComponent key={friend.name}
+                      name = {friend.name}
+                      uuid = {friend.uuid}
+                    >
+                    </PlayerComponent>
+                  ))}
+              </div>
+            </div>
+            :
+            null
+          }
         </div>
         {playerShops && playerShops?.length > 0 ? 
           <div className="">
