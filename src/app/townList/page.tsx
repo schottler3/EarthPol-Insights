@@ -63,7 +63,7 @@ export default function page() {
             <>
                 <h1 className="text-white font-bold text-2xl">{`Search Towns(${towns?.length})`}</h1>
                 <div className="bg-gray1 drop-shadow-xl my-4 p-4 gap-8 items-center">
-                    <input className="w-1/4 h-[4vh] rounded-md p-1" placeholder="Search towns" type="text" onChange={(e) => setQuery(e.target.value)}></input>
+                    <input className="w-1/2 md:1/4 h-[4vh] rounded-md p-1" placeholder="Search Towns" type="text" onChange={(e) => setQuery(e.target.value)}></input>
                 </div>
                 {renderedTowns && renderedTowns.length > 0 ? ( // Show results if any
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">

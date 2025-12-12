@@ -56,9 +56,10 @@ exports.itemupdates = onSchedule({
       for (const shop of validShops) {
         const shopId = shop.id.toString().trim();
         if (shopId) {
-          const shopData = await getShopData(shopId)
-          if(shopData)
+          const shopData = await getShopData(shopId);
+          if (shopData) {
             recentPrices.set(shopId, shopData.price);
+          }
         }
       }
 
