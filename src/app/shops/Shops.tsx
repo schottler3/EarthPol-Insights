@@ -73,23 +73,39 @@ export default function Shops({data}: {data: Shop[] | null}){
     }, [screenSize])
 
     useEffect(() => {
-        const fetchAllyShops = async () => {
-            if(!allyShops && user && user.nation){
-                const gotAllyShops: Shop[] | null = await renderAllyShops(user.nation.uuid);
-                if(gotAllyShops){
-                    setAllyShops(gotAllyShops);
+        const initializeUser = async () => {
+            if (user?.userName) {
+                const playerData = await getPlayerData(user.userName);
+                setLocalUser(playerData);
+            } else {
+                const localUserName = localStorage.getItem('userName');
+                if (localUserName) {
+                    const playerData = await getPlayerData(localUserName);
+                    setLocalUser(playerData);
                 }
             }
-            else if(!allyShops && localUser && localUser.nation){
-                const gotAllyShops: Shop[] | null = await renderAllyShops(localUser.nation.uuid);
-                if(gotAllyShops){
-                    setAllyShops(gotAllyShops);
-                }
-            }
-        }
-        fetchAllyShops();
+        };
+        
+        initializeUser();
+    }, [user]);
 
-    },[user])
+    useEffect(() => {
+        const fetchAllyShops = async () => {
+            if (!onlyAllies) return;
+            
+            setAllyShops(null);
+            
+            const currentUser = localUser || user;
+            
+            if (currentUser?.nation) {
+                const gotAllyShops: Shop[] | null = await renderAllyShops(currentUser.nation.uuid);
+                if (gotAllyShops) {
+                    setAllyShops(gotAllyShops);
+                }
+            }
+        };
+        fetchAllyShops();
+    }, [user, localUser, onlyAllies]);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -183,24 +199,30 @@ export default function Shops({data}: {data: Shop[] | null}){
     }, [user])
 
     useEffect(() => {
-    const updateItems = () => {
+        const updateItems = () => {
 
-        var currentData: Shop[] | null = null;
+            var currentData: Shop[] | null = null;
 
-        if(onlyAllies && allyShops) {
-            // Respect showOuts toggle for ally shops
-            if(showOuts) {
-                currentData = allyShops;
+            if(onlyAllies) {
+                // Wait for ally shops to load
+                if (!allyShops) {
+                    setMiddlewareShops(null);
+                    return;
+                }
+                
+                // Respect showOuts toggle for ally shops
+                if(showOuts) {
+                    currentData = allyShops;
+                } else {
+                    currentData = allyShops.filter(shop => {
+                        return shop.type === "BUYING" && shop.space <= 0 ? false :
+                        shop.type === "SELLING" && shop.stock <= 0 ? false : true;
+                    });
+                }
+            } else if(showOuts) {
+                currentData = data;
             } else {
-                currentData = allyShops.filter(shop => {
-                    return shop.type === "BUYING" && shop.space <= 0 ? false :
-                    shop.type === "SELLING" && shop.stock <= 0 ? false : true;
-                });
-            }
-        } else if(showOuts) {
-            currentData = data;
-        } else {
-            currentData = noOutShops;
+                currentData = noOutShops;
         }
 
         // Apply filter based on the updated list of selected categories

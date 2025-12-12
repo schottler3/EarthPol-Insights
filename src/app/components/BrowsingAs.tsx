@@ -19,12 +19,12 @@ export default function BrowsingAs ({ localUser, setLocalUser }: { localUser: Pl
 
     return (
         <div className="flex mr-8 justify-right items-center gap-4 w-full text-white">
-            {localUser ?
+            {localUser && !isPrompting ?
             <div className="flex flex-col ">
                 <div className="text-blue1 w-max">
                     Browsing As:
                 </div>
-                <div className="bg-[] items-center text-2xl flex font-bold rounded-e">
+                <div onClick={() => setIsPrompting(true)} className="hover:cursor-pointer items-center text-2xl flex font-bold rounded-e">
                     {localUser?.name}
                 </div> 
             </div>
@@ -43,7 +43,9 @@ export default function BrowsingAs ({ localUser, setLocalUser }: { localUser: Pl
                             if (event.key === 'Enter') {
                                 const value = event.currentTarget.value;
                                 console.log(`Success! ${value}`);
-                                setLocalUser(await getPlayerData(event.currentTarget.value));
+                                const newUser = await getPlayerData(event.currentTarget.value);
+                                setLocalUser(newUser);
+                                setIsPrompting(false);
                             }
                         }}
                     />
