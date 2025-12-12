@@ -238,7 +238,7 @@ export const renderSkin = async(uuid: string): Promise<string> => {
             return `https://mc-heads.net/avatar/steve`;
         }
 
-        console.log(crafatarUrl)
+        //console.log(crafatarUrl)
         
         return crafatarUrl;
     } catch (error) {

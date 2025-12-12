@@ -110,7 +110,10 @@ export default function Header(){
                         Nations
                     </Link>
                     <Link href="/shops" className="text-center hover hover:bg-charcoal rounded-full hover:text-aqua1 bg-opacity-75 transition-all ease-in-out">
-                        Shops
+                        Live Shops
+                    </Link>
+                    <Link href="/shops/query/" className="text-center hover hover:bg-charcoal rounded-full hover:text-aqua1 bg-opacity-75 transition-all ease-in-out">
+                        Query Shops
                     </Link>
                     <Link href="/players" className="text-center hover hover:bg-charcoal rounded-full hover:text-aqua1 bg-opacity-75 transition-all ease-in-out">
                         Players
