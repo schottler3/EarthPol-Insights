@@ -39,7 +39,6 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     const { user } = useAppContext(); 
     const [localUser, setLocalUser] = useState<Player | null>(null);
-    const [skinURL, setSkinURL] = useState<string | null>(null);
 
     useEffect(() => {
         if(query)
@@ -279,6 +278,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                     <div className="block md:hidden">
                         <BrowsingAs
                             localUser={localUser}
+                            setLocalUser={setLocalUser}
                         >
                         </BrowsingAs>
                     </div>
@@ -381,6 +381,7 @@ export default function Shops({data}: {data: Shop[] | null}){
                     <div className="hidden md:block">
                         <BrowsingAs
                             localUser={localUser}
+                            setLocalUser={setLocalUser}
                         >
                         </BrowsingAs>
                     </div>
