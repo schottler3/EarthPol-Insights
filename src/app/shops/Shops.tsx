@@ -21,12 +21,10 @@ export default function Shops({data}: {data: Shop[] | null}){
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [selectedShop, setSelectedShop] = useState<string | null>(null);
     
-    const [noOutShops, setNoOutShops] = useState<Shop[] | null>(null);
     const [renderedShops, setRenderedShops] = useState<Shop[] | null>(null);
     const [middlewareShops, setMiddlewareShops] = useState<Shop[] | null>(null);
 
     const [isSelling, setIsSelling] = useState<boolean>(true);
-    const [showOuts, setShowOuts] = useState<boolean>(false);
     const [bestDeals, setBestDeals] = useState<boolean>(true);
 
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -105,7 +103,7 @@ export default function Shops({data}: {data: Shop[] | null}){
     useEffect(() => {
         setRenderedShops(null);
         setLoading(true);
-    }, [onlyAllies, showOuts, isSelling])
+    }, [onlyAllies, isSelling])
 
     useEffect(() => {
         const getData = async () => {
@@ -121,17 +119,6 @@ export default function Shops({data}: {data: Shop[] | null}){
         }
         getData();
     }, [user])
-
-    useEffect(() => {
-        if(data){
-            setNoOutShops(data.filter(shop => {
-                return shop.type === "BUYING" && shop.space <= 0 ? false :
-                shop.type === "SELLING" && shop.stock <= 0 ? false : true;
-            }));
-        } else {
-            setNoOutShops([]);
-        }
-    },[data])
 
     useEffect(() => {
         const getDetails = async () => {
@@ -189,19 +176,10 @@ export default function Shops({data}: {data: Shop[] | null}){
         var currentData: Shop[] | null = null;
 
         if(onlyAllies && allyShops) {
-            // Respect showOuts toggle for ally shops
-            if(showOuts) {
-                currentData = allyShops;
-            } else {
-                currentData = allyShops.filter(shop => {
-                    return shop.type === "BUYING" && shop.space <= 0 ? false :
-                    shop.type === "SELLING" && shop.stock <= 0 ? false : true;
-                });
-            }
-        } else if(showOuts) {
+            currentData = allyShops;
+        }
+        else {
             currentData = data;
-        } else {
-            currentData = noOutShops;
         }
 
         // Apply filter based on the updated list of selected categories
@@ -214,9 +192,6 @@ export default function Shops({data}: {data: Shop[] | null}){
             if(!isSelling && shop.type === "SELLING"){
                 return false;
             }
-
-            if(shop.price >= 999)
-                return false;
 
             if (searchQuery && searchQuery.length > 0 && 
                 !shop.item.toLowerCase().includes(searchQuery.toLowerCase()) && 
@@ -244,7 +219,7 @@ export default function Shops({data}: {data: Shop[] | null}){
 
     updateItems();
 
-}, [selectedCategories, searchQuery, noOutShops, showOuts, isSelling, onlyAllies, allyShops])
+}, [selectedCategories, searchQuery, isSelling, onlyAllies, allyShops])
 
     const handleCategoryClick = (category: string) => {
         // Update selected categories list
@@ -262,7 +237,6 @@ export default function Shops({data}: {data: Shop[] | null}){
         const searchInput = document.getElementById("itemSearch") as HTMLInputElement;
         if (searchInput) searchInput.value = "";
         setSelectedCategories([]);
-        setShowOuts(false);
         setIsSelling(true);
     }
 
@@ -291,15 +265,6 @@ export default function Shops({data}: {data: Shop[] | null}){
                             </h1>
                             <h1 onClick={() => {setIsSelling(false);}} className="z-0 pr-2">
                                 Buying
-                            </h1>
-                        </div>
-                        <div className="flex relative h-min gap-6 text-blue1 font-bold items-center bg-charcoal rounded-full py-1 hover:cursor-pointer">
-                            <span className={`absolute top-0 bg-aqua1 w-1/2 h-full rounded-full transition-all ease-linear duration-100 ${showOuts ? 'translate-x-0' : 'translate-x-full'}`}></span>
-                            <h1 onClick={() => {setShowOuts(true);}} className="z-0 pl-2">
-                                Show Outs
-                            </h1>
-                            <h1 onClick={() => {setShowOuts(false);}} className="z-0 pr-2">
-                                Hide Outs
                             </h1>
                         </div>
                         { localUser || (user && user.nation && user.nation.uuid) ?

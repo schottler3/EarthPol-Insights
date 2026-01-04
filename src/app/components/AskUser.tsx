@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import { setServers } from "dns";
 import { reloadAccount } from "../lib/databasing";
 
 export default function AskUser({account}: {account:string}) {
